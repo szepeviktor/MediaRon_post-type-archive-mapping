@@ -1,15 +1,16 @@
 <?php
 /*
 Plugin Name: Post Type Archive Mapping
-Plugin URI: https://bigwing.com
+Plugin URI: https://mediaron.com/portfolio/post-type-archive-mapping/
 Description: Map your post type archives to a page
-Author: ronalfy
+Author: Ronald Huereca
 Version: 1.0.0
 Requires at least: 4.4
-Author URI: https://www.ronalfy.com
+Author URI: https://mediaron.com
 Contributors: ronalfy
 Text Domain: post-type-archive-mapping
 Domain Path: /languages
+Credit: Forked from https://github.com/bigwing/post-type-archive-mapping
 */ 
 
 class PostTypeArchiveMapping {
@@ -45,6 +46,7 @@ class PostTypeArchiveMapping {
 	 */
 	private function __construct() {
 		add_action( 'init', array( $this, 'init' ), 9 );
+		load_plugin_textdomain( 'post-type-archive-mapping', false, basename( dirname( __FILE__ ) ) . '/languages' );
 	} //end constructor
 
 	/**
