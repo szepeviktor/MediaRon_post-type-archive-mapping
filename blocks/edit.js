@@ -20,7 +20,6 @@ const { apiFetch } = wp;
 
 const {
 	registerStore,
-	withSelect,
 } = wp.data;
 
 const {
@@ -42,21 +41,12 @@ const {
 	BlockControls,
 } = wp.editor;
 
-let postTypeList = [];
-let taxonomies = [];
-let terms = [{'value': 0, 'label': 'All'}];
 
-const default_post_type = 'post';
-const default_taxonomy_name = 'category';
 
-axios.get(ptam_globals.rest_url + 'wp/v2/types').then( ( response ) => {
-	$.each( response.data, function( key, value ) {
-		if( 'attachment' != key && 'wp_block' != key ) {
-			postTypeList.push( { 'value': key, 'label': value.name } );
-		}
-	} );
-});
-axios.get(ptam_globals.rest_url + 'wp/v2/taxonomies').then( ( response ) => {
+
+
+
+/*axios.get(ptam_globals.rest_url + 'wp/v2/taxonomies').then( ( response ) => {
 	$.each( response.data, function( key, value ) {
 		if( value.types.includes(default_post_type)) {
 			taxonomies.push( { 'value': key, 'label': value.name } );
@@ -67,7 +57,7 @@ axios.get(ptam_globals.rest_url + 'ptam/v1/get_terms/' + default_taxonomy_name )
 	$.each( response.data, function( key, value ) {
 		terms.push( { 'value': value.term_id, 'label': value.name } );
 	} );
-});
+});*/
 
 const MAX_POSTS_COLUMNS = 4;
 
@@ -80,6 +70,77 @@ class PTAM_Custom_Posts extends Component {
 		this.toggleDisplayPostAuthor = this.toggleDisplayPostAuthor.bind( this );
 		this.toggleDisplayPostImage = this.toggleDisplayPostImage.bind( this );
 		this.toggleDisplayPostLink = this.toggleDisplayPostLink.bind( this );
+		this.get_latest_data = this.get_latest_data.bind(this);
+		
+		const default_post_type = 'post';
+		const default_taxonomy_name = 'category';
+		let taxonomies = [];
+		let terms = [{'value': 0, 'label': 'All'}];
+		let ptam_latest_posts = [];
+		
+		this.state = {
+			loading: true,
+			postType: 'post',
+			taxonomy: 'category',
+			term: 'all',
+			latestPosts: [],
+			postTypeList: [],
+			taxonomyList: [],
+			termsList: []
+		};
+		
+		this.get_latest_data();
+	}
+	
+	get_latest_data( object = {} ) {
+		this.setState( { 'loading': true } )
+		let latestPosts = [];
+		let postTypeList = [];
+		let taxonomyList = [];
+		let termsList = [];
+		const props = jQuery.extend({}, this.props.attributes, object);
+		const { postType, order, orderBy, taxonomy, term, terms, postsToShow } = props;
+		console.log(order);
+		
+		// Get Latest Posts and Chain Promises
+		axios.get(ptam_globals.rest_url + 'wp/v2/' + postType + `s?order=${order}&orderby=${orderBy}&taxonomy=${taxonomy}&term=${term}&posts_per_page=${postsToShow}`).then( ( response ) => { 
+				latestPosts = response.data;
+				
+				// Get Post Types
+				axios.get(ptam_globals.rest_url + 'wp/v2/types').then( ( response ) => {
+					$.each( response.data, function( key, value ) {
+						if( 'attachment' != key && 'wp_block' != key ) {
+							postTypeList.push( { 'value': key, 'label': value.name } );
+						}
+					} );
+					
+					// Get Terms
+					axios.get(ptam_globals.rest_url + 'ptam/v1/get_terms/' + taxonomy ).then( ( response ) => {
+						$.each( response.data, function( key, value ) {
+							termsList.push( { 'value': value.term_id, 'label': value.name } );
+						} );
+						
+						// Get Taxonomies
+						axios.get(ptam_globals.rest_url + 'wp/v2/taxonomies').then( ( response ) => {
+							$.each( response.data, function( key, value ) {
+								if( value.types.includes(postType)) {
+									taxonomyList.push( { 'value': key, 'label': value.name } );
+								}
+							} );
+							
+							// Now Set State
+							this.setState( {
+								'loading': false,
+								'latestPosts': latestPosts,
+								'postTypeList': postTypeList,
+								'taxonomyList': taxonomyList,
+								'termsList': termsList	
+							} );
+						});
+						
+					});
+				} );
+			});
 	}
 
 	toggleDisplayPostDate() {
@@ -125,12 +186,13 @@ class PTAM_Custom_Posts extends Component {
 	}
 
 	render() {
-		if( postTypeList.length == 0 ) {
+		if( this.state.loading ) {
 			return <div>Loading...</div>
 		}
-		const { attributes, categoriesList, setAttributes, latestPosts } = this.props;
+		const { attributes, setAttributes } = this.props;
 		const { postType, term, taxonomy, displayPostDate, displayPostExcerpt, displayPostAuthor, displayPostImage,displayPostLink, align, postLayout, columns, order, orderBy, categories, postsToShow, width, imageCrop, readMoreText } = attributes;
-
+		
+		let latestPosts = this.state.latestPosts;
 		// Thumbnail options
 		const imageCropOptions = [
 			{ value: 'landscape', label: __( 'Landscape' ) },
@@ -142,33 +204,14 @@ class PTAM_Custom_Posts extends Component {
 		const inspectorControls = (
 			<InspectorControls>
 				<PanelBody title={ __( 'Post Grid Settings' ) }>
-					<SelectControl
-							label={ __( 'Post Type' ) }
-							options={ postTypeList }
-							value={ postType }
-							onChange={ ( value ) => this.props.setAttributes( { postType: value } ) }
-					/>
-					<SelectControl
-							label={ __( 'Taxonomy' ) }
-							options={ taxonomies }
-							value={ taxonomy }
-							onChange={ ( value ) => this.props.setAttributes( { imageCrop: value } ) }
-					/>
-					<SelectControl
-							label={ __( 'Terms' ) }
-							options={ terms }
-							value={ term }
-							onChange={ ( value ) => this.props.setAttributes( { imageCrop: value } ) }
-					/>
 					<QueryControls
 						{ ...{ order, orderBy } }
 						numberOfItems={ postsToShow }
-						categoriesList={ categoriesList }
 						selectedCategoryId={ categories }
-						onOrderChange={ ( value ) => setAttributes( { order: value } ) }
-						onOrderByChange={ ( value ) => setAttributes( { orderBy: value } ) }
-						onCategoryChange={ ( value ) => setAttributes( { categories: '' !== value ? value : undefined } ) }
-						onNumberOfItemsChange={ ( value ) => setAttributes( { postsToShow: value } ) }
+						onOrderChange={ ( value ) => { this.props.setAttributes( { order: value } ); this.get_latest_data({order: value }); } }
+						onOrderByChange={ ( value ) => { this.props.setAttributes( { orderBy: value } ); this.get_latest_data({orderBy: value }); } }
+						onCategoryChange={ ( value ) => this.props.setAttributes( { categories: '' !== value ? value : undefined } ) }
+						onNumberOfItemsChange={ ( value ) => this.props.setAttributes( { postsToShow: value } ) }
 					/>
 					{ postLayout === 'grid' &&
 						<RangeControl
@@ -345,32 +388,4 @@ class PTAM_Custom_Posts extends Component {
 	}
 }
 
-let ptam_latest_posts = [];
-function ptam_get_latest_posts(postType,query) {
-	axios.get(ptam_globals.rest_url + 'wp/v2/' + postType + 's/?' + jQuery.param(query)).then( ( response ) => { ptam_latest_posts = response.data });
-}
-
-
-export default withSelect( ( select, props ) => {
-	const { postType, terms, taxonomy, postsToShow, order, orderBy, context } = props.attributes;
-	const { getEntityRecords } = select( 'core' );
-	const latestPostsQuery = pickBy( {
-		postType,
-		taxonomy,
-		terms,
-		order,
-		orderby: orderBy,
-		per_page: postsToShow,
-		context: 'view'
-	}, ( value ) => ! isUndefined( value ) );
-	const categoriesListQuery = {
-		per_page: 100,
-	};
-	ptam_get_latest_posts(postType,latestPostsQuery);
-	if( ptam_latest_posts.length > 0 ) {
-		return {
-			latestPosts: ptam_latest_posts,
-			categoriesList: getEntityRecords( taxonomy, terms, categoriesListQuery ),
-		};	
-	}
-} )( PTAM_Custom_Posts );
+export default PTAM_Custom_Posts;

@@ -19198,9 +19198,7 @@ var __ = wp.i18n.__;
 var decodeEntities = wp.htmlEntities.decodeEntities;
 var _wp = wp,
     apiFetch = _wp.apiFetch;
-var _wp$data = wp.data,
-    registerStore = _wp$data.registerStore,
-    withSelect = _wp$data.withSelect;
+var registerStore = wp.data.registerStore;
 var _wp$components = wp.components,
     PanelBody = _wp$components.PanelBody,
     Placeholder = _wp$components.Placeholder,
@@ -19217,33 +19215,18 @@ var _wp$editor = wp.editor,
     BlockAlignmentToolbar = _wp$editor.BlockAlignmentToolbar,
     BlockControls = _wp$editor.BlockControls;
 
-
-var postTypeList = [];
-var taxonomies = [];
-var terms = [{ 'value': 0, 'label': 'All' }];
-
-var default_post_type = 'post';
-var default_taxonomy_name = 'category';
-
-__WEBPACK_IMPORTED_MODULE_6_axios___default.a.get(ptam_globals.rest_url + 'wp/v2/types').then(function (response) {
-	$.each(response.data, function (key, value) {
-		if ('attachment' != key && 'wp_block' != key) {
-			postTypeList.push({ 'value': key, 'label': value.name });
+/*axios.get(ptam_globals.rest_url + 'wp/v2/taxonomies').then( ( response ) => {
+	$.each( response.data, function( key, value ) {
+		if( value.types.includes(default_post_type)) {
+			taxonomies.push( { 'value': key, 'label': value.name } );
 		}
-	});
+	} );
 });
-__WEBPACK_IMPORTED_MODULE_6_axios___default.a.get(ptam_globals.rest_url + 'wp/v2/taxonomies').then(function (response) {
-	$.each(response.data, function (key, value) {
-		if (value.types.includes(default_post_type)) {
-			taxonomies.push({ 'value': key, 'label': value.name });
-		}
-	});
-});
-__WEBPACK_IMPORTED_MODULE_6_axios___default.a.get(ptam_globals.rest_url + 'ptam/v1/get_terms/' + default_taxonomy_name).then(function (response) {
-	$.each(response.data, function (key, value) {
-		terms.push({ 'value': value.term_id, 'label': value.name });
-	});
-});
+axios.get(ptam_globals.rest_url + 'ptam/v1/get_terms/' + default_taxonomy_name ).then( ( response ) => {
+	$.each( response.data, function( key, value ) {
+		terms.push( { 'value': value.term_id, 'label': value.name } );
+	} );
+});*/
 
 var MAX_POSTS_COLUMNS = 4;
 
@@ -19260,10 +19243,92 @@ var PTAM_Custom_Posts = function (_Component) {
 		_this.toggleDisplayPostAuthor = _this.toggleDisplayPostAuthor.bind(_this);
 		_this.toggleDisplayPostImage = _this.toggleDisplayPostImage.bind(_this);
 		_this.toggleDisplayPostLink = _this.toggleDisplayPostLink.bind(_this);
+		_this.get_latest_data = _this.get_latest_data.bind(_this);
+
+		var default_post_type = 'post';
+		var default_taxonomy_name = 'category';
+		var taxonomies = [];
+		var terms = [{ 'value': 0, 'label': 'All' }];
+		var ptam_latest_posts = [];
+
+		_this.state = {
+			loading: true,
+			postType: 'post',
+			taxonomy: 'category',
+			term: 'all',
+			latestPosts: [],
+			postTypeList: [],
+			taxonomyList: [],
+			termsList: []
+		};
+
+		_this.get_latest_data();
 		return _this;
 	}
 
 	_createClass(PTAM_Custom_Posts, [{
+		key: 'get_latest_data',
+		value: function get_latest_data() {
+			var _this2 = this;
+
+			var object = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
+			this.setState({ 'loading': true });
+			var latestPosts = [];
+			var postTypeList = [];
+			var taxonomyList = [];
+			var termsList = [];
+			var props = jQuery.extend({}, this.props.attributes, object);
+			var postType = props.postType,
+			    order = props.order,
+			    orderBy = props.orderBy,
+			    taxonomy = props.taxonomy,
+			    term = props.term,
+			    terms = props.terms,
+			    postsToShow = props.postsToShow;
+
+			console.log(order);
+
+			// Get Latest Posts and Chain Promises
+			__WEBPACK_IMPORTED_MODULE_6_axios___default.a.get(ptam_globals.rest_url + 'wp/v2/' + postType + ('s?order=' + order + '&orderby=' + orderBy + '&taxonomy=' + taxonomy + '&term=' + term + '&posts_per_page=' + postsToShow)).then(function (response) {
+				latestPosts = response.data;
+
+				// Get Post Types
+				__WEBPACK_IMPORTED_MODULE_6_axios___default.a.get(ptam_globals.rest_url + 'wp/v2/types').then(function (response) {
+					$.each(response.data, function (key, value) {
+						if ('attachment' != key && 'wp_block' != key) {
+							postTypeList.push({ 'value': key, 'label': value.name });
+						}
+					});
+
+					// Get Terms
+					__WEBPACK_IMPORTED_MODULE_6_axios___default.a.get(ptam_globals.rest_url + 'ptam/v1/get_terms/' + taxonomy).then(function (response) {
+						$.each(response.data, function (key, value) {
+							termsList.push({ 'value': value.term_id, 'label': value.name });
+						});
+
+						// Get Taxonomies
+						__WEBPACK_IMPORTED_MODULE_6_axios___default.a.get(ptam_globals.rest_url + 'wp/v2/taxonomies').then(function (response) {
+							$.each(response.data, function (key, value) {
+								if (value.types.includes(postType)) {
+									taxonomyList.push({ 'value': key, 'label': value.name });
+								}
+							});
+
+							// Now Set State
+							_this2.setState({
+								'loading': false,
+								'latestPosts': latestPosts,
+								'postTypeList': postTypeList,
+								'taxonomyList': taxonomyList,
+								'termsList': termsList
+							});
+						});
+					});
+				});
+			});
+		}
+	}, {
 		key: 'toggleDisplayPostDate',
 		value: function toggleDisplayPostDate() {
 			var displayPostDate = this.props.attributes.displayPostDate;
@@ -19320,10 +19385,10 @@ var PTAM_Custom_Posts = function (_Component) {
 	}, {
 		key: 'render',
 		value: function render() {
-			var _this2 = this,
+			var _this3 = this,
 			    _classnames;
 
-			if (postTypeList.length == 0) {
+			if (this.state.loading) {
 				return wp.element.createElement(
 					'div',
 					null,
@@ -19332,9 +19397,7 @@ var PTAM_Custom_Posts = function (_Component) {
 			}
 			var _props = this.props,
 			    attributes = _props.attributes,
-			    categoriesList = _props.categoriesList,
-			    setAttributes = _props.setAttributes,
-			    latestPosts = _props.latestPosts;
+			    setAttributes = _props.setAttributes;
 			var postType = attributes.postType,
 			    term = attributes.term,
 			    taxonomy = attributes.taxonomy,
@@ -19354,8 +19417,9 @@ var PTAM_Custom_Posts = function (_Component) {
 			    imageCrop = attributes.imageCrop,
 			    readMoreText = attributes.readMoreText;
 
-			// Thumbnail options
 
+			var latestPosts = this.state.latestPosts;
+			// Thumbnail options
 			var imageCropOptions = [{ value: 'landscape', label: __('Landscape') }, { value: 'square', label: __('Square') }];
 
 			var isLandscape = imageCrop === 'landscape';
@@ -19366,45 +19430,20 @@ var PTAM_Custom_Posts = function (_Component) {
 				wp.element.createElement(
 					PanelBody,
 					{ title: __('Post Grid Settings') },
-					wp.element.createElement(SelectControl, {
-						label: __('Post Type'),
-						options: postTypeList,
-						value: postType,
-						onChange: function onChange(value) {
-							return _this2.props.setAttributes({ postType: value });
-						}
-					}),
-					wp.element.createElement(SelectControl, {
-						label: __('Taxonomy'),
-						options: taxonomies,
-						value: taxonomy,
-						onChange: function onChange(value) {
-							return _this2.props.setAttributes({ imageCrop: value });
-						}
-					}),
-					wp.element.createElement(SelectControl, {
-						label: __('Terms'),
-						options: terms,
-						value: term,
-						onChange: function onChange(value) {
-							return _this2.props.setAttributes({ imageCrop: value });
-						}
-					}),
 					wp.element.createElement(QueryControls, _extends({ order: order, orderBy: orderBy }, {
 						numberOfItems: postsToShow,
-						categoriesList: categoriesList,
 						selectedCategoryId: categories,
 						onOrderChange: function onOrderChange(value) {
-							return setAttributes({ order: value });
+							_this3.props.setAttributes({ order: value });_this3.get_latest_data({ order: value });
 						},
 						onOrderByChange: function onOrderByChange(value) {
-							return setAttributes({ orderBy: value });
+							_this3.props.setAttributes({ orderBy: value });_this3.get_latest_data({ orderBy: value });
 						},
 						onCategoryChange: function onCategoryChange(value) {
-							return setAttributes({ categories: '' !== value ? value : undefined });
+							return _this3.props.setAttributes({ categories: '' !== value ? value : undefined });
 						},
 						onNumberOfItemsChange: function onNumberOfItemsChange(value) {
-							return setAttributes({ postsToShow: value });
+							return _this3.props.setAttributes({ postsToShow: value });
 						}
 					})),
 					postLayout === 'grid' && wp.element.createElement(RangeControl, {
@@ -19426,7 +19465,7 @@ var PTAM_Custom_Posts = function (_Component) {
 						options: imageCropOptions,
 						value: imageCrop,
 						onChange: function onChange(value) {
-							return _this2.props.setAttributes({ imageCrop: value });
+							return _this3.props.setAttributes({ imageCrop: value });
 						}
 					}),
 					wp.element.createElement(ToggleControl, {
@@ -19454,7 +19493,7 @@ var PTAM_Custom_Posts = function (_Component) {
 						type: 'text',
 						value: readMoreText,
 						onChange: function onChange(value) {
-							return _this2.props.setAttributes({ readMoreText: value });
+							return _this3.props.setAttributes({ readMoreText: value });
 						}
 					})
 				)
@@ -19599,48 +19638,7 @@ var PTAM_Custom_Posts = function (_Component) {
 	return PTAM_Custom_Posts;
 }(Component);
 
-var ptam_latest_posts = [];
-function ptam_get_latest_posts(postType, query) {
-	__WEBPACK_IMPORTED_MODULE_6_axios___default.a.get(ptam_globals.rest_url + 'wp/v2/' + postType + 's/?' + jQuery.param(query)).then(function (response) {
-		ptam_latest_posts = response.data;
-	});
-}
-
-/* harmony default export */ __webpack_exports__["a"] = (withSelect(function (select, props) {
-	var _props$attributes = props.attributes,
-	    postType = _props$attributes.postType,
-	    terms = _props$attributes.terms,
-	    taxonomy = _props$attributes.taxonomy,
-	    postsToShow = _props$attributes.postsToShow,
-	    order = _props$attributes.order,
-	    orderBy = _props$attributes.orderBy,
-	    context = _props$attributes.context;
-
-	var _select = select('core'),
-	    getEntityRecords = _select.getEntityRecords;
-
-	var latestPostsQuery = __WEBPACK_IMPORTED_MODULE_2_lodash_pickBy___default()({
-		postType: postType,
-		taxonomy: taxonomy,
-		terms: terms,
-		order: order,
-		orderby: orderBy,
-		per_page: postsToShow,
-		context: 'view'
-	}, function (value) {
-		return !__WEBPACK_IMPORTED_MODULE_1_lodash_isUndefined___default()(value);
-	});
-	var categoriesListQuery = {
-		per_page: 100
-	};
-	ptam_get_latest_posts(postType, latestPostsQuery);
-	if (ptam_latest_posts.length > 0) {
-		return {
-			latestPosts: ptam_latest_posts,
-			categoriesList: getEntityRecords(taxonomy, terms, categoriesListQuery)
-		};
-	}
-})(PTAM_Custom_Posts));
+/* harmony default export */ __webpack_exports__["a"] = (PTAM_Custom_Posts);
 
 /***/ }),
 /* 508 */
