@@ -8,6 +8,7 @@ import pickBy from 'lodash/pickBy';
 import moment from 'moment';
 import classnames from 'classnames';
 import { stringify } from 'querystringify';
+import axios from 'axios';
 
 const { Component, Fragment } = wp.element;
 
@@ -40,6 +41,28 @@ const {
 	BlockAlignmentToolbar,
 	BlockControls,
 } = wp.editor;
+
+let postTypeList = [];
+let taxonomies = [];
+
+const default_post_type = 'post';
+const default_taxonomy_name = 'category';
+
+axios.get(ptam_globals.rest_url + 'wp/v2/types').then( ( response ) => {
+	$.each( response.data, function( key, value ) {
+		if( 'attachment' != key && 'wp_block' != key ) {
+			postTypeList.push( { 'value': key, 'label': value.name } );
+		}
+	} );
+});
+axios.get(ptam_globals.rest_url + 'wp/v2/taxonomies').then( ( response ) => {
+	$.each( response.data, function( key, value ) {
+		if( value.types.includes(default_post_type)) {
+			taxonomies.push( { 'value': key, 'label': value.name } );
+		}
+	} );
+});
+
 
 const MAX_POSTS_COLUMNS = 4;
 
@@ -97,8 +120,11 @@ class PTAM_Custom_Posts extends Component {
 	}
 
 	render() {
-		const { attributes, categoriesList, setAttributes, latestPosts } = this.props;
-		const { displayPostDate, displayPostExcerpt, displayPostAuthor, displayPostImage,displayPostLink, align, postLayout, columns, order, orderBy, categories, postsToShow, width, imageCrop, readMoreText } = attributes;
+		if( postTypeList.length == 0 ) {
+			return <div>Loading...</div>
+		}
+		const { attributes, taxonomyList, categoriesList, setAttributes, latestPosts } = this.props;
+		const { postType, displayPostDate, displayPostExcerpt, displayPostAuthor, displayPostImage,displayPostLink, align, postLayout, columns, order, orderBy, taxonomy, categories, postsToShow, width, imageCrop, readMoreText } = attributes;
 
 		// Thumbnail options
 		const imageCropOptions = [
@@ -107,11 +133,25 @@ class PTAM_Custom_Posts extends Component {
 		];
 
 		const isLandscape = imageCrop === 'landscape';
-
+		
 		const inspectorControls = (
 			<InspectorControls>
 				<PanelBody title={ __( 'Post Grid Settings' ) }>
+					{console.log(postTypeList)}
+					<SelectControl
+							label={ __( 'Post Type' ) }
+							options={ postTypeList }
+							value={ postType }
+							onChange={ ( value ) => this.props.setAttributes( { imageCrop: value } ) }
+					/>
+					<SelectControl
+							label={ __( 'Taxonomy' ) }
+							options={ taxonomies }
+							value={ taxonomy }
+							onChange={ ( value ) => this.props.setAttributes( { imageCrop: value } ) }
+					/>
 					<QueryControls
+						postType={ postTypeList }
 						{ ...{ order, orderBy } }
 						numberOfItems={ postsToShow }
 						categoriesList={ categoriesList }
@@ -183,7 +223,7 @@ class PTAM_Custom_Posts extends Component {
 					{ inspectorControls }
 					<Placeholder
 						icon="admin-post"
-						label={ __( 'Atomic Blocks Post Grid' ) }
+						label={ __( 'Custom Posts Grid' ) }
 					>
 						{ ! Array.isArray( latestPosts ) ?
 							<Spinner /> :
@@ -298,9 +338,11 @@ class PTAM_Custom_Posts extends Component {
 }
 
 export default withSelect( ( select, props ) => {
-	const { postsToShow, order, orderBy, categories } = props.attributes;
+	const { postType, taxonomy, postsToShow, order, orderBy, categories } = props.attributes;
 	const { getEntityRecords } = select( 'core' );
 	const latestPostsQuery = pickBy( {
+		postType,
+		taxonomy,
 		categories,
 		order,
 		orderby: orderBy,
@@ -310,7 +352,7 @@ export default withSelect( ( select, props ) => {
 		per_page: 100,
 	};
 	return {
-		latestPosts: getEntityRecords( 'postType', 'post', latestPostsQuery ),
-		categoriesList: getEntityRecords( 'taxonomy', 'category', categoriesListQuery ),
+		latestPosts: getEntityRecords( 'postType', postType, latestPostsQuery ),
+		categoriesList: getEntityRecords( taxonomy, categories, categoriesListQuery ),
 	};
 } )( PTAM_Custom_Posts );

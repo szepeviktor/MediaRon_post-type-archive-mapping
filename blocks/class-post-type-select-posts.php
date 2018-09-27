@@ -1,4 +1,5 @@
 <?php
+require 'init.php';
 /**
  * Renders the post grid block on server.
  */
@@ -174,15 +175,12 @@ function ptam_register_custom_posts_block() {
 	if ( ! function_exists( 'register_block_type' ) ) {
 		return;
 	}
-	
-	wp_register_script(
-		'ptam-custom-posts-gutenberg',
-		PostTypeArchiveMapping::get_plugin_url( 'assets/dist/js/gutenberg.js' ,
-		array( 'wp-blocks', 'wp-element' )
-	) );
 
 	register_block_type( 'ptam/custom-posts', array(
 		'attributes' => array(
+			'postType' => array(
+				'type' => 'string',
+			),
 			'categories' => array(
 				'type' => 'string',
 			),
