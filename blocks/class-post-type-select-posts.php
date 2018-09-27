@@ -180,6 +180,15 @@ function ptam_register_custom_posts_block() {
 		'attributes' => array(
 			'postType' => array(
 				'type' => 'string',
+				'default' => 'post',
+			),
+			'taxonomy' => array(
+				'type' => 'string',
+				'default' => 'category',
+			),
+			'terms' => array(
+				'type' => 'string',
+				'default' => 'all',
 			),
 			'categories' => array(
 				'type' => 'string',

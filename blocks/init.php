@@ -61,3 +61,30 @@ function ptam_blocks_editor_assets() {
 	);
 }
 add_action( 'enqueue_block_editor_assets', 'ptam_blocks_editor_assets' );
+
+/**
+ * Return terms for taxonomy
+ *
+ * @since 1.0.0
+ * @param WP_REST_Request $tax_data
+ */
+function ptam_get_all_terms($tax_data) {
+	$taxonomy = $tax_data['taxonomy'];
+	$terms = get_terms( array(
+		'taxonomy' => $taxonomy,
+		'hide_empty' => true
+	) );
+	wp_send_json($terms);
+}
+/**
+ * Register route for getting taxonomy terms
+ *
+ * @since 1.0.0
+ */
+function ptam_register_route() {
+	register_rest_route('ptam/v1', '/get_terms/(?P<taxonomy>[-a-zA-Z]+)', array(
+		'methods' => 'GET',
+		'callback' => 'ptam_get_all_terms',
+	));
+}
+add_action('rest_api_init', 'ptam_register_route' );

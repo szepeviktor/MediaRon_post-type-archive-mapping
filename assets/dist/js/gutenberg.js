@@ -19220,6 +19220,7 @@ var _wp$editor = wp.editor,
 
 var postTypeList = [];
 var taxonomies = [];
+var terms = [{ 'value': 0, 'label': 'All' }];
 
 var default_post_type = 'post';
 var default_taxonomy_name = 'category';
@@ -19236,6 +19237,13 @@ __WEBPACK_IMPORTED_MODULE_6_axios___default.a.get(ptam_globals.rest_url + 'wp/v2
 		if (value.types.includes(default_post_type)) {
 			taxonomies.push({ 'value': key, 'label': value.name });
 		}
+	});
+});
+__WEBPACK_IMPORTED_MODULE_6_axios___default.a.get(ptam_globals.rest_url + 'ptam/v1/get_terms/' + default_taxonomy_name).then(function (response) {
+	console.log(response);
+	console.log('test');
+	$.each(response.data, function (key, value) {
+		terms.push({ 'value': value.term_id, 'label': value.name });
 	});
 });
 
@@ -19331,6 +19339,8 @@ var PTAM_Custom_Posts = function (_Component) {
 			    setAttributes = _props.setAttributes,
 			    latestPosts = _props.latestPosts;
 			var postType = attributes.postType,
+			    term = attributes.term,
+			    taxonomy = attributes.taxonomy,
 			    displayPostDate = attributes.displayPostDate,
 			    displayPostExcerpt = attributes.displayPostExcerpt,
 			    displayPostAuthor = attributes.displayPostAuthor,
@@ -19341,7 +19351,6 @@ var PTAM_Custom_Posts = function (_Component) {
 			    columns = attributes.columns,
 			    order = attributes.order,
 			    orderBy = attributes.orderBy,
-			    taxonomy = attributes.taxonomy,
 			    categories = attributes.categories,
 			    postsToShow = attributes.postsToShow,
 			    width = attributes.width,
@@ -19360,7 +19369,6 @@ var PTAM_Custom_Posts = function (_Component) {
 				wp.element.createElement(
 					PanelBody,
 					{ title: __('Post Grid Settings') },
-					console.log(postTypeList),
 					wp.element.createElement(SelectControl, {
 						label: __('Post Type'),
 						options: postTypeList,
@@ -19373,6 +19381,14 @@ var PTAM_Custom_Posts = function (_Component) {
 						label: __('Taxonomy'),
 						options: taxonomies,
 						value: taxonomy,
+						onChange: function onChange(value) {
+							return _this2.props.setAttributes({ imageCrop: value });
+						}
+					}),
+					wp.element.createElement(SelectControl, {
+						label: __('Terms'),
+						options: terms,
+						value: term,
 						onChange: function onChange(value) {
 							return _this2.props.setAttributes({ imageCrop: value });
 						}
@@ -19592,6 +19608,7 @@ var PTAM_Custom_Posts = function (_Component) {
 /* harmony default export */ __webpack_exports__["a"] = (withSelect(function (select, props) {
 	var _props$attributes = props.attributes,
 	    postType = _props$attributes.postType,
+	    terms = _props$attributes.terms,
 	    taxonomy = _props$attributes.taxonomy,
 	    postsToShow = _props$attributes.postsToShow,
 	    order = _props$attributes.order,
@@ -19604,7 +19621,7 @@ var PTAM_Custom_Posts = function (_Component) {
 	var latestPostsQuery = __WEBPACK_IMPORTED_MODULE_2_lodash_pickBy___default()({
 		postType: postType,
 		taxonomy: taxonomy,
-		categories: categories,
+		terms: terms,
 		order: order,
 		orderby: orderBy,
 		per_page: postsToShow
@@ -19616,7 +19633,7 @@ var PTAM_Custom_Posts = function (_Component) {
 	};
 	return {
 		latestPosts: getEntityRecords('postType', postType, latestPostsQuery),
-		categoriesList: getEntityRecords(taxonomy, categories, categoriesListQuery)
+		categoriesList: getEntityRecords(taxonomy, terms, categoriesListQuery)
 	};
 })(PTAM_Custom_Posts));
 

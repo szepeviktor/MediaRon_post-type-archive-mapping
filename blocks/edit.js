@@ -44,6 +44,7 @@ const {
 
 let postTypeList = [];
 let taxonomies = [];
+let terms = [{'value': 0, 'label': 'All'}];
 
 const default_post_type = 'post';
 const default_taxonomy_name = 'category';
@@ -62,7 +63,13 @@ axios.get(ptam_globals.rest_url + 'wp/v2/taxonomies').then( ( response ) => {
 		}
 	} );
 });
-
+axios.get(ptam_globals.rest_url + 'ptam/v1/get_terms/' + default_taxonomy_name ).then( ( response ) => {
+	console.log( response );
+	console.log( 'test' );
+	$.each( response.data, function( key, value ) {
+		terms.push( { 'value': value.term_id, 'label': value.name } );
+	} );
+});
 
 const MAX_POSTS_COLUMNS = 4;
 
@@ -124,7 +131,7 @@ class PTAM_Custom_Posts extends Component {
 			return <div>Loading...</div>
 		}
 		const { attributes, taxonomyList, categoriesList, setAttributes, latestPosts } = this.props;
-		const { postType, displayPostDate, displayPostExcerpt, displayPostAuthor, displayPostImage,displayPostLink, align, postLayout, columns, order, orderBy, taxonomy, categories, postsToShow, width, imageCrop, readMoreText } = attributes;
+		const { postType, term, taxonomy, displayPostDate, displayPostExcerpt, displayPostAuthor, displayPostImage,displayPostLink, align, postLayout, columns, order, orderBy, categories, postsToShow, width, imageCrop, readMoreText } = attributes;
 
 		// Thumbnail options
 		const imageCropOptions = [
@@ -137,7 +144,6 @@ class PTAM_Custom_Posts extends Component {
 		const inspectorControls = (
 			<InspectorControls>
 				<PanelBody title={ __( 'Post Grid Settings' ) }>
-					{console.log(postTypeList)}
 					<SelectControl
 							label={ __( 'Post Type' ) }
 							options={ postTypeList }
@@ -148,6 +154,12 @@ class PTAM_Custom_Posts extends Component {
 							label={ __( 'Taxonomy' ) }
 							options={ taxonomies }
 							value={ taxonomy }
+							onChange={ ( value ) => this.props.setAttributes( { imageCrop: value } ) }
+					/>
+					<SelectControl
+							label={ __( 'Terms' ) }
+							options={ terms }
+							value={ term }
 							onChange={ ( value ) => this.props.setAttributes( { imageCrop: value } ) }
 					/>
 					<QueryControls
@@ -338,12 +350,12 @@ class PTAM_Custom_Posts extends Component {
 }
 
 export default withSelect( ( select, props ) => {
-	const { postType, taxonomy, postsToShow, order, orderBy, categories } = props.attributes;
+	const { postType, terms, taxonomy, postsToShow, order, orderBy, categories } = props.attributes;
 	const { getEntityRecords } = select( 'core' );
 	const latestPostsQuery = pickBy( {
 		postType,
 		taxonomy,
-		categories,
+		terms,
 		order,
 		orderby: orderBy,
 		per_page: postsToShow,
@@ -353,6 +365,6 @@ export default withSelect( ( select, props ) => {
 	};
 	return {
 		latestPosts: getEntityRecords( 'postType', postType, latestPostsQuery ),
-		categoriesList: getEntityRecords( taxonomy, categories, categoriesListQuery ),
+		categoriesList: getEntityRecords( taxonomy, terms, categoriesListQuery ),
 	};
 } )( PTAM_Custom_Posts );
