@@ -47,6 +47,7 @@ class PostTypeArchiveMapping {
 	private function __construct() {
 		add_action( 'init', array( $this, 'init' ), 9 );
 		load_plugin_textdomain( 'post-type-archive-mapping', false, basename( dirname( __FILE__ ) ) . '/languages' );
+		include 'blocks/class-post-type-select-posts.php';
 	} //end constructor
 
 	/**
@@ -99,6 +100,20 @@ class PostTypeArchiveMapping {
 				$this->paged_reset = true;
 			}
 		}
+	}
+	
+	public static function get_plugin_dir( $path = '' ) {
+		$dir = rtrim( plugin_dir_path(__FILE__), '/' );
+		if ( !empty( $path ) && is_string( $path) )
+			$dir .= '/' . ltrim( $path, '/' );
+		return $dir;		
+	}
+	//Returns the plugin url
+	public static function get_plugin_url( $path = '' ) {
+		$dir = rtrim( plugin_dir_url(__FILE__), '/' );
+		if ( !empty( $path ) && is_string( $path) )
+			$dir .= '/' . ltrim( $path, '/' );
+		return $dir;	
 	}
 	
 	/**
