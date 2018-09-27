@@ -19430,6 +19430,14 @@ var PTAM_Custom_Posts = function (_Component) {
 				wp.element.createElement(
 					PanelBody,
 					{ title: __('Post Grid Settings') },
+					wp.element.createElement(SelectControl, {
+						label: __('Post Type'),
+						options: this.state.postTypeList,
+						value: postType,
+						onChange: function onChange(value) {
+							_this3.props.setAttributes({ postType: value });_this3.get_latest_data({ postType: value });
+						}
+					}),
 					wp.element.createElement(QueryControls, _extends({ order: order, orderBy: orderBy }, {
 						numberOfItems: postsToShow,
 						selectedCategoryId: categories,
@@ -19597,7 +19605,7 @@ var PTAM_Custom_Posts = function (_Component) {
 									wp.element.createElement(
 										'div',
 										{ 'class': 'ab-block-post-grid-byline' },
-										displayPostAuthor && post.author_info.display_name && wp.element.createElement(
+										displayPostAuthor && post.author_info.display_name !== 'undefined' && post.author_info.display_name && wp.element.createElement(
 											'div',
 											{ 'class': 'ab-block-post-grid-author' },
 											wp.element.createElement(

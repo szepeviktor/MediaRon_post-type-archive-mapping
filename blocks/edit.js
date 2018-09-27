@@ -204,6 +204,12 @@ class PTAM_Custom_Posts extends Component {
 		const inspectorControls = (
 			<InspectorControls>
 				<PanelBody title={ __( 'Post Grid Settings' ) }>
+					<SelectControl
+							label={ __( 'Post Type' ) }
+							options={ this.state.postTypeList }
+							value={ postType }
+							onChange={ ( value ) => { this.props.setAttributes( { postType: value } ); this.get_latest_data({postType: value }); } } 
+					/>
 					<QueryControls
 						{ ...{ order, orderBy } }
 						numberOfItems={ postsToShow }
@@ -358,7 +364,7 @@ class PTAM_Custom_Posts extends Component {
 									<h2 class="entry-title"><a href={ post.link } target="_blank" rel="bookmark">{ decodeEntities( post.title.rendered.trim() ) || __( '(Untitled)' ) }</a></h2>
 
 									<div class="ab-block-post-grid-byline">
-										{ displayPostAuthor && post.author_info.display_name &&
+										{ displayPostAuthor && post.author_info.display_name !== 'undefined' && post.author_info.display_name &&
 											<div class="ab-block-post-grid-author"><a class="ab-text-link" target="_blank" href={ post.author_info.author_link }>{ post.author_info.display_name }</a></div>
 										}
 
