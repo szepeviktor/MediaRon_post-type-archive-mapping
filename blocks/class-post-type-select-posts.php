@@ -5,7 +5,8 @@ require 'init.php';
  */
 function ptam_custom_posts( $attributes ) {
 	$recent_posts = wp_get_recent_posts( array(
-		'numberposts' => $attributes['postsToShow'],
+		'post_type' => $attributes['postType'],
+		'posts_per_page' => $attributes['postsToShow'],
 		'post_status' => 'publish',
 		'order' => $attributes['order'],
 		'orderby' => $attributes['orderBy'],
@@ -186,12 +187,20 @@ function ptam_register_custom_posts_block() {
 				'type' => 'string',
 				'default' => 'category',
 			),
+			'term' => array(
+				'type' => 'number',
+				'default' => 0,
+			),
 			'terms' => array(
 				'type' => 'string',
 				'default' => 'all',
 			),
 			'categories' => array(
 				'type' => 'string',
+			),
+			'context' => array(
+				'type' => 'string',
+				'default' => 'view',
 			),
 			'className' => array(
 				'type' => 'string',
