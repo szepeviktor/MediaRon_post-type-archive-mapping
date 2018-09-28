@@ -274,40 +274,56 @@ add_action( 'init', 'ptam_register_custom_posts_block' );
  * Create API fields for additional info
  */
 function ptam_register_rest_fields() {
-	// Add landscape featured image source
-	register_rest_field(
-		'post',
-		'featured_image_src',
-		array(
-			'get_callback' => 'ptam_get_src_landscape',
-			'update_callback' => null,
-			'schema' => null,
-		)
-	);
-
-	// Add square featured image source
-	register_rest_field(
-		'post',
-		'featured_image_src_square',
-		array(
-			'get_callback' => 'ptam_get_src_square',
-			'update_callback' => null,
-			'schema' => null,
-		)
-	);
+	$post_types = get_post_types( array(
+		'public' => 'true',
+		'show_in_rest' => true
+	) );
+	foreach( $post_types as $name => $label ) {
+		if( 'attachment' == $name ) continue;
+		// Add landscape featured image source
+		register_rest_field(
+			$name,
+			'featured_image_src',
+			array(
+				'get_callback' => 'ptam_get_src_landscape',
+				'update_callback' => null,
+				'schema' => null,
+			)
+		);
 	
-	// Add author info
-	register_rest_field(
-		'post',
-		'author_info',
-		array(
-			'get_callback' => 'ptam_get_author_info',
-			'update_callback' => null,
-			'schema' => null,
-		)
-	);
+		// Add square featured image source
+		register_rest_field(
+			$name,
+			'featured_image_src_square',
+			array(
+				'get_callback' => 'ptam_get_src_square',
+				'update_callback' => null,
+				'schema' => null,
+			)
+		);
+		
+		// Add author info
+		register_rest_field(
+			$name,
+			'author_info',
+			array(
+				'get_callback' => 'ptam_get_author_info',
+				'update_callback' => null,
+				'schema' => null,
+			)
+		);
+		
+	}
+	
 }
 add_action( 'rest_api_init', 'ptam_register_rest_fields' );
+
+function ptam_blocks_image_sizes() {
+	// Post Grid Block
+	add_image_size( 'ptam-block-post-grid-landscape', 600, 400, true );
+	add_image_size( 'ptam-block-post-grid-square', 600, 600, true );
+}
+add_action( 'after_setup_theme', 'ptam_blocks_image_sizes' );
 
 
 /**
@@ -338,6 +354,8 @@ function ptam_get_src_square( $object, $field_name, $request ) {
  * Get author info for the rest field
  */
 function ptam_get_author_info( $object, $field_name, $request ) {
+	
+	error_log( print_r( $object, true ) );
 	// Get the author name
 	$author_data['display_name'] = get_the_author_meta( 'display_name', $object['author'] );
 	

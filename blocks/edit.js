@@ -42,23 +42,6 @@ const {
 } = wp.editor;
 
 
-
-
-
-
-/*axios.get(ptam_globals.rest_url + 'wp/v2/taxonomies').then( ( response ) => {
-	$.each( response.data, function( key, value ) {
-		if( value.types.includes(default_post_type)) {
-			taxonomies.push( { 'value': key, 'label': value.name } );
-		}
-	} );
-});
-axios.get(ptam_globals.rest_url + 'ptam/v1/get_terms/' + default_taxonomy_name ).then( ( response ) => {
-	$.each( response.data, function( key, value ) {
-		terms.push( { 'value': value.term_id, 'label': value.name } );
-	} );
-});*/
-
 const MAX_POSTS_COLUMNS = 4;
 
 class PTAM_Custom_Posts extends Component {
@@ -99,11 +82,10 @@ class PTAM_Custom_Posts extends Component {
 		let taxonomyList = [];
 		let termsList = [];
 		const props = jQuery.extend({}, this.props.attributes, object);
-		const { postType, order, orderBy, taxonomy, term, terms, postsToShow } = props;
-		console.log(order);
+		const { postType, order, orderBy, taxonomy, term, terms, postsToShow, imageCrop } = props;
 		
 		// Get Latest Posts and Chain Promises
-		axios.get(ptam_globals.rest_url + 'wp/v2/' + postType + `s?order=${order}&orderby=${orderBy}&taxonomy=${taxonomy}&term=${term}&posts_per_page=${postsToShow}`).then( ( response ) => { 
+		axios.get(ptam_globals.rest_url + `ptam/v1/get_posts/${postType}/${order}/${orderBy}/${taxonomy}/${term}/${postsToShow}/${imageCrop}`).then( ( response ) => { 
 				latestPosts = response.data;
 				
 				// Get Post Types
@@ -351,7 +333,7 @@ class PTAM_Custom_Posts extends Component {
 											<a href={ post.link } target="_blank" rel="bookmark">
 												<img
 													src={ isLandscape ? post.featured_image_src : post.featured_image_src_square }
-													alt={ decodeEntities( post.title.rendered.trim() ) || __( '(Untitled)' ) }
+													alt={ decodeEntities( post.post_title.trim() ) || __( '(Untitled)' ) }
 												/>
 											</a>
 										</div>
@@ -361,7 +343,7 @@ class PTAM_Custom_Posts extends Component {
 								}
 
 								<div class="ab-block-post-grid-text">
-									<h2 class="entry-title"><a href={ post.link } target="_blank" rel="bookmark">{ decodeEntities( post.title.rendered.trim() ) || __( '(Untitled)' ) }</a></h2>
+									<h2 class="entry-title"><a href={ post.link } target="_blank" rel="bookmark">{ decodeEntities( post.post_title.trim() ) || __( '(Untitled)' ) }</a></h2>
 
 									<div class="ab-block-post-grid-byline">
 										{ displayPostAuthor && post.author_info.display_name !== 'undefined' && post.author_info.display_name &&
@@ -377,7 +359,7 @@ class PTAM_Custom_Posts extends Component {
 
 									<div class="ab-block-post-grid-excerpt">
 										{ displayPostExcerpt && post.excerpt &&
-											<div dangerouslySetInnerHTML={ { __html: post.excerpt.rendered } } />
+											<div dangerouslySetInnerHTML={ { __html: post.excerpt } } />
 										}
 
 										{ displayPostLink &&

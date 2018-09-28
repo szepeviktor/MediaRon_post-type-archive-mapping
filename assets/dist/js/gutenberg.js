@@ -19215,18 +19215,6 @@ var _wp$editor = wp.editor,
     BlockAlignmentToolbar = _wp$editor.BlockAlignmentToolbar,
     BlockControls = _wp$editor.BlockControls;
 
-/*axios.get(ptam_globals.rest_url + 'wp/v2/taxonomies').then( ( response ) => {
-	$.each( response.data, function( key, value ) {
-		if( value.types.includes(default_post_type)) {
-			taxonomies.push( { 'value': key, 'label': value.name } );
-		}
-	} );
-});
-axios.get(ptam_globals.rest_url + 'ptam/v1/get_terms/' + default_taxonomy_name ).then( ( response ) => {
-	$.each( response.data, function( key, value ) {
-		terms.push( { 'value': value.term_id, 'label': value.name } );
-	} );
-});*/
 
 var MAX_POSTS_COLUMNS = 4;
 
@@ -19285,12 +19273,12 @@ var PTAM_Custom_Posts = function (_Component) {
 			    taxonomy = props.taxonomy,
 			    term = props.term,
 			    terms = props.terms,
-			    postsToShow = props.postsToShow;
-
-			console.log(order);
+			    postsToShow = props.postsToShow,
+			    imageCrop = props.imageCrop;
 
 			// Get Latest Posts and Chain Promises
-			__WEBPACK_IMPORTED_MODULE_6_axios___default.a.get(ptam_globals.rest_url + 'wp/v2/' + postType + ('s?order=' + order + '&orderby=' + orderBy + '&taxonomy=' + taxonomy + '&term=' + term + '&posts_per_page=' + postsToShow)).then(function (response) {
+
+			__WEBPACK_IMPORTED_MODULE_6_axios___default.a.get(ptam_globals.rest_url + ('ptam/v1/get_posts/' + postType + '/' + order + '/' + orderBy + '/' + taxonomy + '/' + term + '/' + postsToShow + '/' + imageCrop)).then(function (response) {
 				latestPosts = response.data;
 
 				// Get Post Types
@@ -19586,7 +19574,7 @@ var PTAM_Custom_Posts = function (_Component) {
 										{ href: post.link, target: '_blank', rel: 'bookmark' },
 										wp.element.createElement('img', {
 											src: isLandscape ? post.featured_image_src : post.featured_image_src_square,
-											alt: decodeEntities(post.title.rendered.trim()) || __('(Untitled)')
+											alt: decodeEntities(post.post_title.trim()) || __('(Untitled)')
 										})
 									)
 								) : null,
@@ -19599,7 +19587,7 @@ var PTAM_Custom_Posts = function (_Component) {
 										wp.element.createElement(
 											'a',
 											{ href: post.link, target: '_blank', rel: 'bookmark' },
-											decodeEntities(post.title.rendered.trim()) || __('(Untitled)')
+											decodeEntities(post.post_title.trim()) || __('(Untitled)')
 										)
 									),
 									wp.element.createElement(
@@ -19623,7 +19611,7 @@ var PTAM_Custom_Posts = function (_Component) {
 									wp.element.createElement(
 										'div',
 										{ 'class': 'ab-block-post-grid-excerpt' },
-										displayPostExcerpt && post.excerpt && wp.element.createElement('div', { dangerouslySetInnerHTML: { __html: post.excerpt.rendered } }),
+										displayPostExcerpt && post.excerpt && wp.element.createElement('div', { dangerouslySetInnerHTML: { __html: post.excerpt } }),
 										displayPostLink && wp.element.createElement(
 											'p',
 											null,
