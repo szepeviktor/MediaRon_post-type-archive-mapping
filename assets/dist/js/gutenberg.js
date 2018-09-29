@@ -591,12 +591,11 @@ var PTAM_Custom_Posts = function (_Component) {
 
 			__WEBPACK_IMPORTED_MODULE_6_axios___default.a.get(ptam_globals.rest_url + ('ptam/v1/get_terms/' + taxonomy + '/' + postType)).then(function (response) {
 				if (response.data.length > 0) {
-					termsList.push({ 'value': 'all', 'label': __('All') });
+					termsList.push({ 'value': 0, 'label': __('All') });
+					$.each(response.data, function (key, value) {
+						termsList.push({ 'value': value.term_id, 'label': value.name });
+					});
 				}
-				$.each(response.data, function (key, value) {
-					termsList.push({ 'value': value.term_id, 'label': value.name });
-				});
-
 				_this3.setState({
 					'loading': false,
 					'termsList': termsList
@@ -641,11 +640,11 @@ var PTAM_Custom_Posts = function (_Component) {
 					// Get Terms
 					__WEBPACK_IMPORTED_MODULE_6_axios___default.a.get(ptam_globals.rest_url + ('ptam/v1/get_terms/' + taxonomy + '/' + postType)).then(function (response) {
 						if (response.data.length > 0) {
-							termsList.push({ 'value': 'all', 'label': __('All') });
+							termsList.push({ 'value': 0, 'label': __('All') });
+							$.each(response.data, function (key, value) {
+								termsList.push({ 'value': value.term_id, 'label': value.name });
+							});
 						}
-						$.each(response.data, function (key, value) {
-							termsList.push({ 'value': value.term_id, 'label': value.name });
-						});
 
 						// Get Taxonomies
 						__WEBPACK_IMPORTED_MODULE_6_axios___default.a.get(ptam_globals.rest_url + 'wp/v2/taxonomies').then(function (response) {
@@ -768,7 +767,7 @@ var PTAM_Custom_Posts = function (_Component) {
 						options: this.state.postTypeList,
 						value: postType,
 						onChange: function onChange(value) {
-							_this5.props.setAttributes({ postType: value });_this5.get_latest_data({ postType: value });
+							_this5.props.setAttributes({ postType: value, taxonomy: 'none', term: 0 });_this5.get_latest_data({ postType: value, taxonomy: 'none', term: 0 });
 						}
 					}),
 					wp.element.createElement(SelectControl, {

@@ -97,12 +97,11 @@ class PTAM_Custom_Posts extends Component {
 		const { postType, taxonomy } = props;
 		axios.get( ptam_globals.rest_url + `ptam/v1/get_terms/${taxonomy}/${postType}` ).then( ( response ) => {
 			if( response.data.length > 0 ) {
-				termsList.push( { 'value': 'all', 'label': __('All') } );
+				termsList.push( { 'value': 0, 'label': __('All') } );
+				$.each( response.data, function( key, value ) {
+					termsList.push( { 'value': value.term_id, 'label': value.name } );
+				} );
 			}
-			$.each( response.data, function( key, value ) {
-				termsList.push( { 'value': value.term_id, 'label': value.name } );
-			} );
-
 			this.setState( {
 				'loading': false,
 				'termsList': termsList,
@@ -134,11 +133,11 @@ class PTAM_Custom_Posts extends Component {
 					// Get Terms
 					axios.get(ptam_globals.rest_url + `ptam/v1/get_terms/${taxonomy}/${postType}` ).then( ( response ) => {
 						if( response.data.length > 0 ) {
-							termsList.push( { 'value': 'all', 'label': __('All') } );
+							termsList.push( { 'value': 0, 'label': __('All') } );
+							$.each( response.data, function( key, value ) {
+								termsList.push( { 'value': value.term_id, 'label': value.name } );
+							} );
 						}
-						$.each( response.data, function( key, value ) {
-							termsList.push( { 'value': value.term_id, 'label': value.name } );
-						} );
 						
 						// Get Taxonomies
 						axios.get(ptam_globals.rest_url + 'wp/v2/taxonomies').then( ( response ) => {
@@ -225,7 +224,7 @@ class PTAM_Custom_Posts extends Component {
 							label={ __( 'Post Type' ) }
 							options={ this.state.postTypeList }
 							value={ postType }
-							onChange={ ( value ) => { this.props.setAttributes( { postType: value } ); this.get_latest_data({postType: value }); } } 
+							onChange={ ( value ) => { this.props.setAttributes( { postType: value, taxonomy: 'none', term: 0 } ); this.get_latest_data({ postType: value, taxonomy: 'none', term: 0 }); } } 
 					/>
 					<SelectControl
 							label={ __( 'Taxonomy' ) }

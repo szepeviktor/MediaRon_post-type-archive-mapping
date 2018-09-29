@@ -100,7 +100,14 @@ function ptam_get_posts($post_data) {
 		'orderby' => $orderby,
 		'posts_per_page' => $posts_per_page
 	);
+	if( 'all' !== $term && '0' !== $term ) {
+		$post_args[ 'tax_query' ] = array( array(
+			'taxonomy' => $taxonomy,
+			'terms' => $term
+		) );
+	}
 	$posts = get_posts( $post_args );
+
 	foreach( $posts as &$post) {
 		
 		// Get thumbnail information
