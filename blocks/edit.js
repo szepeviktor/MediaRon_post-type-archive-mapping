@@ -183,9 +183,6 @@ class PTAM_Custom_Posts extends Component {
 	}
 
 	render() {
-		if( this.state.loading ) {
-			return <div>Loading...</div>
-		}
 		const { attributes, setAttributes } = this.props;
 		const { postType, term, taxonomy, displayPostDate, displayPostExcerpt, displayPostAuthor, displayPostImage,displayPostLink, align, postLayout, columns, order, orderBy, categories, postsToShow, width, imageCrop, readMoreText } = attributes;
 		
@@ -268,6 +265,22 @@ class PTAM_Custom_Posts extends Component {
 				</PanelBody>
 			</InspectorControls>
 		);
+		if( this.state.loading ) {
+			return (
+				<Fragment>
+					{ inspectorControls }
+					<Placeholder
+						icon="admin-post"
+						label={ __( 'Custom Posts Grid' ) }
+					>
+						{ ! Array.isArray( latestPosts ) ?
+							<Spinner /> :
+							__( 'Loading...' )
+						}
+					</Placeholder>
+				</Fragment>
+			)
+		}
 		const hasPosts = Array.isArray( latestPosts ) && latestPosts.length;
 		if ( ! hasPosts ) {
 			return (

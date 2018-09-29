@@ -698,13 +698,6 @@ var PTAM_Custom_Posts = function (_Component) {
 			var _this4 = this,
 			    _classnames;
 
-			if (this.state.loading) {
-				return wp.element.createElement(
-					'div',
-					null,
-					'Loading...'
-				);
-			}
 			var _props = this.props,
 			    attributes = _props.attributes,
 			    setAttributes = _props.setAttributes;
@@ -812,6 +805,21 @@ var PTAM_Custom_Posts = function (_Component) {
 					})
 				)
 			);
+			if (this.state.loading) {
+				return wp.element.createElement(
+					Fragment,
+					null,
+					inspectorControls,
+					wp.element.createElement(
+						Placeholder,
+						{
+							icon: 'admin-post',
+							label: __('Custom Posts Grid')
+						},
+						!Array.isArray(latestPosts) ? wp.element.createElement(Spinner, null) : __('Loading...')
+					)
+				);
+			}
 			var hasPosts = Array.isArray(latestPosts) && latestPosts.length;
 			if (!hasPosts) {
 				return wp.element.createElement(
