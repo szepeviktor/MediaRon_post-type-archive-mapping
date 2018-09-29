@@ -539,7 +539,7 @@ var PTAM_Custom_Posts = function (_Component) {
 			loading: true,
 			postType: 'post',
 			taxonomy: 'category',
-			term: 'all',
+			term: 0,
 			latestPosts: [],
 			postTypeList: [],
 			taxonomyList: [],
@@ -590,7 +590,7 @@ var PTAM_Custom_Posts = function (_Component) {
 			    taxonomy = props.taxonomy;
 
 			__WEBPACK_IMPORTED_MODULE_6_axios___default.a.get(ptam_globals.rest_url + ('ptam/v1/get_terms/' + taxonomy + '/' + postType)).then(function (response) {
-				if (response.data.length > 0) {
+				if (Object.keys(response.data).length > 0) {
 					termsList.push({ 'value': 0, 'label': __('All') });
 					$.each(response.data, function (key, value) {
 						termsList.push({ 'value': value.term_id, 'label': value.name });
@@ -639,7 +639,7 @@ var PTAM_Custom_Posts = function (_Component) {
 
 					// Get Terms
 					__WEBPACK_IMPORTED_MODULE_6_axios___default.a.get(ptam_globals.rest_url + ('ptam/v1/get_terms/' + taxonomy + '/' + postType)).then(function (response) {
-						if (response.data.length > 0) {
+						if (Object.keys(response.data).length > 0 && response.data.constructor === Object) {
 							termsList.push({ 'value': 0, 'label': __('All') });
 							$.each(response.data, function (key, value) {
 								termsList.push({ 'value': value.term_id, 'label': value.name });
@@ -648,11 +648,14 @@ var PTAM_Custom_Posts = function (_Component) {
 
 						// Get Taxonomies
 						__WEBPACK_IMPORTED_MODULE_6_axios___default.a.get(ptam_globals.rest_url + 'wp/v2/taxonomies').then(function (response) {
-							$.each(response.data, function (key, value) {
-								if (value.types.includes(postType)) {
-									taxonomyList.push({ 'value': key, 'label': value.name });
-								}
-							});
+							if (Object.keys(response.data).length > 0 && response.data.constructor === Object) {
+								taxonomyList.push({ 'value': 'none', 'label': __('Select a Taxonomy') });
+								$.each(response.data, function (key, value) {
+									if (value.types.includes(postType)) {
+										taxonomyList.push({ 'value': key, 'label': value.name });
+									}
+								});
+							}
 
 							// Now Set State
 							_this4.setState({
