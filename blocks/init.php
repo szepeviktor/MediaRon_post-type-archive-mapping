@@ -127,11 +127,11 @@ function ptam_get_posts($post_data) {
  * @since 1.0.0
  */
 function ptam_register_route() {
-	register_rest_route('ptam/v1', '/get_terms/(?P<taxonomy>[-a-zA-Z]+)', array(
+	register_rest_route('ptam/v1', '/get_terms/(?P<taxonomy>[-_a-zA-Z]+)', array(
 		'methods' => 'GET',
 		'callback' => 'ptam_get_all_terms',
 	));
-	register_rest_route('ptam/v1', '/get_posts/(?P<post_type>[a-zA-Z]+)/(?P<order>[a-zA-Z]+)/(?P<orderby>[a-zA-Z]+)/(?P<taxonomy>[-a-zA-Z]+)/(?P<term>\d+)/(?P<posts_per_page>\d+)/(?P<image_crop>[-a-zA-Z]+)', array(
+	register_rest_route('ptam/v1', '/get_posts/(?P<post_type>[a-zA-Z]+)/(?P<order>[a-zA-Z]+)/(?P<orderby>[a-zA-Z]+)/(?P<taxonomy>[-_a-zA-Z]+)/(?P<term>\d+)/(?P<posts_per_page>\d+)/(?P<image_crop>[-a-zA-Z]+)', array(
 		'methods' => 'GET',
 		'callback' => 'ptam_get_posts',
 	));

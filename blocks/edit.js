@@ -55,6 +55,7 @@ class PTAM_Custom_Posts extends Component {
 		this.toggleDisplayPostLink = this.toggleDisplayPostLink.bind( this );
 		this.get_latest_data = this.get_latest_data.bind(this);
 		this.get_latest_posts = this.get_latest_posts.bind(this);
+		this.get_term_list = this.get_term_list.bind(this);
 		
 		const default_post_type = 'post';
 		const default_taxonomy_name = 'category';
@@ -89,6 +90,22 @@ class PTAM_Custom_Posts extends Component {
 			} );
 		} );
 	}
+
+	get_term_list( object = {} ) {
+		let termsList = [];
+		const props = jQuery.extend({}, this.props.attributes, object);
+		const { postType, taxonomy } = props;
+		axios.get(ptam_globals.rest_url + 'ptam/v1/get_terms/' + taxonomy ).then( ( response ) => {
+			termsList.push( { 'value': 'all', 'label': __('All') } );
+			$.each( response.data, function( key, value ) {
+				termsList.push( { 'value': value.term_id, 'label': value.name } );
+			} );
+			this.setState( {
+				'loading': false,
+				'termsList': termsList,
+			} );
+		} );
+	}
 	
 	get_latest_data( object = {} ) {
 		this.setState( { 'loading': true } );
@@ -113,6 +130,7 @@ class PTAM_Custom_Posts extends Component {
 					
 					// Get Terms
 					axios.get(ptam_globals.rest_url + 'ptam/v1/get_terms/' + taxonomy ).then( ( response ) => {
+						termsList.push( { 'value': 'all', 'label': __('All') } );
 						$.each( response.data, function( key, value ) {
 							termsList.push( { 'value': value.term_id, 'label': value.name } );
 						} );
@@ -203,6 +221,18 @@ class PTAM_Custom_Posts extends Component {
 							options={ this.state.postTypeList }
 							value={ postType }
 							onChange={ ( value ) => { this.props.setAttributes( { postType: value } ); this.get_latest_data({postType: value }); } } 
+					/>
+					<SelectControl
+							label={ __( 'Taxonomy' ) }
+							options={ this.state.taxonomyList }
+							value={ taxonomy }
+							onChange={ ( value ) => { this.props.setAttributes( { taxonomy: value } ); this.get_term_list( { taxonomy: value } ); } }
+					/>
+					<SelectControl
+							label={ __( 'Terms' ) }
+							options={ this.state.termsList }
+							value={ term }
+							onChange={ ( value ) => { this.props.setAttributes( { term: value } ); this.get_latest_posts({ term: value }); } }
 					/>
 					<QueryControls
 						{ ...{ order, orderBy } }
