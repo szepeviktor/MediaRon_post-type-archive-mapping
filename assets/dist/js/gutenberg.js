@@ -589,11 +589,14 @@ var PTAM_Custom_Posts = function (_Component) {
 			var postType = props.postType,
 			    taxonomy = props.taxonomy;
 
-			__WEBPACK_IMPORTED_MODULE_6_axios___default.a.get(ptam_globals.rest_url + 'ptam/v1/get_terms/' + taxonomy).then(function (response) {
-				termsList.push({ 'value': 'all', 'label': __('All') });
+			__WEBPACK_IMPORTED_MODULE_6_axios___default.a.get(ptam_globals.rest_url + ('ptam/v1/get_terms/' + taxonomy + '/' + postType)).then(function (response) {
+				if (response.data.length > 0) {
+					termsList.push({ 'value': 'all', 'label': __('All') });
+				}
 				$.each(response.data, function (key, value) {
 					termsList.push({ 'value': value.term_id, 'label': value.name });
 				});
+
 				_this3.setState({
 					'loading': false,
 					'termsList': termsList
@@ -636,8 +639,10 @@ var PTAM_Custom_Posts = function (_Component) {
 					});
 
 					// Get Terms
-					__WEBPACK_IMPORTED_MODULE_6_axios___default.a.get(ptam_globals.rest_url + 'ptam/v1/get_terms/' + taxonomy).then(function (response) {
-						termsList.push({ 'value': 'all', 'label': __('All') });
+					__WEBPACK_IMPORTED_MODULE_6_axios___default.a.get(ptam_globals.rest_url + ('ptam/v1/get_terms/' + taxonomy + '/' + postType)).then(function (response) {
+						if (response.data.length > 0) {
+							termsList.push({ 'value': 'all', 'label': __('All') });
+						}
 						$.each(response.data, function (key, value) {
 							termsList.push({ 'value': value.term_id, 'label': value.name });
 						});

@@ -95,11 +95,14 @@ class PTAM_Custom_Posts extends Component {
 		let termsList = [];
 		const props = jQuery.extend({}, this.props.attributes, object);
 		const { postType, taxonomy } = props;
-		axios.get(ptam_globals.rest_url + 'ptam/v1/get_terms/' + taxonomy ).then( ( response ) => {
-			termsList.push( { 'value': 'all', 'label': __('All') } );
+		axios.get( ptam_globals.rest_url + `ptam/v1/get_terms/${taxonomy}/${postType}` ).then( ( response ) => {
+			if( response.data.length > 0 ) {
+				termsList.push( { 'value': 'all', 'label': __('All') } );
+			}
 			$.each( response.data, function( key, value ) {
 				termsList.push( { 'value': value.term_id, 'label': value.name } );
 			} );
+
 			this.setState( {
 				'loading': false,
 				'termsList': termsList,
@@ -129,8 +132,10 @@ class PTAM_Custom_Posts extends Component {
 					} );
 					
 					// Get Terms
-					axios.get(ptam_globals.rest_url + 'ptam/v1/get_terms/' + taxonomy ).then( ( response ) => {
-						termsList.push( { 'value': 'all', 'label': __('All') } );
+					axios.get(ptam_globals.rest_url + `ptam/v1/get_terms/${taxonomy}/${postType}` ).then( ( response ) => {
+						if( response.data.length > 0 ) {
+							termsList.push( { 'value': 'all', 'label': __('All') } );
+						}
 						$.each( response.data, function( key, value ) {
 							termsList.push( { 'value': value.term_id, 'label': value.name } );
 						} );
