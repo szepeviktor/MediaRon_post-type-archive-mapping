@@ -76,8 +76,25 @@ function ptam_get_all_terms($tax_data) {
 		'hide_empty' => true,
 		'post_type' => $post_type,
 	) );
-	wp_send_json($terms);
+	if( is_wp_error( $terms ) ) {
+		die( json_encode( '{}' ) );
+	} else {
+		die( json_encode( $terms ) );
+	}
 }
+
+/**
+ * Return Posts
+ *
+ * @since 1.0.0
+ * @param WP_REST_Request $post_data
+ */
+function ptam_get_taxonomies($post_data) {
+	$post_type = $post_data['post_type'];
+	$taxonomies = get_object_taxonomies( $post_type, 'objects' );
+	die( json_encode( $taxonomies ) );
+}
+
 /**
  * Return Posts
  *
@@ -128,7 +145,7 @@ function ptam_get_posts($post_data) {
 		$post->link = get_permalink( $post->ID );
 	
 	}
-	wp_send_json($posts);
+	die( json_encode( $posts ) );
 }
 /**
  * Register route for getting taxonomy terms
@@ -143,6 +160,11 @@ function ptam_register_route() {
 	register_rest_route('ptam/v1', '/get_posts/(?P<post_type>[-_a-zA-Z]+)/(?P<order>[a-zA-Z]+)/(?P<orderby>[a-zA-Z]+)/(?P<taxonomy>[-_a-zA-Z]+)/(?P<term>\d+)/(?P<posts_per_page>\d+)/(?P<image_crop>[-a-zA-Z]+)', array(
 		'methods' => 'GET',
 		'callback' => 'ptam_get_posts',
+	));
+
+	register_rest_route('ptam/v1', '/get_taxonomies/(?P<post_type>[-_a-zA-Z]+)', array(
+		'methods' => 'GET',
+		'callback' => 'ptam_get_taxonomies',
 	));
 }
 add_action('rest_api_init', 'ptam_register_route' );

@@ -647,13 +647,11 @@ var PTAM_Custom_Posts = function (_Component) {
 						}
 
 						// Get Taxonomies
-						__WEBPACK_IMPORTED_MODULE_6_axios___default.a.get(ptam_globals.rest_url + 'wp/v2/taxonomies').then(function (response) {
+						__WEBPACK_IMPORTED_MODULE_6_axios___default.a.get(ptam_globals.rest_url + ('ptam/v1/get_taxonomies/' + postType)).then(function (response) {
 							if (Object.keys(response.data).length > 0 && response.data.constructor === Object) {
 								taxonomyList.push({ 'value': 'none', 'label': __('Select a Taxonomy') });
 								$.each(response.data, function (key, value) {
-									if (value.types.includes(postType)) {
-										taxonomyList.push({ 'value': key, 'label': value.name });
-									}
+									taxonomyList.push({ 'value': key, 'label': value.label });
 								});
 							}
 
