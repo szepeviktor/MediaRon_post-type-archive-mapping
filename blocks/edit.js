@@ -132,7 +132,7 @@ class PTAM_Custom_Posts extends Component {
 					
 					// Get Terms
 					axios.get(ptam_globals.rest_url + `ptam/v1/get_terms/${taxonomy}/${postType}` ).then( ( response ) => {
-						if( Object.keys(response.data).length > 0  &&  response.data.constructor === Object) {
+						if( Object.keys(response.data).length > 0 ) {
 							termsList.push( { 'value': 0, 'label': __('All') } );
 							$.each( response.data, function( key, value ) {
 								termsList.push( { 'value': value.term_id, 'label': value.name } );
@@ -141,7 +141,7 @@ class PTAM_Custom_Posts extends Component {
 						
 						// Get Taxonomies
 						axios.get(ptam_globals.rest_url + `ptam/v1/get_taxonomies/${postType}`).then( ( response ) => {
-							if( Object.keys(response.data).length > 0  && response.data.constructor === Object) {
+							if( Object.keys(response.data).length > 0 ) {
 								taxonomyList.push( { 'value': 'none', 'label': __('Select a Taxonomy') } );
 								$.each( response.data, function( key, value ) {
 									taxonomyList.push( { 'value': key, 'label': value.label } );

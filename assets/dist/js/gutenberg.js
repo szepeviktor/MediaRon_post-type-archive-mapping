@@ -639,7 +639,7 @@ var PTAM_Custom_Posts = function (_Component) {
 
 					// Get Terms
 					__WEBPACK_IMPORTED_MODULE_6_axios___default.a.get(ptam_globals.rest_url + ('ptam/v1/get_terms/' + taxonomy + '/' + postType)).then(function (response) {
-						if (Object.keys(response.data).length > 0 && response.data.constructor === Object) {
+						if (Object.keys(response.data).length > 0) {
 							termsList.push({ 'value': 0, 'label': __('All') });
 							$.each(response.data, function (key, value) {
 								termsList.push({ 'value': value.term_id, 'label': value.name });
@@ -648,7 +648,7 @@ var PTAM_Custom_Posts = function (_Component) {
 
 						// Get Taxonomies
 						__WEBPACK_IMPORTED_MODULE_6_axios___default.a.get(ptam_globals.rest_url + ('ptam/v1/get_taxonomies/' + postType)).then(function (response) {
-							if (Object.keys(response.data).length > 0 && response.data.constructor === Object) {
+							if (Object.keys(response.data).length > 0) {
 								taxonomyList.push({ 'value': 'none', 'label': __('Select a Taxonomy') });
 								$.each(response.data, function (key, value) {
 									taxonomyList.push({ 'value': key, 'label': value.label });

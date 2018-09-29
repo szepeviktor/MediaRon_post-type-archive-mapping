@@ -77,7 +77,7 @@ function ptam_get_all_terms($tax_data) {
 		'post_type' => $post_type,
 	) );
 	if( is_wp_error( $terms ) ) {
-		die( json_encode( '{}' ) );
+		die( json_encode( array() ) );
 	} else {
 		die( json_encode( $terms ) );
 	}

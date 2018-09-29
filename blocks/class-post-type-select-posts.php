@@ -268,3 +268,13 @@ function ptam_register_custom_posts_block() {
 }
 
 add_action( 'init', 'ptam_register_custom_posts_block' );
+
+/**
+ * Add image sizes
+ */
+function ptam_blocks_image_sizes() {
+	// Post Grid Block
+	add_image_size( 'ptam-block-post-grid-landscape', 600, 400, true );
+	add_image_size( 'ptam-block-post-grid-square', 600, 600, true );
+}
+add_action( 'after_setup_theme', 'ptam_blocks_image_sizes' );
