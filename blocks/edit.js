@@ -54,6 +54,7 @@ class PTAM_Custom_Posts extends Component {
 		this.toggleDisplayPostImage = this.toggleDisplayPostImage.bind( this );
 		this.toggleDisplayPostLink = this.toggleDisplayPostLink.bind( this );
 		this.get_latest_data = this.get_latest_data.bind(this);
+		this.get_latest_posts = this.get_latest_posts.bind(this);
 		
 		const default_post_type = 'post';
 		const default_taxonomy_name = 'category';
@@ -74,9 +75,23 @@ class PTAM_Custom_Posts extends Component {
 		
 		this.get_latest_data();
 	}
+
+	get_latest_posts ( object = {} ) {
+		this.setState( { 'loading': true } );
+		let latestPosts = [];
+		const props = jQuery.extend({}, this.props.attributes, object);
+		const { postType, order, orderBy, taxonomy, term, terms, postsToShow, imageCrop } = props;
+		axios.get(ptam_globals.rest_url + `ptam/v1/get_posts/${postType}/${order}/${orderBy}/${taxonomy}/${term}/${postsToShow}/${imageCrop}`).then( ( response ) => { 
+			// Now Set State
+			this.setState( {
+				'loading': false,
+				'latestPosts': response.data,
+			} );
+		} );
+	}
 	
 	get_latest_data( object = {} ) {
-		this.setState( { 'loading': true } )
+		this.setState( { 'loading': true } );
 		let latestPosts = [];
 		let postTypeList = [];
 		let taxonomyList = [];
@@ -195,11 +210,9 @@ class PTAM_Custom_Posts extends Component {
 					<QueryControls
 						{ ...{ order, orderBy } }
 						numberOfItems={ postsToShow }
-						selectedCategoryId={ categories }
-						onOrderChange={ ( value ) => { this.props.setAttributes( { order: value } ); this.get_latest_data({order: value }); } }
-						onOrderByChange={ ( value ) => { this.props.setAttributes( { orderBy: value } ); this.get_latest_data({orderBy: value }); } }
-						onCategoryChange={ ( value ) => this.props.setAttributes( { categories: '' !== value ? value : undefined } ) }
-						onNumberOfItemsChange={ ( value ) => this.props.setAttributes( { postsToShow: value } ) }
+						onOrderChange={ ( value ) => { this.props.setAttributes( { order: value } ); this.get_latest_posts({order: value }); } }
+						onOrderByChange={ ( value ) => { this.props.setAttributes( { orderBy: value } ); this.get_latest_posts({orderBy: value }); } }
+						onNumberOfItemsChange={ ( value ) => { this.props.setAttributes( { postsToShow: value } ); this.get_latest_posts({ postsToShow: value } ); } }
 					/>
 					{ postLayout === 'grid' &&
 						<RangeControl
@@ -350,16 +363,16 @@ class PTAM_Custom_Posts extends Component {
 											<div class="ab-block-post-grid-author"><a class="ab-text-link" target="_blank" href={ post.author_info.author_link }>{ post.author_info.display_name }</a></div>
 										}
 
-										{ displayPostDate && post.date_gmt &&
-											<time dateTime={ moment( post.date_gmt ).utc().format() } className={ 'ab-block-post-grid-date' }>
-												{ moment( post.date_gmt ).local().format( 'MMMM DD, Y' ) }
+										{ displayPostDate && post.post_date_gmt &&
+											<time dateTime={ moment( post.post_date_gmt ).utc().format() } className={ 'ab-block-post-grid-date' }>
+												{ moment( post.post_date_gmt ).local().format( 'MMMM DD, Y' ) }
 											</time>
 										}
 									</div>
 
 									<div class="ab-block-post-grid-excerpt">
-										{ displayPostExcerpt && post.excerpt &&
-											<div dangerouslySetInnerHTML={ { __html: post.excerpt } } />
+										{ displayPostExcerpt && post.post_excerpt &&
+											<div dangerouslySetInnerHTML={ { __html: post.post_excerpt } } />
 										}
 
 										{ displayPostLink &&

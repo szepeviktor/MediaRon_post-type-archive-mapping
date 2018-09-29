@@ -115,6 +115,8 @@ function ptam_get_posts($post_data) {
 		$post->author_info = new stdClass();
 		$post->author_info->display_name = $display_name;
 		$post->author_info->author_link = $author_url;
+		
+		$post->link = get_permalink( $post->ID );
 	
 	}
 	wp_send_json($posts);
