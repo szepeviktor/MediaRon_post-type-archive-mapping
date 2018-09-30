@@ -1,7 +1,7 @@
 === Post Type Archive Mapping ===
-Contributors: ronalfy, bigwing
-Tags: post types, archive, mapping
-Requires at least: 4.7
+Contributors: ronalfy
+Tags: post types, archive, mapping, gutenberg
+Requires at least: 4.9
 Tested up to: 4.9
 Stable tag: 1.0.0
 License: GPLv2 or later
@@ -12,12 +12,21 @@ A WordPress plugin for mapping post type archives to pages.
 
 == Description ==
 
-A WordPress plugin for mapping post type archives to pages.
+A WordPress plugin for mapping post type archives to pages. Plays well with Gutenberg and Gutenberg is highly recommended for use with this plugin.
+
+Ensure your post types have <code>has_archive</code> set to true.
+
+The plugin has a new Gutenberg block based on Atomic Blocks that will allow you to select which posts to display on your archive page. It even supports pagination.
+
+See below for an overview of how Post Type Archive Mapping works:
+
+https://www.youtube.com/watch?v=QT0QIdTBrdk?rel=0
 
 <ul>
-<li>Select a Private or Public page to use as your post type archive page.</li>
+<li>Select a Public page to use as your post type archive page.</li>
 <li>View the archive and you will see the page content instead of the archive content.</li>
 <li>Use page templates on your pages for flexibility.</li>
+<li>Custom Gutenberg block for showing your posts.</li>
 </ul>
 
 == Installation ==
@@ -37,7 +46,13 @@ Make sure your post type has <code>has_archive</code> set to true.
 
 = Can you do posts instead of pages? =
 
-Not at this time.
+No, this plugin only works with pages.
+
+== Screenshots ==
+
+1. Editing a page using Gutenberg
+2. The resulting archive page
+3. Settings->Reading option
 
 == Changelog ==
 

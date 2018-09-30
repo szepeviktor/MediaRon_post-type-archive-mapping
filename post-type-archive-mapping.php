@@ -5,12 +5,13 @@ Plugin URI: https://mediaron.com/portfolio/post-type-archive-mapping/
 Description: Map your post type archives to a page
 Author: Ronald Huereca
 Version: 1.0.0
-Requires at least: 4.4
+Requires at least: 4.9
 Author URI: https://mediaron.com
 Contributors: ronalfy
 Text Domain: post-type-archive-mapping
 Domain Path: /languages
 Credit: Forked from https://github.com/bigwing/post-type-archive-mapping
+Credit: Gutenberg block based on Atomic Blocks
 */ 
 
 class PostTypeArchiveMapping {
