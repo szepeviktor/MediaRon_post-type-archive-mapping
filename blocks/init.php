@@ -26,13 +26,6 @@ function ptam_blocks_block_assets() {
 		PostTypeArchiveMapping::get_plugin_url( 'assets/dist/css/gutenberg.css'),
 		array( 'wp-blocks' ),
 		'20180927' );
-
-	// Load the FontAwesome icon library
-	wp_enqueue_style(
-		'ptam-fontawesome',
-		PostTypeArchiveMapping::get_plugin_url( 'assets/dist/fontawesome/css/all.css'),
-		array( 'wp-blocks' ),
-		'20180927' );
 } 
 add_action( 'enqueue_block_assets', 'ptam_blocks_block_assets' );
 
