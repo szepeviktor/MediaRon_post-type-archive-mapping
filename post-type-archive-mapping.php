@@ -68,6 +68,20 @@ class PostTypeArchiveMapping {
 	} //end init
 	
 	public function maybe_override_archive( $query ) {
+		if( is_admin() ) {
+			return $query;
+		}
+
+		// Maybe Redirect
+		if( is_page() ) {
+			$object_id = get_queried_object_id();
+			$meta = get_post_meta( $object_id, '_post_type_mapped', true );
+			if( $meta ) {
+				wp_redirect( get_post_type_archive_link( $meta ) );
+				exit();
+			}
+		}
+
 		// trigger this once after running the main query.
 		if ( true === $this->paged_reset ) {
 			$query->set( 'paged', $this->paged );
@@ -115,6 +129,13 @@ class PostTypeArchiveMapping {
 			$dir .= '/' . ltrim( $path, '/' );
 		return $dir;	
 	}
+
+	public function post_type_save( $args ) {
+		foreach( $args as $post_type => $page_id ) {
+			update_post_meta( $page_id, '_post_type_mapped', $post_type );
+		}
+		return $args;
+	}
 	
 	/**
 	 * Initialize options 
@@ -130,7 +151,10 @@ class PostTypeArchiveMapping {
 	public function init_admin_settings() {
 		register_setting(
 			'reading',
-			'post-type-archive-mapping'
+			'post-type-archive-mapping',
+			array(
+				'sanitize_callback' => array( $this, 'post_type_save' ),
+			)
 		);
 		
 		add_settings_section( 'post-type-archive-mapping', _x( 'Post Type Archive Mapping', 'plugin settings heading' , 'post-type-archive-mapping' ), array( $this, 'settings_section' ), 'reading' );
@@ -138,7 +162,7 @@ class PostTypeArchiveMapping {
 		
 		add_settings_field( 
 			'post-type-archive-mapping', 
-			_x( 'Post Type Archive Mapping', 'post-type-archive-mapping' ), 
+			__( 'Post Type Archive Mapping', 'post-type-archive-mapping' ), 
 			array( $this, 'add_settings_post_types' ), 
 			'reading', 
 			'post-type-archive-mapping'
@@ -149,7 +173,7 @@ class PostTypeArchiveMapping {
 	function add_settings_post_types( $args ) {
 		$output = get_option( 'post-type-archive-mapping', array() );
 		$posts = get_posts( array(
-			'post_status' => array( 'publish', 'private' ),
+			'post_status' => array( 'publish' ),
 			'posts_per_page' => 1000,
 			'post_type' => 'page',
 			'orderby' => 'name',
@@ -172,7 +196,7 @@ class PostTypeArchiveMapping {
 				<option value="default"><?php esc_html_e( 'Default', 'post-type-archive-mapping' ); ?></option>
 				<?php
 				foreach( $posts as $post ) {
-					printf( '<option value="%d" %s>%s</option>', absint( $post->ID ), selected( $output[ $post_type ], $post->ID, false ),esc_html( $post->post_title ) );
+					printf( '<option value="%d" %s>%s</option>', absint( $post->ID ), selected( $output[ $post_type ], $post->ID, false ), esc_html( $post->post_title ) );
 				}	
 				?>
 			</select>
