@@ -131,6 +131,9 @@ class PostTypeArchiveMapping {
 	}
 
 	public function post_type_save( $args ) {
+		global $wpdb;
+		$query = "delete from {$wpdb->postmeta} where meta_key = '_post_type_mapped'";
+		$wpdb->query( $query );
 		foreach( $args as $post_type => $page_id ) {
 			update_post_meta( $page_id, '_post_type_mapped', $post_type );
 		}
