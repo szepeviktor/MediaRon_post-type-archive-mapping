@@ -90,16 +90,6 @@ const config = {
 module.exports = [
     Object.assign({
         entry: {
-            'frontend': ['./assets/frontend/style.scss', './assets/frontend/script.js'],
-            'backend': ['./assets/backend/style.scss', './assets/backend/script.js'],
-        },
-        output: {
-            path: path.join( __dirname, './assets/dist/' ),
-            filename: 'js/[name].js',
-        },
-    }, config),
-    Object.assign({
-        entry: {
             'idempotent-babel-polyfill': 'idempotent-babel-polyfill',
             'gutenberg': './blocks/load.js'
         },
@@ -118,8 +108,8 @@ if ( inProduction ) {
     // POT file.
     wpPot( {
         package: 'ConvertKit',
-        domain: 'convertkit',
-        destFile: 'languages/convertkit.pot',
+        domain: 'post-type-archive-mapping',
+        destFile: 'languages/post-type-archive-mapping.pot',
         relativeTo: './',
     } );
 

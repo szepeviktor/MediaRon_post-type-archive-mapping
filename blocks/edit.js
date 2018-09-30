@@ -382,7 +382,7 @@ class PTAM_Custom_Posts extends Component {
 				<div
 					className={ classnames(
 						this.props.className,
-						'ab-block-post-grid',
+						'ptam-block-post-grid',
 					) }
 				>
 					<div
@@ -390,7 +390,7 @@ class PTAM_Custom_Posts extends Component {
 							'is-grid': postLayout === 'grid',
 							'is-list': postLayout === 'list',
 							[ `columns-${ columns }` ]: postLayout === 'grid',
-							'ab-post-grid-items' : 'ab-post-grid-items'
+							'ptam-post-grid-items' : 'ptam-post-grid-items'
 						} ) }
 					>
 						{ displayPosts.map( ( post, i ) =>
@@ -402,7 +402,7 @@ class PTAM_Custom_Posts extends Component {
 							>
 								{
 									displayPostImage && post.featured_image_src !== undefined && post.featured_image_src ? (
-										<div class="ab-block-post-grid-image">
+										<div class="ptam-block-post-grid-image">
 											<a href={ post.link } target="_blank" rel="bookmark">
 												<img
 													src={ isLandscape ? post.featured_image_src : post.featured_image_src_square }
@@ -415,28 +415,28 @@ class PTAM_Custom_Posts extends Component {
 									)
 								}
 
-								<div class="ab-block-post-grid-text">
+								<div class="ptam-block-post-grid-text">
 									<h2 class="entry-title"><a href={ post.link } target="_blank" rel="bookmark">{ decodeEntities( post.post_title.trim() ) || __( '(Untitled)' ) }</a></h2>
 
-									<div class="ab-block-post-grid-byline">
+									<div class="ptam-block-post-grid-byline">
 										{ displayPostAuthor && post.author_info.display_name !== 'undefined' && post.author_info.display_name &&
-											<div class="ab-block-post-grid-author"><a class="ab-text-link" target="_blank" href={ post.author_info.author_link }>{ post.author_info.display_name }</a></div>
+											<div class="ptam-block-post-grid-author"><a class="ptam-text-link" target="_blank" href={ post.author_info.author_link }>{ post.author_info.display_name }</a></div>
 										}
 
 										{ displayPostDate && post.post_date_gmt &&
-											<time dateTime={ moment( post.post_date_gmt ).utc().format() } className={ 'ab-block-post-grid-date' }>
+											<time dateTime={ moment( post.post_date_gmt ).utc().format() } className={ 'ptam-block-post-grid-date' }>
 												{ moment( post.post_date_gmt ).local().format( 'MMMM DD, Y' ) }
 											</time>
 										}
 									</div>
 
-									<div class="ab-block-post-grid-excerpt">
+									<div class="ptam-block-post-grid-excerpt">
 										{ displayPostExcerpt && post.post_excerpt &&
 											<div dangerouslySetInnerHTML={ { __html: post.post_excerpt } } />
 										}
 
 										{ displayPostLink &&
-											<p><a class="ab-block-post-grid-link ab-text-link" href={ post.link } target="_blank" rel="bookmark">{ readMoreText }</a></p>
+											<p><a class="ptam-block-post-grid-link ptam-text-link" href={ post.link } target="_blank" rel="bookmark">{ readMoreText }</a></p>
 										}
 									</div>
 								</div>

@@ -12,7 +12,7 @@ function ptam_custom_posts( $attributes ) {
 		'orderby' => $attributes['orderBy'],
 	);
 	if ( isset( $attributes['taxonomy']) && isset( $attributes['term'] ) ) {
-		if( 'all' !== $attributes['term'] && '0' !== $attributes['term'] && 'none' !== $attributes['taxonomy'] ) {
+		if( 'all' !== $attributes['term'] && 0 != $attributes['term'] && 'none' !== $attributes['taxonomy'] ) {
 			$post_args[ 'tax_query' ] = array( array(
 				'taxonomy' => $attributes['taxonomy'],
 				'terms' => $attributes['term']
