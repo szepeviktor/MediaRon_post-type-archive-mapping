@@ -49,13 +49,13 @@ function ptam_custom_posts( $attributes ) {
 			// Get the featured image
 			if ( isset( $attributes['displayPostImage'] ) && $attributes['displayPostImage'] && $post_thumb_id ) {
 				if( $attributes['imageCrop'] === 'landscape' ) {
-					$post_thumb_size = 'ab-block-post-grid-landscape';
+					$post_thumb_size = 'ptam-block-post-grid-landscape';
 				} else {
-					$post_thumb_size = 'ab-block-post-grid-square';
+					$post_thumb_size = 'ptam-block-post-grid-square';
 				}
 				
 				$list_items_markup .= sprintf( 
-					'<div class="ab-block-post-grid-image"><a href="%1$s" rel="bookmark">%2$s</a></div>',
+					'<div class="ptam-block-post-grid-image"><a href="%1$s" rel="bookmark">%2$s</a></div>',
 					esc_url( get_permalink( $post_id ) ),
 					wp_get_attachment_image( $post_thumb_id, $post_thumb_size ) 
 				);
@@ -63,7 +63,7 @@ function ptam_custom_posts( $attributes ) {
 
 			// Wrap the text content
 			$list_items_markup .= sprintf(
-				'<div class="ab-block-post-grid-text">'
+				'<div class="ptam-block-post-grid-text">'
 			);
 
 				// Get the post title 
@@ -74,20 +74,20 @@ function ptam_custom_posts( $attributes ) {
 				}
 
 				$list_items_markup .= sprintf(
-					'<h2 class="ab-block-post-grid-title"><a href="%1$s" rel="bookmark">%2$s</a></h2>',
+					'<h2 class="ptam-block-post-grid-title"><a href="%1$s" rel="bookmark">%2$s</a></h2>',
 					esc_url( get_permalink( $post_id ) ),
 					esc_html( $title )
 				);
 
 				// Wrap the byline content
 				$list_items_markup .= sprintf(
-					'<div class="ab-block-post-grid-byline">'
+					'<div class="ptam-block-post-grid-byline">'
 				);
 
 					// Get the post author
 					if ( isset( $attributes['displayPostAuthor'] ) && $attributes['displayPostAuthor'] ) {
 						$list_items_markup .= sprintf(
-							'<div class="ab-block-post-grid-author"><a class="ab-text-link" href="%2$s">%1$s</a></div>',
+							'<div class="ptam-block-post-grid-author"><a class="ptam-text-link" href="%2$s">%1$s</a></div>',
 							esc_html( get_the_author_meta( 'display_name', $post->post_author ) ),
 							esc_html( get_author_posts_url( $post->post_author ) )
 						);
@@ -96,7 +96,7 @@ function ptam_custom_posts( $attributes ) {
 					// Get the post date
 					if ( isset( $attributes['displayPostDate'] ) && $attributes['displayPostDate'] ) {
 						$list_items_markup .= sprintf(
-							'<time datetime="%1$s" class="ab-block-post-grid-date">%2$s</time>',
+							'<time datetime="%1$s" class="ptam-block-post-grid-date">%2$s</time>',
 							esc_attr( get_the_date( 'c', $post_id ) ),
 							esc_html( get_the_date( '', $post_id ) )
 						);
@@ -109,7 +109,7 @@ function ptam_custom_posts( $attributes ) {
 
 				// Wrap the excerpt content
 				$list_items_markup .= sprintf(
-					'<div class="ab-block-post-grid-excerpt">'
+					'<div class="ptam-block-post-grid-excerpt">'
 				);
 
 					// Get the excerpt
@@ -129,7 +129,7 @@ function ptam_custom_posts( $attributes ) {
 
 					if ( isset( $attributes['displayPostLink'] ) && $attributes['displayPostLink'] ) {
 						$list_items_markup .= sprintf(
-							'<p><a class="ab-block-post-grid-link ab-text-link" href="%1$s" rel="bookmark">%2$s</a></p>',
+							'<p><a class="ptam-block-post-grid-link ptam-text-link" href="%1$s" rel="bookmark">%2$s</a></p>',
 							esc_url( get_permalink( $post_id ) ),
 							esc_html( $attributes['readMoreText'] )
 						);
@@ -151,13 +151,13 @@ function ptam_custom_posts( $attributes ) {
 	endif;
 
 	// Build the classes
-	$class = "ab-block-post-grid align{$attributes['align']}";
+	$class = "ptam-block-post-grid align{$attributes['align']}";
 
 	if ( isset( $attributes['className'] ) ) {
 		$class .= ' ' . $attributes['className'];
 	}
 	
-	$grid_class = 'ab-post-grid-items';
+	$grid_class = 'ptam-post-grid-items';
 
 	if ( isset( $attributes['postLayout'] ) && 'list' === $attributes['postLayout'] ) {
 		$grid_class .= ' is-list';
@@ -170,20 +170,23 @@ function ptam_custom_posts( $attributes ) {
 	}
 
 	// Pagination
-	$pagination = paginate_links( array(
-		'total'        => $recent_posts->max_num_pages,
-		'current'      => max( 1, get_query_var( 'paged' ) ),
-		'format'       => '/page/%#%',
-		'show_all'     => false,
-		'type'         => 'plain',
-		'end_size'     => 2,
-		'mid_size'     => 1,
-		'prev_next'    => true,
-		'prev_text'    => sprintf( '<i></i> %1$s', __( 'Newer Posts', 'text-domain' ) ),
-		'next_text'    => sprintf( '%1$s <i></i>', __( 'Older Posts', 'text-domain' ) ),
-		'add_args'     => false,
-		'add_fragment' => '',
-	) );
+	$pagination = '';
+	if( isset( $attributes['pagination'] ) && $attributes['pagination'] ) {
+		$pagination = paginate_links( array(
+			'total'        => $recent_posts->max_num_pages,
+			'current'      => max( 1, get_query_var( 'paged' ) ),
+			'format'       => '/page/%#%',
+			'show_all'     => false,
+			'type'         => 'list',
+			'end_size'     => 1,
+			'mid_size'     => 2,
+			'prev_next'    => false,
+			'prev_text'    => sprintf( '<i></i> %1$s', __( 'Newer Items', 'post-type-archive-mapping' ) ),
+			'next_text'    => sprintf( '%1$s <i></i>', __( 'Older Items', 'post-type-archive-mapping' ) ),
+			'add_args'     => false,
+			'add_fragment' => '',
+		) );
+	}
 
 	// Output the post markup
 	$block_content = sprintf(
