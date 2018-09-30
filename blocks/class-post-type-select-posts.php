@@ -4,14 +4,22 @@ require 'init.php';
  * Renders the post grid block on server.
  */
 function ptam_custom_posts( $attributes ) {
-	$recent_posts = wp_get_recent_posts( array(
+	$post_args = array(
 		'post_type' => $attributes['postType'],
 		'posts_per_page' => $attributes['postsToShow'],
 		'post_status' => 'publish',
 		'order' => $attributes['order'],
 		'orderby' => $attributes['orderBy'],
-		'category' => $attributes['categories'],
-	), 'OBJECT' );
+	);
+	if ( isset( $attributes['taxonomy']) && isset( $attributes['term'] ) ) {
+		if( 'all' !== $attributes['term'] && '0' !== $attributes['term'] ) {
+			$post_args[ 'tax_query' ] = array( array(
+				'taxonomy' => $attributes['taxonomy'],
+				'terms' => $attributes['term']
+			) );
+		}
+	}
+	$recent_posts = get_posts( $post_args );
 
 	$list_items_markup = '';
 
