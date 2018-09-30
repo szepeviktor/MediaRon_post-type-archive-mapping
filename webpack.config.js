@@ -90,6 +90,7 @@ const config = {
 module.exports = [
     Object.assign({
         entry: {
+            'idempotent-babel-polyfill': 'idempotent-babel-polyfill',
             'gutenberg': './blocks/load.js'
         },
 
