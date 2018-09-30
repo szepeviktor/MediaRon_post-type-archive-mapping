@@ -16,6 +16,7 @@ import './styles/style.scss';
 import './styles/editor.scss';
 
 // Import JS
+import 'idempotent-babel-polyfill';
 import edit from './edit';
 
 // Extend component
