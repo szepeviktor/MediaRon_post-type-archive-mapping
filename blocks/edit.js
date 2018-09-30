@@ -231,7 +231,7 @@ class PTAM_Custom_Posts extends Component {
 							label={ __( 'Taxonomy' ) }
 							options={ this.state.taxonomyList }
 							value={ taxonomy }
-							onChange={ ( value ) => { this.props.setAttributes( { taxonomy: value } ); this.get_term_list( { taxonomy: value } ); } }
+							onChange={ ( value ) => { this.props.setAttributes( { taxonomy: value } ); this.get_term_list( { taxonomy: value } ); this.get_latest_posts({ taxonomy: value }); } }
 					/>
 					<SelectControl
 							label={ __( 'Terms' ) }

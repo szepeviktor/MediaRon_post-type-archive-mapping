@@ -776,7 +776,7 @@ var PTAM_Custom_Posts = function (_Component) {
 						options: this.state.taxonomyList,
 						value: taxonomy,
 						onChange: function onChange(value) {
-							_this5.props.setAttributes({ taxonomy: value });_this5.get_term_list({ taxonomy: value });
+							_this5.props.setAttributes({ taxonomy: value });_this5.get_term_list({ taxonomy: value });_this5.get_latest_posts({ taxonomy: value });
 						}
 					}),
 					wp.element.createElement(SelectControl, {
