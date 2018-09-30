@@ -220,7 +220,7 @@ class PTAM_Custom_Posts extends Component {
 		
 		const inspectorControls = (
 			<InspectorControls>
-				<PanelBody title={ __( 'Post Grid Settings' ) }>
+				<PanelBody title={ __( 'Custom Posts Settings' ) }>
 					<SelectControl
 							label={ __( 'Post Type' ) }
 							options={ this.state.postTypeList }
@@ -306,7 +306,7 @@ class PTAM_Custom_Posts extends Component {
 					{ inspectorControls }
 					<Placeholder
 						icon="admin-post"
-						label={ __( 'Custom Posts Grid' ) }
+						label={ __( 'Custom Posts' ) }
 					>
 						{ ! Array.isArray( latestPosts ) ?
 							<Spinner /> :
@@ -323,7 +323,7 @@ class PTAM_Custom_Posts extends Component {
 					{ inspectorControls }
 					<Placeholder
 						icon="admin-post"
-						label={ __( 'Custom Posts Grid' ) }
+						label={ __( 'Custom Posts' ) }
 					>
 						{ ! Array.isArray( latestPosts ) ?
 							<Spinner /> :

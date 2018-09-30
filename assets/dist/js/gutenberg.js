@@ -409,8 +409,13 @@ var name = 'ptam/custom-posts';
  *                             registered; otherwise `undefined`.
  */
 registerBlockType('ptam/custom-posts', { // Block name. Block names must be string that contains a namespace prefix. Example: my-plugin/my-custom-block.
-  title: __('Custom Posts', 'post-type-archive-mapping'), // Block title.
-  icon: 'grid-view', // Block icon from Dashicons → https://developer.wordpress.org/resource/dashicons/.
+  title: __('Custom Posts'), // Block title.
+  icon: wp.element.createElement(
+    'svg',
+    { xmlns: 'http://www.w3.org/2000/svg', width: '24', height: '24', viewBox: '0 0 24 24' },
+    wp.element.createElement('path', { d: 'M4 14h4v-4H4v4zm0 5h4v-4H4v4zM4 9h4V5H4v4zm5 5h12v-4H9v4zm0 5h12v-4H9v4zM9 5v4h12V5H9z' }),
+    wp.element.createElement('path', { d: 'M0 0h24v24H0z', fill: 'none' })
+  ),
   category: 'common', // Block category — Group blocks together based on common traits E.g. common, formatting, layout widgets, embed.
 
   getEditWrapperProps: function getEditWrapperProps(attributes) {
@@ -762,7 +767,7 @@ var PTAM_Custom_Posts = function (_Component) {
 				null,
 				wp.element.createElement(
 					PanelBody,
-					{ title: __('Post Grid Settings') },
+					{ title: __('Custom Posts Settings') },
 					wp.element.createElement(SelectControl, {
 						label: __('Post Type'),
 						options: this.state.postTypeList,
@@ -860,7 +865,7 @@ var PTAM_Custom_Posts = function (_Component) {
 						Placeholder,
 						{
 							icon: 'admin-post',
-							label: __('Custom Posts Grid')
+							label: __('Custom Posts')
 						},
 						!Array.isArray(latestPosts) ? wp.element.createElement(Spinner, null) : __('Loading...')
 					)
@@ -876,7 +881,7 @@ var PTAM_Custom_Posts = function (_Component) {
 						Placeholder,
 						{
 							icon: 'admin-post',
-							label: __('Custom Posts Grid')
+							label: __('Custom Posts')
 						},
 						!Array.isArray(latestPosts) ? wp.element.createElement(Spinner, null) : __('No posts found.')
 					)
