@@ -19,131 +19,136 @@ function ptam_custom_posts( $attributes ) {
 			) );
 		}
 	}
-	$recent_posts = get_posts( $post_args );
+	$recent_posts = new WP_Query( $post_args );
 
 	$list_items_markup = '';
 
-	foreach ( $recent_posts as $post ) {
-		// Get the post ID
-		$post_id = $post->ID;
+	if( $recent_posts->have_posts()):
+		while ( $recent_posts->have_posts() ) {
+			global $post;
+			$recent_posts->the_post();
 
-		// Get the post thumbnail 
-		$post_thumb_id = get_post_thumbnail_id( $post_id );
+			// Get the post ID
+			$post_id = $post->ID;
 
-		if ( $post_thumb_id && isset( $attributes['displayPostImage'] ) && $attributes['displayPostImage'] ) {
-			$post_thumb_class = 'has-thumb';
-		} else {
-			$post_thumb_class = 'no-thumb';
-		}
+			// Get the post thumbnail 
+			$post_thumb_id = get_post_thumbnail_id( $post_id );
 
-		// Start the markup for the post
-		$list_items_markup .= sprintf(
-			'<article class="%1$s">',
-			esc_attr( $post_thumb_class )
-		);
-		
-		// Get the featured image
-		if ( isset( $attributes['displayPostImage'] ) && $attributes['displayPostImage'] && $post_thumb_id ) {
-			if( $attributes['imageCrop'] === 'landscape' ) {
-				$post_thumb_size = 'ab-block-post-grid-landscape';
+			if ( $post_thumb_id && isset( $attributes['displayPostImage'] ) && $attributes['displayPostImage'] ) {
+				$post_thumb_class = 'has-thumb';
 			} else {
-				$post_thumb_size = 'ab-block-post-grid-square';
+				$post_thumb_class = 'no-thumb';
 			}
+
+			// Start the markup for the post
+			$list_items_markup .= sprintf(
+				'<article class="%1$s">',
+				esc_attr( $post_thumb_class )
+			);
 			
-			$list_items_markup .= sprintf( 
-				'<div class="ab-block-post-grid-image"><a href="%1$s" rel="bookmark">%2$s</a></div>',
-				esc_url( get_permalink( $post_id ) ),
-				wp_get_attachment_image( $post_thumb_id, $post_thumb_size ) 
-			);
-		}
-
-		// Wrap the text content
-		$list_items_markup .= sprintf(
-			'<div class="ab-block-post-grid-text">'
-		);
-
-			// Get the post title 
-			$title = get_the_title( $post_id );
-
-			if ( ! $title ) {
-				$title = __( 'Untitled' );
-			}
-
-			$list_items_markup .= sprintf(
-				'<h2 class="ab-block-post-grid-title"><a href="%1$s" rel="bookmark">%2$s</a></h2>',
-				esc_url( get_permalink( $post_id ) ),
-				esc_html( $title )
-			);
-
-			// Wrap the byline content
-			$list_items_markup .= sprintf(
-				'<div class="ab-block-post-grid-byline">'
-			);
-
-				// Get the post author
-				if ( isset( $attributes['displayPostAuthor'] ) && $attributes['displayPostAuthor'] ) {
-					$list_items_markup .= sprintf(
-						'<div class="ab-block-post-grid-author"><a class="ab-text-link" href="%2$s">%1$s</a></div>',
-						esc_html( get_the_author_meta( 'display_name', $post->post_author ) ),
-						esc_html( get_author_posts_url( $post->post_author ) )
-					);
+			// Get the featured image
+			if ( isset( $attributes['displayPostImage'] ) && $attributes['displayPostImage'] && $post_thumb_id ) {
+				if( $attributes['imageCrop'] === 'landscape' ) {
+					$post_thumb_size = 'ab-block-post-grid-landscape';
+				} else {
+					$post_thumb_size = 'ab-block-post-grid-square';
 				}
 				
-				// Get the post date
-				if ( isset( $attributes['displayPostDate'] ) && $attributes['displayPostDate'] ) {
-					$list_items_markup .= sprintf(
-						'<time datetime="%1$s" class="ab-block-post-grid-date">%2$s</time>',
-						esc_attr( get_the_date( 'c', $post_id ) ),
-						esc_html( get_the_date( '', $post_id ) )
-					);
+				$list_items_markup .= sprintf( 
+					'<div class="ab-block-post-grid-image"><a href="%1$s" rel="bookmark">%2$s</a></div>',
+					esc_url( get_permalink( $post_id ) ),
+					wp_get_attachment_image( $post_thumb_id, $post_thumb_size ) 
+				);
+			}
+
+			// Wrap the text content
+			$list_items_markup .= sprintf(
+				'<div class="ab-block-post-grid-text">'
+			);
+
+				// Get the post title 
+				$title = get_the_title( $post_id );
+
+				if ( ! $title ) {
+					$title = __( 'Untitled' );
 				}
 
-			// Close the byline content
+				$list_items_markup .= sprintf(
+					'<h2 class="ab-block-post-grid-title"><a href="%1$s" rel="bookmark">%2$s</a></h2>',
+					esc_url( get_permalink( $post_id ) ),
+					esc_html( $title )
+				);
+
+				// Wrap the byline content
+				$list_items_markup .= sprintf(
+					'<div class="ab-block-post-grid-byline">'
+				);
+
+					// Get the post author
+					if ( isset( $attributes['displayPostAuthor'] ) && $attributes['displayPostAuthor'] ) {
+						$list_items_markup .= sprintf(
+							'<div class="ab-block-post-grid-author"><a class="ab-text-link" href="%2$s">%1$s</a></div>',
+							esc_html( get_the_author_meta( 'display_name', $post->post_author ) ),
+							esc_html( get_author_posts_url( $post->post_author ) )
+						);
+					}
+					
+					// Get the post date
+					if ( isset( $attributes['displayPostDate'] ) && $attributes['displayPostDate'] ) {
+						$list_items_markup .= sprintf(
+							'<time datetime="%1$s" class="ab-block-post-grid-date">%2$s</time>',
+							esc_attr( get_the_date( 'c', $post_id ) ),
+							esc_html( get_the_date( '', $post_id ) )
+						);
+					}
+
+				// Close the byline content
+				$list_items_markup .= sprintf(
+					'</div>'
+				);
+
+				// Wrap the excerpt content
+				$list_items_markup .= sprintf(
+					'<div class="ab-block-post-grid-excerpt">'
+				);
+
+					// Get the excerpt
+					$excerpt = apply_filters( 'the_excerpt', get_post_field( 'post_excerpt', $post_id, 'display' ) );
+
+					if( empty( $excerpt ) ) {
+						$excerpt = apply_filters( 'the_excerpt', wp_trim_words( $post->post_content, 55 ) );
+					}
+
+					if ( ! $excerpt ) {
+						$excerpt = null;
+					}
+
+					if ( isset( $attributes['displayPostExcerpt'] ) && $attributes['displayPostExcerpt'] ) {
+						$list_items_markup .=  wp_kses_post( $excerpt );
+					}
+
+					if ( isset( $attributes['displayPostLink'] ) && $attributes['displayPostLink'] ) {
+						$list_items_markup .= sprintf(
+							'<p><a class="ab-block-post-grid-link ab-text-link" href="%1$s" rel="bookmark">%2$s</a></p>',
+							esc_url( get_permalink( $post_id ) ),
+							esc_html( $attributes['readMoreText'] )
+						);
+					}
+
+				// Close the excerpt content
+				$list_items_markup .= sprintf(
+					'</div>'
+				);
+
+			// Wrap the text content
 			$list_items_markup .= sprintf(
 				'</div>'
 			);
 
-			// Wrap the excerpt content
-			$list_items_markup .= sprintf(
-				'<div class="ab-block-post-grid-excerpt">'
-			);
-
-				// Get the excerpt
-				$excerpt = apply_filters( 'the_excerpt', get_post_field( 'post_excerpt', $post_id, 'display' ) );
-
-				if( empty( $excerpt ) ) {
-					$excerpt = apply_filters( 'the_excerpt', wp_trim_words( $post->post_content, 55 ) );
-				}
-
-				if ( ! $excerpt ) {
-					$excerpt = null;
-				}
-
-				if ( isset( $attributes['displayPostExcerpt'] ) && $attributes['displayPostExcerpt'] ) {
-					$list_items_markup .=  wp_kses_post( $excerpt );
-				}
-
-				if ( isset( $attributes['displayPostLink'] ) && $attributes['displayPostLink'] ) {
-					$list_items_markup .= sprintf(
-						'<p><a class="ab-block-post-grid-link ab-text-link" href="%1$s" rel="bookmark">%2$s</a></p>',
-						esc_url( get_permalink( $post_id ) ),
-						esc_html( $attributes['readMoreText'] )
-					);
-				}
-
-			// Close the excerpt content
-			$list_items_markup .= sprintf(
-				'</div>'
-			);
-
-		// Wrap the text content
-		$list_items_markup .= sprintf(
-			'</div>'
-		);
-
-		// Close the markup for the post
-		$list_items_markup .= "</article>\n";
-	}
+			// Close the markup for the post
+			$list_items_markup .= "</article>\n";
+		}
+	endif;
 
 	// Build the classes
 	$class = "ab-block-post-grid align{$attributes['align']}";
@@ -164,12 +169,29 @@ function ptam_custom_posts( $attributes ) {
 		$grid_class .= ' columns-' . $attributes['columns'];
 	}
 
+	// Pagination
+	$pagination = paginate_links( array(
+		'total'        => $recent_posts->max_num_pages,
+		'current'      => max( 1, get_query_var( 'paged' ) ),
+		'format'       => '/page/%#%',
+		'show_all'     => false,
+		'type'         => 'plain',
+		'end_size'     => 2,
+		'mid_size'     => 1,
+		'prev_next'    => true,
+		'prev_text'    => sprintf( '<i></i> %1$s', __( 'Newer Posts', 'text-domain' ) ),
+		'next_text'    => sprintf( '%1$s <i></i>', __( 'Older Posts', 'text-domain' ) ),
+		'add_args'     => false,
+		'add_fragment' => '',
+	) );
+
 	// Output the post markup
 	$block_content = sprintf(
-		'<div class="%1$s"><div class="%2$s">%3$s</div></div>',
+		'<div class="%1$s"><div class="%2$s">%3$s</div><div class="ptam-pagination">%4$s</div></div>',
 		esc_attr( $class ),
 		esc_attr( $grid_class ),
-		$list_items_markup
+		$list_items_markup,
+		$pagination
 	);
 
 	return $block_content;
@@ -203,9 +225,6 @@ function ptam_register_custom_posts_block() {
 				'type' => 'string',
 				'default' => 'all',
 			),
-			'categories' => array(
-				'type' => 'string',
-			),
 			'context' => array(
 				'type' => 'string',
 				'default' => 'view',
@@ -216,6 +235,10 @@ function ptam_register_custom_posts_block() {
 			'postsToShow' => array(
 				'type' => 'number',
 				'default' => 6,
+			),
+			'pagination' => array(
+				'type' => 'boolean',
+				'default' => false,
 			),
 			'displayPostDate' => array(
 				'type' => 'boolean',

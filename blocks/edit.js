@@ -53,6 +53,7 @@ class PTAM_Custom_Posts extends Component {
 		this.toggleDisplayPostAuthor = this.toggleDisplayPostAuthor.bind( this );
 		this.toggleDisplayPostImage = this.toggleDisplayPostImage.bind( this );
 		this.toggleDisplayPostLink = this.toggleDisplayPostLink.bind( this );
+		this.toggleDisplayPagination = this.toggleDisplayPagination.bind(this);
 		this.get_latest_data = this.get_latest_data.bind(this);
 		this.get_latest_posts = this.get_latest_posts.bind(this);
 		this.get_term_list = this.get_term_list.bind(this);
@@ -198,6 +199,13 @@ class PTAM_Custom_Posts extends Component {
 		setAttributes( { displayPostLink: ! displayPostLink } );
 	}
 
+	toggleDisplayPagination() {
+		const { pagination } = this.props.attributes;
+		const { setAttributes } = this.props;
+
+		setAttributes( { pagination: ! pagination } );
+	}
+
 	customizeReadMoreText() {
 		const { readMoreText } = this.props.attributes;
 		const { setAttributes } = this.props;
@@ -207,7 +215,7 @@ class PTAM_Custom_Posts extends Component {
 
 	render() {
 		const { attributes, setAttributes } = this.props;
-		const { postType, term, taxonomy, displayPostDate, displayPostExcerpt, displayPostAuthor, displayPostImage,displayPostLink, align, postLayout, columns, order, orderBy, categories, postsToShow, width, imageCrop, readMoreText } = attributes;
+		const { postType, term, taxonomy, displayPostDate, displayPostExcerpt, displayPostAuthor, displayPostImage,displayPostLink, align, postLayout, columns, order, pagination, orderBy, postsToShow, width, imageCrop, readMoreText } = attributes;
 		
 		let latestPosts = this.state.latestPosts;
 		// Thumbnail options
@@ -284,6 +292,11 @@ class PTAM_Custom_Posts extends Component {
 						onChange={ this.toggleDisplayPostExcerpt }
 					/>
 					<ToggleControl
+						label={ __( 'Display Pagination' ) }
+						checked={ pagination }
+						onChange={ this.toggleDisplayPagination }
+					/>
+					<ToggleControl
 						label={ __( 'Display Continue Reading Link' ) }
 						checked={ displayPostLink }
 						onChange={ this.toggleDisplayPostLink }
@@ -296,7 +309,6 @@ class PTAM_Custom_Posts extends Component {
 						onChange={ ( value ) => this.props.setAttributes( { readMoreText: value } ) }
 					/>
 					}
-
 				</PanelBody>
 			</InspectorControls>
 		);

@@ -530,6 +530,7 @@ var PTAM_Custom_Posts = function (_Component) {
 		_this.toggleDisplayPostAuthor = _this.toggleDisplayPostAuthor.bind(_this);
 		_this.toggleDisplayPostImage = _this.toggleDisplayPostImage.bind(_this);
 		_this.toggleDisplayPostLink = _this.toggleDisplayPostLink.bind(_this);
+		_this.toggleDisplayPagination = _this.toggleDisplayPagination.bind(_this);
 		_this.get_latest_data = _this.get_latest_data.bind(_this);
 		_this.get_latest_posts = _this.get_latest_posts.bind(_this);
 		_this.get_term_list = _this.get_term_list.bind(_this);
@@ -719,6 +720,15 @@ var PTAM_Custom_Posts = function (_Component) {
 			setAttributes({ displayPostLink: !displayPostLink });
 		}
 	}, {
+		key: 'toggleDisplayPagination',
+		value: function toggleDisplayPagination() {
+			var pagination = this.props.attributes.pagination;
+			var setAttributes = this.props.setAttributes;
+
+
+			setAttributes({ pagination: !pagination });
+		}
+	}, {
 		key: 'customizeReadMoreText',
 		value: function customizeReadMoreText() {
 			var readMoreText = this.props.attributes.readMoreText;
@@ -748,8 +758,8 @@ var PTAM_Custom_Posts = function (_Component) {
 			    postLayout = attributes.postLayout,
 			    columns = attributes.columns,
 			    order = attributes.order,
+			    pagination = attributes.pagination,
 			    orderBy = attributes.orderBy,
-			    categories = attributes.categories,
 			    postsToShow = attributes.postsToShow,
 			    width = attributes.width,
 			    imageCrop = attributes.imageCrop,
@@ -840,6 +850,11 @@ var PTAM_Custom_Posts = function (_Component) {
 						label: __('Display Post Excerpt'),
 						checked: displayPostExcerpt,
 						onChange: this.toggleDisplayPostExcerpt
+					}),
+					wp.element.createElement(ToggleControl, {
+						label: __('Display Pagination'),
+						checked: pagination,
+						onChange: this.toggleDisplayPagination
 					}),
 					wp.element.createElement(ToggleControl, {
 						label: __('Display Continue Reading Link'),
