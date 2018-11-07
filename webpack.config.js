@@ -89,15 +89,14 @@ const config = {
 
 module.exports = [
     Object.assign({
-        entry: {
-            'idempotent-babel-polyfill': 'idempotent-babel-polyfill',
-            'gutenberg': './blocks/load.js'
-        },
+		entry: {
+			admin: ['idempotent-babel-polyfill', './blocks/load.js']
+		},
 
         // Tell webpack where to output.
         output: {
             path: path.resolve( __dirname, './assets/dist/' ),
-            filename: 'js/[name].js'
+            filename: 'js/gutenberg.js'
         },
     }, config)
 ];
