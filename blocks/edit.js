@@ -74,6 +74,8 @@ class PTAM_Custom_Posts extends Component {
 			taxonomyList: [],
 			termsList: [],
 			imageSizes: [],
+			userTaxonomies: [],
+			userTerms: [],
 			imageLocation: this.props.attributes.imageLocation
 		};
 
@@ -91,6 +93,8 @@ class PTAM_Custom_Posts extends Component {
 			this.setState( {
 				latestPosts: response.data.posts,
 				imageSizes: response.data.image_sizes,
+				'userTaxonomies': response.data.taxonomies,
+				'userTerms': response.data.terms
 			} );
 		} );
 	}
@@ -120,13 +124,18 @@ class PTAM_Custom_Posts extends Component {
 		let postTypeList = [];
 		let taxonomyList = [];
 		let termsList = [];
+		let userTaxonomies = [];
+		let userTerms = [];
 		const props = jQuery.extend({}, this.props.attributes, object);
 		const { postType, order, orderBy, avatarSize,imageType,imageTypeSize,taxonomy, term, terms, postsToShow, imageCrop } = props;
 
 		// Get Latest Posts and Chain Promises
 		axios.get(ptam_globals.rest_url + `ptam/v1/get_posts/${postType}/${order}/${orderBy}/${taxonomy}/${term}/${postsToShow}/${imageCrop}/${avatarSize}/${imageType}/${imageTypeSize}`).then( ( response ) => {
+			console.log(response);
 				latestPosts = response.data.posts;
 				imageSizes = response.data.image_sizes;
+				userTaxonomies = response.data.taxonomies;
+				userTerms = response.data.terms;
 
 				// Get Post Types
 				axios.get(ptam_globals.rest_url + 'wp/v2/types').then( ( response ) => {
@@ -161,8 +170,12 @@ class PTAM_Custom_Posts extends Component {
 								'latestPosts': latestPosts,
 								'postTypeList': postTypeList,
 								'taxonomyList': taxonomyList,
-								'termsList': termsList
+								'termsList': termsList,
+								'userTaxonomies': userTaxonomies,
+								'userTerms': userTerms,
 							} );
+							console.log(userTaxonomies);
+							console.log(userTerms);
 						});
 
 					});
@@ -365,6 +378,17 @@ class PTAM_Custom_Posts extends Component {
 							options={ this.state.termsList }
 							value={ term }
 							onChange={ ( value ) => { this.props.setAttributes( { term: value } ); this.get_latest_posts({ term: value }); } }
+					/>
+					<SelectControl
+						multiple
+						label={ __( 'Select taxonomies you would like to display:', 'post-type-archive-mapping' ) }
+						value={ this.state.user_taxonomies } // e.g: value = [ 'a', 'c' ]
+						onChange={ ( userTaxonomies ) => { this.props.setAttributes(userTaxonomies, userTaxonomies ); this.setState( { userTaxonomies: userTaxonomies } ) } }
+						options={ [
+							{ value: 'a', label: 'User A' },
+							{ value: 'b', label: 'User B' },
+							{ value: 'c', label: 'User c' },
+						] }
 					/>
 					<QueryControls
 						{ ...{ order, orderBy } }

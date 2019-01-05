@@ -138,6 +138,16 @@ function ptam_get_posts($post_data) {
 
 		$post->link = get_permalink( $post->ID );
 
+		// Get taxonomy information
+		$taxonomies = get_object_taxonomies( $post->post_type );
+		$terms = array();
+		foreach( $taxonomies as $taxonomy ) {
+			$terms[$taxonomy] = get_the_term_list( $post->ID, $taxonomy );
+		}
+
+		$post->taxonomies = $taxonomies;
+		$post->terms = $terms;
+
 	}
 	$return = array( 'posts' => $posts, 'image_sizes' => ptam_get_all_image_sizes() );
 	die( json_encode( $return ) );
@@ -194,6 +204,16 @@ function ptam_get_image( $post_data ) {
 		$post->author_info->author_link = $author_url;
 
 		$post->link = get_permalink( $post->ID );
+
+		// Get taxonomy information
+		$taxonomies = get_object_taxonomies( $post->post_type );
+		$terms = array();
+		foreach( $taxonomies as $taxonomy ) {
+			$terms[$taxonomy] = get_the_term_list( $post->ID, $taxonomy );
+		}
+
+		$post->taxonomies = $taxonomies;
+		$post->terms = $terms;
 
 	}
 	$return = array( 'posts' => $posts, 'image_sizes' => ptam_get_all_image_sizes() );

@@ -28655,6 +28655,8 @@ var PTAM_Custom_Posts = function (_Component) {
 			taxonomyList: [],
 			termsList: [],
 			imageSizes: [],
+			userTaxonomies: [],
+			userTerms: [],
 			imageLocation: _this.props.attributes.imageLocation
 		};
 
@@ -28689,7 +28691,9 @@ var PTAM_Custom_Posts = function (_Component) {
 				// Now Set State
 				_this2.setState({
 					latestPosts: response.data.posts,
-					imageSizes: response.data.image_sizes
+					imageSizes: response.data.image_sizes,
+					'userTaxonomies': response.data.taxonomies,
+					'userTerms': response.data.terms
 				});
 			});
 		}
@@ -28731,6 +28735,8 @@ var PTAM_Custom_Posts = function (_Component) {
 			var postTypeList = [];
 			var taxonomyList = [];
 			var termsList = [];
+			var userTaxonomies = [];
+			var userTerms = [];
 			var props = jQuery.extend({}, this.props.attributes, object);
 			var postType = props.postType,
 			    order = props.order,
@@ -28747,8 +28753,11 @@ var PTAM_Custom_Posts = function (_Component) {
 			// Get Latest Posts and Chain Promises
 
 			_axios2.default.get(ptam_globals.rest_url + ('ptam/v1/get_posts/' + postType + '/' + order + '/' + orderBy + '/' + taxonomy + '/' + term + '/' + postsToShow + '/' + imageCrop + '/' + avatarSize + '/' + imageType + '/' + imageTypeSize)).then(function (response) {
+				console.log(response);
 				latestPosts = response.data.posts;
 				imageSizes = response.data.image_sizes;
+				userTaxonomies = response.data.taxonomies;
+				userTerms = response.data.terms;
 
 				// Get Post Types
 				_axios2.default.get(ptam_globals.rest_url + 'wp/v2/types').then(function (response) {
@@ -28783,8 +28792,12 @@ var PTAM_Custom_Posts = function (_Component) {
 								'latestPosts': latestPosts,
 								'postTypeList': postTypeList,
 								'taxonomyList': taxonomyList,
-								'termsList': termsList
+								'termsList': termsList,
+								'userTaxonomies': userTaxonomies,
+								'userTerms': userTerms
 							});
+							console.log(userTaxonomies);
+							console.log(userTerms);
 						});
 					});
 				});
@@ -28936,6 +28949,15 @@ var PTAM_Custom_Posts = function (_Component) {
 						onChange: function onChange(value) {
 							_this5.props.setAttributes({ term: value });_this5.get_latest_posts({ term: value });
 						}
+					}),
+					wp.element.createElement(SelectControl, {
+						multiple: true,
+						label: __('Select taxonomies you would like to display:', 'post-type-archive-mapping'),
+						value: this.state.user_taxonomies // e.g: value = [ 'a', 'c' ]
+						, onChange: function onChange(userTaxonomies) {
+							_this5.props.setAttributes(userTaxonomies, userTaxonomies);_this5.setState({ userTaxonomies: userTaxonomies });
+						},
+						options: [{ value: 'a', label: 'User A' }, { value: 'b', label: 'User B' }, { value: 'c', label: 'User c' }]
 					}),
 					wp.element.createElement(QueryControls, _extends({ order: order, orderBy: orderBy }, {
 						numberOfItems: postsToShow,
