@@ -81,8 +81,7 @@ function ptam_custom_posts( $attributes ) {
 
 				// Wrap the byline content
 				$list_items_markup .= sprintf(
-					'<div class="ptam-block-post-grid-byline">'
-				);
+					'<div class="ptam-block-post-grid-byline %s">', $attributes['changeCapitilization'] ? 'ptam-text-lower-case' : '' );
 
 					// Get the featured image
 					if ( isset( $attributes['displayPostImage'] ) && $attributes['displayPostImage'] && $post_thumb_id && 'below_title' === $attributes['imageLocation']) {
@@ -261,7 +260,12 @@ function ptam_register_custom_posts_block() {
 				'default' => 'post',
 			),
 			'imageLocation' => array(
+				'type' => 'string',
 				'default' => 'regular'
+			),
+			'changeCapitilization' => array(
+				'type' => 'bool',
+				'value' => false
 			),
 			'taxonomy' => array(
 				'type' => 'string',

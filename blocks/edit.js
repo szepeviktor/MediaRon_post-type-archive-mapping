@@ -207,6 +207,12 @@ console.log(this.props);
 		setAttributes( { pagination: ! pagination } );
 	}
 
+	toggleCapitilization = () => {
+		const { changeCapitilization } = this.props.attributes;
+		const { setAttributes } = this.props;
+		setAttributes( { changeCapitilization: ! changeCapitilization } );
+	}
+
 	customizeReadMoreText() {
 		const { readMoreText } = this.props.attributes;
 		const { setAttributes } = this.props;
@@ -222,7 +228,7 @@ console.log(this.props);
 
 	render() {
 		const { attributes, setAttributes } = this.props;
-		const { postType, term, taxonomy, displayPostDate, displayPostExcerpt, displayPostAuthor, displayPostImage,displayPostLink, align, postLayout, columns, order, pagination, orderBy, postsToShow, width, imageCrop, readMoreText, imageLocation } = attributes;
+		const { postType, term, taxonomy, displayPostDate, displayPostExcerpt, displayPostAuthor, displayPostImage,displayPostLink, align, postLayout, columns, order, pagination, orderBy, postsToShow, width, imageCrop, readMoreText, imageLocation, changeCapitilization } = attributes;
 
 		let latestPosts = this.state.latestPosts;
 		// Thumbnail options
@@ -235,7 +241,8 @@ console.log(this.props);
 			{ value: 'below_title', label: __('Image Below Title', 'post-type-archive-mapping' ) },
 			{ value: 'below_title_and_meta', label: __('Below title and post meta', 'post-type-archive-mapping' ) },
 			{ value: 'bottom', label: __('Image on bottom', 'post-type-archive-mapping' ) }
-		]
+		];
+		const capitilization = changeCapitilization ? "ptam-text-lower-case" : '';;
 
 		const isLandscape = imageCrop === 'landscape';
 
@@ -314,6 +321,11 @@ console.log(this.props);
 						label={ __( 'Display Pagination',  'post-type-archive-mapping' ) }
 						checked={ pagination }
 						onChange={ this.toggleDisplayPagination }
+					/>
+					<ToggleControl
+						label={ __( 'Change Capitilization',  'post-type-archive-mapping' ) }
+						checked={ changeCapitilization }
+						onChange={ this.toggleCapitilization }
 					/>
 					<ToggleControl
 						label={ __( 'Display Continue Reading Link',  'post-type-archive-mapping' ) }
@@ -450,7 +462,7 @@ console.log(this.props);
 										)
 									}
 
-									<div className="ptam-block-post-grid-byline">
+									<div className={`ptam-block-post-grid-byline ${capitilization}`}>
 										{ displayPostAuthor && post.author_info.display_name !== 'undefined' && post.author_info.display_name &&
 											<div class="ptam-block-post-grid-author"><a class="ptam-text-link" target="_blank" href={ post.author_info.author_link }>{ post.author_info.display_name }</a></div>
 										}

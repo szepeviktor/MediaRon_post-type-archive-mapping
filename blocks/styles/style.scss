@@ -39,7 +39,7 @@
 		}
 		li {
 			display: inline-block;
-			
+
 			& > span,
 			& > a {
 				display: inline-block;
@@ -106,7 +106,11 @@
 		margin-bottom: 15px;
 	}
 
-	.ptam-block-post-grid-author, 
+	.ptam-text-lower-case {
+		text-transform: none;
+	}
+
+	.ptam-block-post-grid-author,
 	.ptam-block-post-grid-date {
 		display: inline-block;
 

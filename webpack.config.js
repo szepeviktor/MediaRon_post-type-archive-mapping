@@ -33,7 +33,14 @@ const config = {
             // Create RTL styles.
             {
                 test: /\.css$/,
-                loader: ExtractTextPlugin.extract( 'style-loader' )
+                use: ExtractTextPlugin.extract( {
+                    use: [ {
+                        loader: 'style-loader',
+                        options: {
+                            sourceMap: true,
+                        }
+                    } ]
+                } )
             },
 
             // SASS to CSS.
@@ -54,7 +61,6 @@ const config = {
                         loader: 'sass-loader',
                         options: {
                             sourceMap: true,
-                            outputStyle: (inProduction ? 'compressed' : 'nested')
                         }
                     } ]
                 } )
@@ -81,7 +87,7 @@ const config = {
         // Removes the "dist" folder before building.
         new CleanWebpackPlugin( [ 'resources/dist' ] ),
 
-        new ExtractTextPlugin( 'css/[name].css' ),
+        new ExtractTextPlugin('../../assets/dist/css/[name].css' ),
 
         // Create RTL css.
         new WebpackRTLPlugin()

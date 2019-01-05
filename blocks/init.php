@@ -19,13 +19,13 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @since 1.0.0
  */
 function ptam_blocks_block_assets() {
-	
+
 	// Load the compiled styles
 	wp_enqueue_style(
 		'ptam-style-css',
-		PostTypeArchiveMapping::get_plugin_url( 'assets/dist/css/gutenberg.css'),
-		'20181107', 'all' );
-} 
+		PostTypeArchiveMapping::get_plugin_url( 'assets/dist/css/admin.css'),
+		'20190105', 'all' );
+}
 add_action( 'enqueue_block_assets', 'ptam_blocks_block_assets' );
 
 
@@ -47,7 +47,7 @@ function ptam_blocks_editor_assets() {
 	wp_localize_script(
 		'ptam-custom-posts-gutenberg',
 		'ptam_globals',
-		array( 
+		array(
 			'rest_url' => esc_url( rest_url() )
 		)
 	);
@@ -101,7 +101,7 @@ function ptam_get_posts($post_data) {
 	$post_type = $post_data['post_type'];
 	$posts_per_page = $post_data['posts_per_page'];
 	$image_crop = $post_data['image_crop'];
-	
+
 	$post_args = array(
 		'post_type' => $post_type,
 		'post_status' => 'publish',
@@ -118,24 +118,24 @@ function ptam_get_posts($post_data) {
 	$posts = get_posts( $post_args );
 
 	foreach( $posts as &$post) {
-		
+
 		// Get thumbnail information
 		$landscape = get_the_post_thumbnail_url( $post->ID, 'ptam-block-post-grid-landscape' );
 		$square = get_the_post_thumbnail_url( $post->ID, 'ptam-block-post-grid-square' );
-		
+
 		$post->featured_image_src = $landscape;
 		$post->featured_image_src_square = $square;
-		
+
 		// Get author information
 		$display_name = get_the_author_meta( 'display_name', $post->post_author );
 		$author_url = get_author_posts_url( $post->post_author );
-		
+
 		$post->author_info = new stdClass();
 		$post->author_info->display_name = $display_name;
 		$post->author_info->author_link = $author_url;
-		
+
 		$post->link = get_permalink( $post->ID );
-	
+
 	}
 	die( json_encode( $posts ) );
 }
