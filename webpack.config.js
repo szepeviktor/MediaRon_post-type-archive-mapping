@@ -23,9 +23,11 @@ const config = {
             {
                 test: /\.js$/,
                 exclude: /node_modules/,
-                loaders: [
-                    'babel-loader'
-                ]
+                loaders: 'babel-loader',
+                options: {
+                    presets: ['es2015'],
+                    plugins: ['transform-class-properties']
+                }
             },
 
             // Create RTL styles.
@@ -76,7 +78,6 @@ const config = {
 
     // Plugins. Gotta have em'.
     plugins: [
-
         // Removes the "dist" folder before building.
         new CleanWebpackPlugin( [ 'resources/dist' ] ),
 
