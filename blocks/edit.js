@@ -258,7 +258,7 @@ class PTAM_Custom_Posts extends Component {
 
 	}
 
-	noImageSizeChange = ( value ) => {
+	onImageSizeChange = ( value ) => {
 		this.setState( {
 			loading: true
 		} );
@@ -273,9 +273,13 @@ class PTAM_Custom_Posts extends Component {
 
 		// Get Latest Posts and Chain Promises
 		axios.get(ptam_globals.rest_url + `ptam/v1/get_images/${postType}/${order}/${orderBy}/${taxonomy}/${term}/${postsToShow}/${imageCrop}/${avatarSize}/regular/${value}`).then( ( response ) => {
-				latestPosts = response.data.posts;
-				imageSizes = response.data.image_sizes;
-				console.log('here');
+			latestPosts = response.data.posts;
+			imageSizes = response.data.image_sizes;
+			this.setState( {
+				loading: false,
+				latestPosts: latestPosts,
+				imageSizes: imageSizes,
+			} );
 
 		} );
 
@@ -293,13 +297,17 @@ class PTAM_Custom_Posts extends Component {
 			let taxonomyList = [];
 			let termsList = [];
 
-			const props = jQuery.extend({}, classRef.props.attributes, object);
-			const { postType, order, orderBy, taxonomy, term, terms, postsToShow, avatarSize, imageSize,imageCrop } = this.props;
+			const { postType, order, orderBy, taxonomy, term, terms, postsToShow, avatarSize, imageSize,imageCrop, imageTypeSize, imageType } = classRef.props.attributes;
 
 			// Get Latest Posts and Chain Promises
-			axios.get(ptam_globals.rest_url + `ptam/v1/get_images/${postType}/${order}/${orderBy}/${taxonomy}/${term}/${postsToShow}/${avatarSize}${imageType}`).then( ( response ) => {
-					latestPosts = response.data.posts;
-					imageSizes = response.data.image_sizes;
+			axios.get(ptam_globals.rest_url + `ptam/v1/get_images/${postType}/${order}/${orderBy}/${taxonomy}/${term}/${postsToShow}/${imageCrop}/${value}/${imageType}/${imageTypeSize}`).then( ( response ) => {
+				latestPosts = response.data.posts;
+				imageSizes = response.data.image_sizes;
+				classRef.setState( {
+					loading: false,
+					latestPosts: latestPosts,
+					imageSizes: imageSizes,
+				} );
 
 			} );
 		}, 3000);
@@ -369,7 +377,7 @@ class PTAM_Custom_Posts extends Component {
 						<RangeControl
 							label={ __( 'Columns',  'post-type-archive-mapping' ) }
 							value={ columns }
-							onChange={ ( value ) => setAttributes( { columns: value } ) }
+							onChange={ ( value ) => this.props.setAttributes( { columns: value } ) }
 							min={ 2 }
 							max={ ! hasPosts ? MAX_POSTS_COLUMNS : Math.min( MAX_POSTS_COLUMNS, latestPosts.length ) }
 						/>
@@ -392,7 +400,7 @@ class PTAM_Custom_Posts extends Component {
 									<RangeControl
 										label={ __( 'Avatar Size',  'post-type-archive-mapping' ) }
 										value={ avatarSize }
-										onChange={ ( value ) => { setAttributes( { avatarSize: value } ); this.onAvatarSizeChange( 'gravatar' ); } }
+										onChange={ ( value ) => { this.props.setAttributes( { avatarSize: value } ); this.onAvatarSizeChange( value ); } }
 										min={ 16 }
 										max={ 512 }
 									/>
@@ -403,7 +411,7 @@ class PTAM_Custom_Posts extends Component {
 									label={ __( 'Featured Image Size',  'post-type-archive-mapping' ) }
 									options={ imageSizeOptions }
 									value={ imageTypeSize }
-									onChange={ ( value ) => { this.props.setAttributes( { imageTypeSize: value } ); this.noImageSizeChange( 'regular' ); }}/>
+									onChange={ ( value ) => { this.props.setAttributes( { imageTypeSize: value } ); this.onImageSizeChange( 'regular' ); }}/>
 								: ''}
 						</Fragment>
 					}

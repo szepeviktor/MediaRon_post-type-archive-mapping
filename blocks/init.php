@@ -103,6 +103,7 @@ function ptam_get_posts($post_data) {
 	$image_crop = $post_data['image_crop'];
 	$image_type = $post_data['image_type'];
 	$image_size = $post_data['image_size'];
+	$avatar_size = $post_data['avatar_size'];
 
 	$post_args = array(
 		'post_type' => $post_type,
@@ -158,6 +159,8 @@ function ptam_get_image( $post_data ) {
 	$avatar_size = $post_data['avatar_size'];
 	$image_type = $post_data['image_type'];
 	$image_size = $post_data['image_size'];
+
+	error_log($avatar_size);
 
 	$post_args = array(
 		'post_type' => $post_type,
@@ -233,7 +236,7 @@ function ptam_register_route() {
 		'methods' => 'GET',
 		'callback' => 'ptam_get_all_terms',
 	));
-	register_rest_route('ptam/v1', '/get_posts/(?P<post_type>[-_a-zA-Z]+)/(?P<order>[a-zA-Z]+)/(?P<orderby>[a-zA-Z]+)/(?P<taxonomy>[-_a-zA-Z]+)/(?P<term>\d+)/(?P<posts_per_page>\d+)/(?P<image_crop>[-a-zA-Z]+)/(?P<avatar_size>\d+)/(?P<image_type>[-_A-Za-z]+)/(?P<image_size>[-_A-Za-z]+)', array(
+	register_rest_route('ptam/v1', '/get_posts/(?P<post_type>[-_a-zA-Z]+)/(?P<order>[a-zA-Z]+)/(?P<orderby>[a-zA-Z]+)/(?P<taxonomy>[-_a-zA-Z]+)/(?P<term>\d+)/(?P<posts_per_page>\d+)/(?P<image_crop>[-a-zA-Z]+)/(?P<avatar_size>\d+)/(?P<image_type>[-_A-Za-z]+)/(?P<image_size>[_-a-zA-Z0-9]+)', array(
 		'methods' => 'GET',
 		'callback' => 'ptam_get_posts',
 	));
@@ -243,7 +246,7 @@ function ptam_register_route() {
 		'callback' => 'ptam_get_taxonomies',
 	));
 
-	register_rest_route('ptam/v1', '/get_images/(?P<post_type>[-_a-zA-Z]+)/(?P<order>[a-zA-Z]+)/(?P<orderby>[a-zA-Z]+)/(?P<taxonomy>[-_a-zA-Z]+)/(?P<term>\d+)/(?P<posts_per_page>\d+)/(?P<image_crop>[-a-zA-Z]+)/(?P<avatar_size>\d+)/(?P<image_type>[-_A-Za-z]+)/(?P<image_size>[-_A-Za-z]+)', array(
+	register_rest_route('ptam/v1', '/get_images/(?P<post_type>[-_a-zA-Z]+)/(?P<order>[a-zA-Z]+)/(?P<orderby>[a-zA-Z]+)/(?P<taxonomy>[-_a-zA-Z]+)/(?P<term>\d+)/(?P<posts_per_page>\d+)/(?P<image_crop>[-a-zA-Z]+)/(?P<avatar_size>\d+)/(?P<image_type>[-_A-Za-z]+)/(?P<image_size>[_-a-zA-Z0-9]+)', array(
 		'methods' => 'GET',
 		'callback' => 'ptam_get_image'
 	));

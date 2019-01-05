@@ -28953,7 +28953,7 @@ var PTAM_Custom_Posts = function (_Component) {
 						label: __('Columns', 'post-type-archive-mapping'),
 						value: columns,
 						onChange: function onChange(value) {
-							return setAttributes({ columns: value });
+							return _this5.props.setAttributes({ columns: value });
 						},
 						min: 2,
 						max: !hasPosts ? MAX_POSTS_COLUMNS : Math.min(MAX_POSTS_COLUMNS, latestPosts.length)
@@ -28981,7 +28981,7 @@ var PTAM_Custom_Posts = function (_Component) {
 								label: __('Avatar Size', 'post-type-archive-mapping'),
 								value: avatarSize,
 								onChange: function onChange(value) {
-									setAttributes({ avatarSize: value });_this5.onAvatarSizeChange('gravatar');
+									_this5.props.setAttributes({ avatarSize: value });_this5.onAvatarSizeChange(value);
 								},
 								min: 16,
 								max: 512
@@ -28992,7 +28992,7 @@ var PTAM_Custom_Posts = function (_Component) {
 							options: imageSizeOptions,
 							value: imageTypeSize,
 							onChange: function onChange(value) {
-								_this5.props.setAttributes({ imageTypeSize: value });_this5.noImageSizeChange('regular');
+								_this5.props.setAttributes({ imageTypeSize: value });_this5.onImageSizeChange('regular');
 							} }) : ''
 					),
 					wp.element.createElement(SelectControl, {
@@ -29274,7 +29274,7 @@ var _initialiseProps = function _initialiseProps() {
 		});
 	};
 
-	this.noImageSizeChange = function (value) {
+	this.onImageSizeChange = function (value) {
 		_this6.setState({
 			loading: true
 		});
@@ -29302,7 +29302,11 @@ var _initialiseProps = function _initialiseProps() {
 		_axios2.default.get(ptam_globals.rest_url + ('ptam/v1/get_images/' + postType + '/' + order + '/' + orderBy + '/' + taxonomy + '/' + term + '/' + postsToShow + '/' + imageCrop + '/' + avatarSize + '/regular/' + value)).then(function (response) {
 			latestPosts = response.data.posts;
 			imageSizes = response.data.image_sizes;
-			console.log('here');
+			_this6.setState({
+				loading: false,
+				latestPosts: latestPosts,
+				imageSizes: imageSizes
+			});
 		});
 	};
 
@@ -29318,24 +29322,30 @@ var _initialiseProps = function _initialiseProps() {
 			var taxonomyList = [];
 			var termsList = [];
 
-			var props = jQuery.extend({}, classRef.props.attributes, object);
-			var _props2 = this.props,
-			    postType = _props2.postType,
-			    order = _props2.order,
-			    orderBy = _props2.orderBy,
-			    taxonomy = _props2.taxonomy,
-			    term = _props2.term,
-			    terms = _props2.terms,
-			    postsToShow = _props2.postsToShow,
-			    avatarSize = _props2.avatarSize,
-			    imageSize = _props2.imageSize,
-			    imageCrop = _props2.imageCrop;
+			var _classRef$props$attri = classRef.props.attributes,
+			    postType = _classRef$props$attri.postType,
+			    order = _classRef$props$attri.order,
+			    orderBy = _classRef$props$attri.orderBy,
+			    taxonomy = _classRef$props$attri.taxonomy,
+			    term = _classRef$props$attri.term,
+			    terms = _classRef$props$attri.terms,
+			    postsToShow = _classRef$props$attri.postsToShow,
+			    avatarSize = _classRef$props$attri.avatarSize,
+			    imageSize = _classRef$props$attri.imageSize,
+			    imageCrop = _classRef$props$attri.imageCrop,
+			    imageTypeSize = _classRef$props$attri.imageTypeSize,
+			    imageType = _classRef$props$attri.imageType;
 
 			// Get Latest Posts and Chain Promises
 
-			_axios2.default.get(ptam_globals.rest_url + ('ptam/v1/get_images/' + postType + '/' + order + '/' + orderBy + '/' + taxonomy + '/' + term + '/' + postsToShow + '/' + avatarSize + imageType)).then(function (response) {
+			_axios2.default.get(ptam_globals.rest_url + ('ptam/v1/get_images/' + postType + '/' + order + '/' + orderBy + '/' + taxonomy + '/' + term + '/' + postsToShow + '/' + imageCrop + '/' + value + '/' + imageType + '/' + imageTypeSize)).then(function (response) {
 				latestPosts = response.data.posts;
 				imageSizes = response.data.image_sizes;
+				classRef.setState({
+					loading: false,
+					latestPosts: latestPosts,
+					imageSizes: imageSizes
+				});
 			});
 		}, 3000);
 	};
