@@ -9,6 +9,7 @@ import moment from 'moment';
 import classnames from 'classnames';
 import { stringify } from 'querystringify';
 import axios from 'axios';
+var HtmlToReactParser = require('html-to-react').Parser;
 
 const { Component, Fragment } = wp.element;
 
@@ -63,7 +64,6 @@ class PTAM_Custom_Posts extends Component {
 		let taxonomies = [];
 		let terms = [{'value': 0, 'label': 'All'}];
 		let ptam_latest_posts = [];
-console.log(this.props);
 		this.state = {
 			loading: true,
 			postType: 'post',
@@ -73,6 +73,7 @@ console.log(this.props);
 			postTypeList: [],
 			taxonomyList: [],
 			termsList: [],
+			imageSizes: [],
 			imageLocation: this.props.attributes.imageLocation
 		};
 
@@ -82,13 +83,14 @@ console.log(this.props);
 	get_latest_posts ( object = {} ) {
 		this.setState( { 'loading': true } );
 		let latestPosts = [];
+		let imageSizes = [];
 		const props = jQuery.extend({}, this.props.attributes, object);
-		const { postType, order, orderBy, taxonomy, term, terms, postsToShow, imageCrop } = props;
-		axios.get(ptam_globals.rest_url + `ptam/v1/get_posts/${postType}/${order}/${orderBy}/${taxonomy}/${term}/${postsToShow}/${imageCrop}`).then( ( response ) => {
+		const { postType, order, orderBy, taxonomy, avatarSize, imageType, imageTypeSize,term, terms, postsToShow, imageCrop } = props;
+		axios.get(ptam_globals.rest_url + `ptam/v1/get_posts/${postType}/${order}/${orderBy}/${taxonomy}/${term}/${postsToShow}/${image_crop}/${avatarSize}/${imageType}/${imageTypeSize}`).then( ( response ) => {
 			// Now Set State
 			this.setState( {
-				'loading': false,
-				'latestPosts': response.data,
+				latestPosts: response.data.posts,
+				imageSizes: response.data.image_sizes,
 			} );
 		} );
 	}
@@ -114,15 +116,17 @@ console.log(this.props);
 	get_latest_data( object = {} ) {
 		this.setState( { 'loading': true } );
 		let latestPosts = [];
+		let imageSizes = [];
 		let postTypeList = [];
 		let taxonomyList = [];
 		let termsList = [];
 		const props = jQuery.extend({}, this.props.attributes, object);
-		const { postType, order, orderBy, taxonomy, term, terms, postsToShow, imageCrop } = props;
+		const { postType, order, orderBy, avatarSize,imageType,imageTypeSize,taxonomy, term, terms, postsToShow, imageCrop } = props;
 
 		// Get Latest Posts and Chain Promises
-		axios.get(ptam_globals.rest_url + `ptam/v1/get_posts/${postType}/${order}/${orderBy}/${taxonomy}/${term}/${postsToShow}/${imageCrop}`).then( ( response ) => {
-				latestPosts = response.data;
+		axios.get(ptam_globals.rest_url + `ptam/v1/get_posts/${postType}/${order}/${orderBy}/${taxonomy}/${term}/${postsToShow}/${imageCrop}/${avatarSize}/${imageType}/${imageTypeSize}`).then( ( response ) => {
+				latestPosts = response.data.posts;
+				imageSizes = response.data.image_sizes;
 
 				// Get Post Types
 				axios.get(ptam_globals.rest_url + 'wp/v2/types').then( ( response ) => {
@@ -153,6 +157,7 @@ console.log(this.props);
 							// Now Set State
 							this.setState( {
 								'loading': false,
+								'imageSizes': imageSizes,
 								'latestPosts': latestPosts,
 								'postTypeList': postTypeList,
 								'taxonomyList': taxonomyList,
@@ -226,9 +231,84 @@ console.log(this.props);
 		});
 	}
 
+	onImageTypeChange = ( imageType ) => {
+		this.setState( {
+			loading: true
+		} );
+
+		let latestPosts = [];
+		let imageSizes = [];
+		let postTypeList = [];
+		let taxonomyList = [];
+		let termsList = [];
+
+		const { postType, order, orderBy, taxonomy, term, terms, imageTypeSize, avatarSize,postsToShow, imageCrop } = this.props.attributes;
+
+		// Get Latest Posts and Chain Promises
+		axios.get(ptam_globals.rest_url + `ptam/v1/get_images/${postType}/${order}/${orderBy}/${taxonomy}/${term}/${postsToShow}/${imageCrop}/${avatarSize}/${imageType}/${imageTypeSize}`).then( ( response ) => {
+				latestPosts = response.data.posts;
+				imageSizes = response.data.image_sizes;
+				this.setState( {
+					loading: false,
+					latestPosts: latestPosts,
+					imageSizes: imageSizes,
+				} );
+
+		} );
+
+	}
+
+	noImageSizeChange = ( value ) => {
+		this.setState( {
+			loading: true
+		} );
+
+		let latestPosts = [];
+		let imageSizes = [];
+		let postTypeList = [];
+		let taxonomyList = [];
+		let termsList = [];
+
+		const { postType, order, orderBy, taxonomy, term, terms, imageTypeSize, avatarSize,postsToShow, imageCrop } = this.props.attributes;
+
+		// Get Latest Posts and Chain Promises
+		axios.get(ptam_globals.rest_url + `ptam/v1/get_images/${postType}/${order}/${orderBy}/${taxonomy}/${term}/${postsToShow}/${imageCrop}/${avatarSize}/regular/${value}`).then( ( response ) => {
+				latestPosts = response.data.posts;
+				imageSizes = response.data.image_sizes;
+				console.log('here');
+
+		} );
+
+	}
+
+	onAvatarSizeChange = ( value ) => {
+		let classRef = this;
+		this.setState( {
+			loading: true
+		} );
+		setTimeout(function(){
+			let latestPosts = [];
+			let imageSizes = [];
+			let postTypeList = [];
+			let taxonomyList = [];
+			let termsList = [];
+
+			const props = jQuery.extend({}, classRef.props.attributes, object);
+			const { postType, order, orderBy, taxonomy, term, terms, postsToShow, avatarSize, imageSize,imageCrop } = this.props;
+
+			// Get Latest Posts and Chain Promises
+			axios.get(ptam_globals.rest_url + `ptam/v1/get_images/${postType}/${order}/${orderBy}/${taxonomy}/${term}/${postsToShow}/${avatarSize}${imageType}`).then( ( response ) => {
+					latestPosts = response.data.posts;
+					imageSizes = response.data.image_sizes;
+
+			} );
+		}, 3000);
+	}
+
 	render() {
+		let htmlToReactParser = new HtmlToReactParser();
 		const { attributes, setAttributes } = this.props;
-		const { postType, term, taxonomy, displayPostDate, displayPostExcerpt, displayPostAuthor, displayPostImage,displayPostLink, align, postLayout, columns, order, pagination, orderBy, postsToShow, width, imageCrop, readMoreText, imageLocation, changeCapitilization } = attributes;
+		const { postType, term, taxonomy, displayPostDate, displayPostExcerpt, displayPostAuthor, displayPostImage,displayPostLink, align, postLayout, columns, order, pagination, orderBy, postsToShow, width, imageCrop, readMoreText, imageLocation, imageSize, imageType, imageTypeSize, avatarSize, changeCapitilization } = attributes;
 
 		let latestPosts = this.state.latestPosts;
 		// Thumbnail options
@@ -242,13 +322,24 @@ console.log(this.props);
 			{ value: 'below_title_and_meta', label: __('Below title and post meta', 'post-type-archive-mapping' ) },
 			{ value: 'bottom', label: __('Image on bottom', 'post-type-archive-mapping' ) }
 		];
-		const capitilization = changeCapitilization ? "ptam-text-lower-case" : '';;
+		let imageSizeOptions = [];
+		let imageSizes = this.state.imageSizes;
+		for ( var key in imageSizes ) {
+			imageSizeOptions.push( { value: key, label: key })
+		}
+
+		let imageDisplayOptionsTypes = [];
+		imageDisplayOptionsTypes.push( { label: __('Gravatar', 'post-type-archive-mapping' ), value: 'gravatar' } );
+		imageDisplayOptionsTypes.push( { label: __('Featured Image', 'post-type-archive-mapping' ), value: 'regular' } );
+
+		const capitilization = changeCapitilization ? "ptam-text-lower-case" : '';
 
 		const isLandscape = imageCrop === 'landscape';
 
 		const inspectorControls = (
 			<InspectorControls>
 				<PanelBody title={ __( 'Custom Posts Settings', 'post-type-archive-mapping' ) }>
+
 					<SelectControl
 							label={ __( 'Post Type', 'post-type-archive-mapping' ) }
 							options={ this.state.postTypeList }
@@ -289,12 +380,32 @@ console.log(this.props);
 						onChange={ this.toggleDisplayPostImage }
 					/>
 					{ displayPostImage &&
-						<SelectControl
-							label={ __( 'Featured Image Style',  'post-type-archive-mapping' ) }
-							options={ imageCropOptions }
-							value={ imageCrop }
-							onChange={ ( value ) => this.props.setAttributes( { imageCrop: value } ) }
-						/>
+						<Fragment>
+							<SelectControl
+								label={ __( 'Image Type',  'post-type-archive-mapping' ) }
+								options={ imageDisplayOptionsTypes}
+								value={ imageType }
+								onChange={ ( value ) => { this.props.setAttributes( { imageType: value } ); this.onImageTypeChange( value ); } }
+							/>
+							{ 'gravatar' === imageType ?
+								<div>
+									<RangeControl
+										label={ __( 'Avatar Size',  'post-type-archive-mapping' ) }
+										value={ avatarSize }
+										onChange={ ( value ) => { setAttributes( { avatarSize: value } ); this.onAvatarSizeChange( 'gravatar' ); } }
+										min={ 16 }
+										max={ 512 }
+									/>
+								</div>
+								: ''}
+								{ 'regular' === imageType ?
+								<SelectControl
+									label={ __( 'Featured Image Size',  'post-type-archive-mapping' ) }
+									options={ imageSizeOptions }
+									value={ imageTypeSize }
+									onChange={ ( value ) => { this.props.setAttributes( { imageTypeSize: value } ); this.noImageSizeChange( 'regular' ); }}/>
+								: ''}
+						</Fragment>
 					}
 					<SelectControl
 							label={ __( 'Featured Image location',  'post-type-archive-mapping' ) }
@@ -435,10 +546,7 @@ console.log(this.props);
 										displayPostImage && post.featured_image_src !== undefined && post.featured_image_src  && 'regular' === this.state.imageLocation ? (
 											<div class="ptam-block-post-grid-image">
 												<a href={ post.link } target="_blank" rel="bookmark">
-													<img
-														src={ isLandscape ? post.featured_image_src : post.featured_image_src_square }
-														alt={ decodeEntities( post.post_title.trim() ) || __( '(Untitled)',  'post-type-archive-mapping' ) }
-													/>
+												{htmlToReactParser.parse(post.featured_image_src)}
 												</a>
 											</div>
 										) : (
@@ -451,10 +559,7 @@ console.log(this.props);
 									{displayPostImage && post.featured_image_src !== undefined && post.featured_image_src  && 'below_title' === this.state.imageLocation ? (
 											<div class="ptam-block-post-grid-image">
 												<a href={ post.link } target="_blank" rel="bookmark">
-													<img
-														src={ isLandscape ? post.featured_image_src : post.featured_image_src_square }
-														alt={ decodeEntities( post.post_title.trim() ) || __( '(Untitled)',  'post-type-archive-mapping' ) }
-													/>
+												{htmlToReactParser.parse(post.featured_image_src)}
 												</a>
 											</div>
 										) : (
@@ -476,10 +581,7 @@ console.log(this.props);
 										displayPostImage && post.featured_image_src !== undefined && post.featured_image_src  && 'below_title_and_meta' === this.state.imageLocation ? (
 											<div class="ptam-block-post-grid-image">
 												<a href={ post.link } target="_blank" rel="bookmark">
-													<img
-														src={ isLandscape ? post.featured_image_src : post.featured_image_src_square }
-														alt={ decodeEntities( post.post_title.trim() ) || __( '(Untitled)',  'post-type-archive-mapping' ) }
-													/>
+												{htmlToReactParser.parse(post.featured_image_src)}
 												</a>
 											</div>
 											) : (
@@ -500,10 +602,7 @@ console.log(this.props);
 										displayPostImage && post.featured_image_src !== undefined && post.featured_image_src  && 'bottom' === this.state.imageLocation ? (
 												<div class="ptam-block-post-grid-image">
 													<a href={ post.link } target="_blank" rel="bookmark">
-														<img
-															src={ isLandscape ? post.featured_image_src : post.featured_image_src_square }
-															alt={ decodeEntities( post.post_title.trim() ) || __( '(Untitled)',  'post-type-archive-mapping' ) }
-														/>
+													{htmlToReactParser.parse(post.featured_image_src)}
 													</a>
 												</div>
 											) : (

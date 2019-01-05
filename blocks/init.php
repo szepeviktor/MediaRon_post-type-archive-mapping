@@ -101,6 +101,8 @@ function ptam_get_posts($post_data) {
 	$post_type = $post_data['post_type'];
 	$posts_per_page = $post_data['posts_per_page'];
 	$image_crop = $post_data['image_crop'];
+	$image_type = $post_data['image_type'];
+	$image_size = $post_data['image_size'];
 
 	$post_args = array(
 		'post_type' => $post_type,
@@ -118,13 +120,12 @@ function ptam_get_posts($post_data) {
 	$posts = get_posts( $post_args );
 
 	foreach( $posts as &$post) {
-
-		// Get thumbnail information
-		$landscape = get_the_post_thumbnail_url( $post->ID, 'ptam-block-post-grid-landscape' );
-		$square = get_the_post_thumbnail_url( $post->ID, 'ptam-block-post-grid-square' );
-
-		$post->featured_image_src = $landscape;
-		$post->featured_image_src_square = $square;
+		if ('gravatar' === $image_type ) {
+			$thumbnail = get_avatar( $post->post_author, $avatar_size );
+		} else {
+			$thumbnail = get_the_post_thumbnail( $post->ID, $image_size );
+		}
+		$post->featured_image_src = $thumbnail;
 
 		// Get author information
 		$display_name = get_the_author_meta( 'display_name', $post->post_author );
@@ -137,7 +138,90 @@ function ptam_get_posts($post_data) {
 		$post->link = get_permalink( $post->ID );
 
 	}
-	die( json_encode( $posts ) );
+	$return = array( 'posts' => $posts, 'image_sizes' => ptam_get_all_image_sizes() );
+	die( json_encode( $return ) );
+}
+
+/**
+ * Get an image based on what a user has selected
+ *
+ * @return string Image sizee
+ */
+function ptam_get_image( $post_data ) {
+	$taxonomy = $post_data['taxonomy'];
+	$order = $post_data['order'];
+	$orderby = $post_data['orderby'];
+	$term = $post_data['term'];
+	$post_type = $post_data['post_type'];
+	$posts_per_page = $post_data['posts_per_page'];
+	$image_crop = $post_data['image_crop'];
+	$avatar_size = $post_data['avatar_size'];
+	$image_type = $post_data['image_type'];
+	$image_size = $post_data['image_size'];
+
+	$post_args = array(
+		'post_type' => $post_type,
+		'post_status' => 'publish',
+		'order' => $order,
+		'orderby' => $orderby,
+		'posts_per_page' => $posts_per_page
+	);
+	if( 'all' !== $term && '0' !== $term && 'none' !== $taxonomy ) {
+		$post_args[ 'tax_query' ] = array( array(
+			'taxonomy' => $taxonomy,
+			'terms' => $term
+		) );
+	}
+	$posts = get_posts( $post_args );
+	foreach( $posts as &$post) {
+		$thumbnail = '';
+		if ('gravatar' === $image_type ) {
+			$thumbnail = get_avatar( $post->post_author, $avatar_size );
+		} else {
+			$thumbnail = get_the_post_thumbnail( $post->ID, $image_size );
+		}
+		$post->featured_image_src = $thumbnail;
+
+		// Get author information
+		$display_name = get_the_author_meta( 'display_name', $post->post_author );
+		$author_url = get_author_posts_url( $post->post_author );
+
+		$post->author_info = new stdClass();
+		$post->author_info->display_name = $display_name;
+		$post->author_info->author_link = $author_url;
+
+		$post->link = get_permalink( $post->ID );
+
+	}
+	$return = array( 'posts' => $posts, 'image_sizes' => ptam_get_all_image_sizes() );
+	die( json_encode( $return ) );
+}
+
+/**
+ * Get all the registered image sizes along with their dimensions
+ *
+ * @global array $_wp_additional_image_sizes
+ *
+ * @link http://core.trac.wordpress.org/ticket/18947 Reference ticket
+ *
+ * @return array $image_sizes The image sizes
+ */
+function ptam_get_all_image_sizes() {
+	global $_wp_additional_image_sizes;
+
+	$default_image_sizes = get_intermediate_image_sizes();
+
+	foreach ( $default_image_sizes as $size ) {
+		$image_sizes[ $size ][ 'width' ] = intval( get_option( "{$size}_size_w" ) );
+		$image_sizes[ $size ][ 'height' ] = intval( get_option( "{$size}_size_h" ) );
+		$image_sizes[ $size ][ 'crop' ] = get_option( "{$size}_crop" ) ? get_option( "{$size}_crop" ) : false;
+	}
+
+	if ( isset( $_wp_additional_image_sizes ) && count( $_wp_additional_image_sizes ) ) {
+		$image_sizes = array_merge( $image_sizes, $_wp_additional_image_sizes );
+	}
+
+	return $image_sizes;
 }
 /**
  * Register route for getting taxonomy terms
@@ -149,7 +233,7 @@ function ptam_register_route() {
 		'methods' => 'GET',
 		'callback' => 'ptam_get_all_terms',
 	));
-	register_rest_route('ptam/v1', '/get_posts/(?P<post_type>[-_a-zA-Z]+)/(?P<order>[a-zA-Z]+)/(?P<orderby>[a-zA-Z]+)/(?P<taxonomy>[-_a-zA-Z]+)/(?P<term>\d+)/(?P<posts_per_page>\d+)/(?P<image_crop>[-a-zA-Z]+)', array(
+	register_rest_route('ptam/v1', '/get_posts/(?P<post_type>[-_a-zA-Z]+)/(?P<order>[a-zA-Z]+)/(?P<orderby>[a-zA-Z]+)/(?P<taxonomy>[-_a-zA-Z]+)/(?P<term>\d+)/(?P<posts_per_page>\d+)/(?P<image_crop>[-a-zA-Z]+)/(?P<avatar_size>\d+)/(?P<image_type>[-_A-Za-z]+)/(?P<image_size>[-_A-Za-z]+)', array(
 		'methods' => 'GET',
 		'callback' => 'ptam_get_posts',
 	));
@@ -157,6 +241,11 @@ function ptam_register_route() {
 	register_rest_route('ptam/v1', '/get_taxonomies/(?P<post_type>[-_a-zA-Z]+)', array(
 		'methods' => 'GET',
 		'callback' => 'ptam_get_taxonomies',
+	));
+
+	register_rest_route('ptam/v1', '/get_images/(?P<post_type>[-_a-zA-Z]+)/(?P<order>[a-zA-Z]+)/(?P<orderby>[a-zA-Z]+)/(?P<taxonomy>[-_a-zA-Z]+)/(?P<term>\d+)/(?P<posts_per_page>\d+)/(?P<image_crop>[-a-zA-Z]+)/(?P<avatar_size>\d+)/(?P<image_type>[-_A-Za-z]+)/(?P<image_size>[-_A-Za-z]+)', array(
+		'methods' => 'GET',
+		'callback' => 'ptam_get_image'
 	));
 }
 add_action('rest_api_init', 'ptam_register_route' );

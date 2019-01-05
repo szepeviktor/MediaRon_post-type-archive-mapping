@@ -267,6 +267,22 @@ function ptam_register_custom_posts_block() {
 				'type' => 'bool',
 				'value' => false
 			),
+			'imageSize' => array(
+				'type' => 'string',
+				'default' => 'ptam-block-post-grid-landscape'
+			),
+			'imageTypeSize' => array(
+				'type' => 'string',
+				'default' => 'thumbnail',
+			),
+			'imageType' => array(
+				'type' => 'string',
+				'default' => 'regular'
+			),
+			'avatarSize' => array(
+				'type' => 'string',
+				'default' => 500
+			),
 			'taxonomy' => array(
 				'type' => 'string',
 				'default' => 'category',

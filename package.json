@@ -52,6 +52,7 @@
     "expose-loader": "latest",
     "extract-text-webpack-plugin": "^3.0.2",
     "file-loader": "^1.1.11",
+    "html-to-react": "^1.3.4",
     "idempotent-babel-polyfill": "^6.26.0-1",
     "imagemin-webpack-plugin": "^1.6.1",
     "lodash": "^4.17.11",
