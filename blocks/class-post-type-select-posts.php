@@ -47,7 +47,7 @@ function ptam_custom_posts( $attributes ) {
 			);
 
 			// Get the featured image
-			if ( isset( $attributes['displayPostImage'] ) && $attributes['displayPostImage'] && $post_thumb_id ) {
+			if ( isset( $attributes['displayPostImage'] ) && $attributes['displayPostImage'] && $post_thumb_id && 'regular' === $attributes['imageLocation']) {
 				if( $attributes['imageCrop'] === 'landscape' ) {
 					$post_thumb_size = 'ptam-block-post-grid-landscape';
 				} else {
@@ -84,6 +84,21 @@ function ptam_custom_posts( $attributes ) {
 					'<div class="ptam-block-post-grid-byline">'
 				);
 
+					// Get the featured image
+					if ( isset( $attributes['displayPostImage'] ) && $attributes['displayPostImage'] && $post_thumb_id && 'below_title' === $attributes['imageLocation']) {
+						if( $attributes['imageCrop'] === 'landscape' ) {
+							$post_thumb_size = 'ptam-block-post-grid-landscape';
+						} else {
+							$post_thumb_size = 'ptam-block-post-grid-square';
+						}
+
+						$list_items_markup .= sprintf(
+							'<div class="ptam-block-post-grid-image"><a href="%1$s" rel="bookmark">%2$s</a></div>',
+							esc_url( get_permalink( $post_id ) ),
+							wp_get_attachment_image( $post_thumb_id, $post_thumb_size )
+						);
+					}
+
 					// Get the post author
 					if ( isset( $attributes['displayPostAuthor'] ) && $attributes['displayPostAuthor'] ) {
 						$list_items_markup .= sprintf(
@@ -99,6 +114,20 @@ function ptam_custom_posts( $attributes ) {
 							'<time datetime="%1$s" class="ptam-block-post-grid-date">%2$s</time>',
 							esc_attr( get_the_date( 'c', $post_id ) ),
 							esc_html( get_the_date( '', $post_id ) )
+						);
+					}
+					// Get the featured image
+					if ( isset( $attributes['displayPostImage'] ) && $attributes['displayPostImage'] && $post_thumb_id && 'below_title_and_meta' === $attributes['imageLocation']) {
+						if( $attributes['imageCrop'] === 'landscape' ) {
+							$post_thumb_size = 'ptam-block-post-grid-landscape';
+						} else {
+							$post_thumb_size = 'ptam-block-post-grid-square';
+						}
+
+						$list_items_markup .= sprintf(
+							'<div class="ptam-block-post-grid-image"><a href="%1$s" rel="bookmark">%2$s</a></div>',
+							esc_url( get_permalink( $post_id ) ),
+							wp_get_attachment_image( $post_thumb_id, $post_thumb_size )
 						);
 					}
 
@@ -132,6 +161,21 @@ function ptam_custom_posts( $attributes ) {
 							'<p><a class="ptam-block-post-grid-link ptam-text-link" href="%1$s" rel="bookmark">%2$s</a></p>',
 							esc_url( get_permalink( $post_id ) ),
 							esc_html( $attributes['readMoreText'] )
+						);
+					}
+
+					// Get the featured image
+					if ( isset( $attributes['displayPostImage'] ) && $attributes['displayPostImage'] && $post_thumb_id && 'bottom' === $attributes['imageLocation']) {
+						if( $attributes['imageCrop'] === 'landscape' ) {
+							$post_thumb_size = 'ptam-block-post-grid-landscape';
+						} else {
+							$post_thumb_size = 'ptam-block-post-grid-square';
+						}
+
+						$list_items_markup .= sprintf(
+							'<div class="ptam-block-post-grid-image"><a href="%1$s" rel="bookmark">%2$s</a></div>',
+							esc_url( get_permalink( $post_id ) ),
+							wp_get_attachment_image( $post_thumb_id, $post_thumb_size )
 						);
 					}
 
