@@ -28753,11 +28753,9 @@ var PTAM_Custom_Posts = function (_Component) {
 			// Get Latest Posts and Chain Promises
 
 			_axios2.default.get(ptam_globals.rest_url + ('ptam/v1/get_posts/' + postType + '/' + order + '/' + orderBy + '/' + taxonomy + '/' + term + '/' + postsToShow + '/' + imageCrop + '/' + avatarSize + '/' + imageType + '/' + imageTypeSize)).then(function (response) {
-				console.log(response);
 				latestPosts = response.data.posts;
 				imageSizes = response.data.image_sizes;
 				userTaxonomies = response.data.taxonomies;
-				userTerms = response.data.terms;
 
 				// Get Post Types
 				_axios2.default.get(ptam_globals.rest_url + 'wp/v2/types').then(function (response) {
@@ -28796,8 +28794,6 @@ var PTAM_Custom_Posts = function (_Component) {
 								'userTaxonomies': userTaxonomies,
 								'userTerms': userTerms
 							});
-							console.log(userTaxonomies);
-							console.log(userTerms);
 						});
 					});
 				});
@@ -28902,6 +28898,12 @@ var PTAM_Custom_Posts = function (_Component) {
 			    changeCapitilization = attributes.changeCapitilization;
 
 
+			var userTaxonomies = this.state.userTaxonomies;
+			var userTaxonomiesArray = [];
+			for (var key in userTaxonomies) {
+				userTaxonomiesArray.push({ value: key, label: userTaxonomies[key].label });
+			};
+			console.log(userTaxonomiesArray);
 			var latestPosts = this.state.latestPosts;
 			// Thumbnail options
 			var imageCropOptions = [{ value: 'landscape', label: __('Landscape', 'post-type-archive-mapping') }, { value: 'square', label: __('Square', 'post-type-archive-mapping') }];

@@ -139,17 +139,15 @@ function ptam_get_posts($post_data) {
 		$post->link = get_permalink( $post->ID );
 
 		// Get taxonomy information
-		$taxonomies = get_object_taxonomies( $post->post_type );
+		$taxonomies = get_object_taxonomies( $post->post_type, 'objects' );
 		$terms = array();
-		foreach( $taxonomies as $taxonomy ) {
-			$terms[$taxonomy] = get_the_term_list( $post->ID, $taxonomy );
+		foreach( $taxonomies as $key => $taxonomy ) {
+			$terms[$taxonomy] = get_the_term_list( $post->ID, $key );
 		}
-
-		$post->taxonomies = $taxonomies;
 		$post->terms = $terms;
 
 	}
-	$return = array( 'posts' => $posts, 'image_sizes' => ptam_get_all_image_sizes() );
+	$return = array( 'posts' => $posts, 'image_sizes' => ptam_get_all_image_sizes(), 'taxonomies' => $taxonomies );
 	die( json_encode( $return ) );
 }
 
@@ -206,17 +204,15 @@ function ptam_get_image( $post_data ) {
 		$post->link = get_permalink( $post->ID );
 
 		// Get taxonomy information
-		$taxonomies = get_object_taxonomies( $post->post_type );
+		$taxonomies = get_object_taxonomies( $post->post_type, 'objects' );
 		$terms = array();
-		foreach( $taxonomies as $taxonomy ) {
-			$terms[$taxonomy] = get_the_term_list( $post->ID, $taxonomy );
+		foreach( $taxonomies as $key => $taxonomy ) {
+			$terms[$taxonomy] = get_the_term_list( $post->ID, $key );
 		}
-
-		$post->taxonomies = $taxonomies;
 		$post->terms = $terms;
 
 	}
-	$return = array( 'posts' => $posts, 'image_sizes' => ptam_get_all_image_sizes() );
+	$return = array( 'posts' => $posts, 'image_sizes' => ptam_get_all_image_sizes(), 'taxonomies' => $taxonomies );
 	die( json_encode( $return ) );
 }
 

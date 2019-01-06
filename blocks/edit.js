@@ -131,11 +131,9 @@ class PTAM_Custom_Posts extends Component {
 
 		// Get Latest Posts and Chain Promises
 		axios.get(ptam_globals.rest_url + `ptam/v1/get_posts/${postType}/${order}/${orderBy}/${taxonomy}/${term}/${postsToShow}/${imageCrop}/${avatarSize}/${imageType}/${imageTypeSize}`).then( ( response ) => {
-			console.log(response);
 				latestPosts = response.data.posts;
 				imageSizes = response.data.image_sizes;
 				userTaxonomies = response.data.taxonomies;
-				userTerms = response.data.terms;
 
 				// Get Post Types
 				axios.get(ptam_globals.rest_url + 'wp/v2/types').then( ( response ) => {
@@ -174,8 +172,6 @@ class PTAM_Custom_Posts extends Component {
 								'userTaxonomies': userTaxonomies,
 								'userTerms': userTerms,
 							} );
-							console.log(userTaxonomies);
-							console.log(userTerms);
 						});
 
 					});
@@ -331,6 +327,12 @@ class PTAM_Custom_Posts extends Component {
 		const { attributes, setAttributes } = this.props;
 		const { postType, term, taxonomy, displayPostDate, displayPostExcerpt, displayPostAuthor, displayPostImage,displayPostLink, align, postLayout, columns, order, pagination, orderBy, postsToShow, width, imageCrop, readMoreText, imageLocation, imageSize, imageType, imageTypeSize, avatarSize, changeCapitilization } = attributes;
 
+		let userTaxonomies = this.state.userTaxonomies;
+		let userTaxonomiesArray = [];
+		for (var key in userTaxonomies) {
+			userTaxonomiesArray.push({value: key, label: userTaxonomies[key].label});
+		};
+		console.log(userTaxonomiesArray);
 		let latestPosts = this.state.latestPosts;
 		// Thumbnail options
 		const imageCropOptions = [
