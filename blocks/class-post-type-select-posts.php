@@ -7,9 +7,10 @@ function ptam_get_profile_image( $attributes, $post_thumb_id = 0, $post_author =
 	ob_start();
 	// Get the featured image
 	$list_item_markup = '';
-	if ( isset( $attributes['displayPostImage'] ) && $attributes['displayPostImage'] && 'regular' === $attributes['imageLocation']) {
+	if ( isset( $attributes['displayPostImage'] ) && $attributes['displayPostImage'] ) {
 		$post_thumb_size = $attributes['imageCrop'];
 		$image_type = $attributes['imageType'];
+		error_log($image_type);
 		if( $image_type === 'gravatar' ) {
 			$list_item_markup .= sprintf(
 				'<div class="ptam-block-post-grid-image"><a href="%1$s" rel="bookmark">%2$s</a></div>',
@@ -69,7 +70,6 @@ function ptam_custom_posts( $attributes ) {
 				'<article class="%1$s">',
 				esc_attr( $post_thumb_class )
 			);
-
 			$list_items_markup .= ptam_get_profile_image( $attributes, $post_thumb_id, $post->post_author, $post->ID );
 
 			// Wrap the text content
