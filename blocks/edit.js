@@ -562,6 +562,7 @@ class PTAM_Custom_Posts extends Component {
 				>
 					<div
 						className={ classnames( {
+							'is-custom' : imageLocation !== 'regular',
 							'is-grid': postLayout === 'grid',
 							'is-list': postLayout === 'list',
 							[ `columns-${ columns }` ]: postLayout === 'grid',

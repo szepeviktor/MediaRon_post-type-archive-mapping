@@ -73,6 +73,13 @@
 		img {
 			display: block;
 		}
+		img.avatar {
+			border-radius: 0%;
+			display: block;
+			height: auto;
+			min-height: inherit;
+			width: inherit;
+		}
 	}
 
 	.ptam-block-post-grid-text {
@@ -167,7 +174,6 @@
 			grid-template-columns: 30% 1fr;
 			grid-template-rows: 1fr;
 			grid-gap: 0 2em;
-
 			&:not(:last-child) {
 				margin-bottom: 5%;
 				padding-bottom: 5%;
@@ -182,6 +188,12 @@
 			@media only screen and (max-width: 600px) {
 				grid-template-columns: 1fr;
 			}
+		}
+		&.is-custom article {
+			display: block;
+			grid-template-columns: 100% 1fr;
+			grid-template-rows: 1fr;
+			grid-gap: 0 2em;
 		}
 
 		.ptam-block-post-grid-image {

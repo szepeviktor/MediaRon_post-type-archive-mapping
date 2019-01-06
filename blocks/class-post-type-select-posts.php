@@ -3,6 +3,30 @@ require 'init.php';
 /**
  * Renders the post grid block on server.
  */
+function ptam_get_profile_image( $attributes, $post_thumb_id = 0, $post_author = 0, $post_id = 0 ) {
+	ob_start();
+	// Get the featured image
+	$list_item_markup = '';
+	if ( isset( $attributes['displayPostImage'] ) && $attributes['displayPostImage'] && 'regular' === $attributes['imageLocation']) {
+		$post_thumb_size = $attributes['imageCrop'];
+		$image_type = $attributes['imageType'];
+		if( $image_type === 'gravatar' ) {
+			$list_item_markup .= sprintf(
+				'<div class="ptam-block-post-grid-image"><a href="%1$s" rel="bookmark">%2$s</a></div>',
+				esc_url( get_permalink( $post_id ) ),
+				get_avatar( $post_author, $attributes['avatarSize'] )
+			);
+		} else {
+			$list_item_markup .= sprintf(
+				'<div class="ptam-block-post-grid-image"><a href="%1$s" rel="bookmark">%2$s</a></div>',
+				esc_url( get_permalink( $post_id ) ),
+				wp_get_attachment_image( $post_thumb_id, $post_thumb_size )
+			);
+		}
+		echo $list_item_markup;
+	}
+	return ob_get_clean();
+}
 function ptam_custom_posts( $attributes ) {
 	$post_args = array(
 		'post_type' => $attributes['postType'],
@@ -46,20 +70,7 @@ function ptam_custom_posts( $attributes ) {
 				esc_attr( $post_thumb_class )
 			);
 
-			// Get the featured image
-			if ( isset( $attributes['displayPostImage'] ) && $attributes['displayPostImage'] && $post_thumb_id && 'regular' === $attributes['imageLocation']) {
-				if( $attributes['imageCrop'] === 'landscape' ) {
-					$post_thumb_size = 'ptam-block-post-grid-landscape';
-				} else {
-					$post_thumb_size = 'ptam-block-post-grid-square';
-				}
-
-				$list_items_markup .= sprintf(
-					'<div class="ptam-block-post-grid-image"><a href="%1$s" rel="bookmark">%2$s</a></div>',
-					esc_url( get_permalink( $post_id ) ),
-					wp_get_attachment_image( $post_thumb_id, $post_thumb_size )
-				);
-			}
+			$list_items_markup .= ptam_get_profile_image( $attributes, $post_thumb_id, $post->post_author, $post->ID );
 
 			// Wrap the text content
 			$list_items_markup .= sprintf(

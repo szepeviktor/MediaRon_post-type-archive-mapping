@@ -29139,6 +29139,7 @@ var PTAM_Custom_Posts = function (_Component) {
 						'div',
 						{
 							className: (0, _classnames3.default)((_classnames = {
+								'is-custom': imageLocation !== 'regular',
 								'is-grid': postLayout === 'grid',
 								'is-list': postLayout === 'list'
 							}, _defineProperty(_classnames, 'columns-' + columns, postLayout === 'grid'), _defineProperty(_classnames, 'ptam-post-grid-items', 'ptam-post-grid-items'), _classnames))
