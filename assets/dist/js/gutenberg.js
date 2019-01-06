@@ -28895,7 +28895,8 @@ var PTAM_Custom_Posts = function (_Component) {
 			    imageType = attributes.imageType,
 			    imageTypeSize = attributes.imageTypeSize,
 			    avatarSize = attributes.avatarSize,
-			    changeCapitilization = attributes.changeCapitilization;
+			    changeCapitilization = attributes.changeCapitilization,
+			    displayTaxonomies = attributes.displayTaxonomies;
 
 
 			var userTaxonomies = this.state.userTaxonomies;
@@ -28903,7 +28904,6 @@ var PTAM_Custom_Posts = function (_Component) {
 			for (var key in userTaxonomies) {
 				userTaxonomiesArray.push({ value: key, label: userTaxonomies[key].label });
 			};
-			console.log(userTaxonomiesArray);
 			var latestPosts = this.state.latestPosts;
 			// Thumbnail options
 			var imageCropOptions = [{ value: 'landscape', label: __('Landscape', 'post-type-archive-mapping') }, { value: 'square', label: __('Square', 'post-type-archive-mapping') }];
@@ -28952,15 +28952,6 @@ var PTAM_Custom_Posts = function (_Component) {
 							_this5.props.setAttributes({ term: value });_this5.get_latest_posts({ term: value });
 						}
 					}),
-					wp.element.createElement(SelectControl, {
-						multiple: true,
-						label: __('Select taxonomies you would like to display:', 'post-type-archive-mapping'),
-						value: this.state.user_taxonomies // e.g: value = [ 'a', 'c' ]
-						, onChange: function onChange(userTaxonomies) {
-							_this5.props.setAttributes(userTaxonomies, userTaxonomies);_this5.setState({ userTaxonomies: userTaxonomies });
-						},
-						options: [{ value: 'a', label: 'User A' }, { value: 'b', label: 'User B' }, { value: 'c', label: 'User c' }]
-					}),
 					wp.element.createElement(QueryControls, _extends({ order: order, orderBy: orderBy }, {
 						numberOfItems: postsToShow,
 						onOrderChange: function onOrderChange(value) {
@@ -28986,6 +28977,11 @@ var PTAM_Custom_Posts = function (_Component) {
 						label: __('Display Featured Image', 'post-type-archive-mapping'),
 						checked: displayPostImage,
 						onChange: this.toggleDisplayPostImage
+					}),
+					wp.element.createElement(ToggleControl, {
+						label: __('Display Taxonomies', 'post-type-archive-mapping'),
+						checked: displayTaxonomies,
+						onChange: this.toggleTaxonomyDisplay
 					}),
 					displayPostImage && wp.element.createElement(
 						Fragment,
@@ -29201,6 +29197,29 @@ var PTAM_Custom_Posts = function (_Component) {
 											{ dateTime: (0, _moment2.default)(post.post_date_gmt).utc().format(), className: 'ptam-block-post-grid-date' },
 											(0, _moment2.default)(post.post_date_gmt).local().format('MMMM DD, Y')
 										),
+										userTaxonomiesArray.length > 0 && displayTaxonomies && wp.element.createElement(
+											'div',
+											null,
+											userTaxonomiesArray.map(function (key) {
+												if (post.terms[key.value] !== false) {
+													return wp.element.createElement(
+														'div',
+														{ className: 'ptam-terms' },
+														wp.element.createElement(
+															'span',
+															{ className: 'ptam-term-label' },
+															key.label,
+															': '
+														),
+														wp.element.createElement(
+															'span',
+															{ className: 'ptam-term-values' },
+															htmlToReactParser.parse(post.terms[key.value])
+														)
+													);
+												}
+											})
+										),
 										displayPostImage && post.featured_image_src !== undefined && post.featured_image_src && 'below_title_and_meta' === _this5.state.imageLocation ? wp.element.createElement(
 											'div',
 											{ 'class': 'ptam-block-post-grid-image' },
@@ -29254,6 +29273,13 @@ var _initialiseProps = function _initialiseProps() {
 		var setAttributes = _this6.props.setAttributes;
 
 		setAttributes({ changeCapitilization: !changeCapitilization });
+	};
+
+	this.toggleTaxonomyDisplay = function () {
+		var displayTaxonomies = _this6.props.attributes.displayTaxonomies;
+		var setAttributes = _this6.props.setAttributes;
+
+		setAttributes({ displayTaxonomies: !displayTaxonomies });
 	};
 
 	this.onChangeLocation = function (value) {

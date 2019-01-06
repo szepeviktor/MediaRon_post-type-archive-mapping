@@ -142,7 +142,8 @@ function ptam_get_posts($post_data) {
 		$taxonomies = get_object_taxonomies( $post->post_type, 'objects' );
 		$terms = array();
 		foreach( $taxonomies as $key => $taxonomy ) {
-			$terms[$taxonomy] = get_the_term_list( $post->ID, $key );
+			error_log($key);
+			$terms[$key] = get_the_term_list( $post->ID, $key, '', ', ' );
 		}
 		$post->terms = $terms;
 
@@ -207,7 +208,7 @@ function ptam_get_image( $post_data ) {
 		$taxonomies = get_object_taxonomies( $post->post_type, 'objects' );
 		$terms = array();
 		foreach( $taxonomies as $key => $taxonomy ) {
-			$terms[$taxonomy] = get_the_term_list( $post->ID, $key );
+			$terms[$key] = get_the_term_list( $post->ID, $key, '', ', ' );
 		}
 		$post->terms = $terms;
 

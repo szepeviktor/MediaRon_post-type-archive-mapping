@@ -287,6 +287,10 @@ function ptam_register_custom_posts_block() {
 				'type' => 'string',
 				'default' => 'category',
 			),
+			'displayTaxonomies' => array(
+				'type' => 'bool',
+				'default' => true,
+			),
 			'term' => array(
 				'type' => 'number',
 				'default' => 0,

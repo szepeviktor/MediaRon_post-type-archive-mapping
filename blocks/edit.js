@@ -227,6 +227,12 @@ class PTAM_Custom_Posts extends Component {
 		setAttributes( { changeCapitilization: ! changeCapitilization } );
 	}
 
+	toggleTaxonomyDisplay = () => {
+		const { displayTaxonomies } = this.props.attributes;
+		const { setAttributes } = this.props;
+		setAttributes( { displayTaxonomies: ! displayTaxonomies } );
+	}
+
 	customizeReadMoreText() {
 		const { readMoreText } = this.props.attributes;
 		const { setAttributes } = this.props;
@@ -325,14 +331,13 @@ class PTAM_Custom_Posts extends Component {
 	render() {
 		let htmlToReactParser = new HtmlToReactParser();
 		const { attributes, setAttributes } = this.props;
-		const { postType, term, taxonomy, displayPostDate, displayPostExcerpt, displayPostAuthor, displayPostImage,displayPostLink, align, postLayout, columns, order, pagination, orderBy, postsToShow, width, imageCrop, readMoreText, imageLocation, imageSize, imageType, imageTypeSize, avatarSize, changeCapitilization } = attributes;
+		const { postType, term, taxonomy, displayPostDate, displayPostExcerpt, displayPostAuthor, displayPostImage,displayPostLink, align, postLayout, columns, order, pagination, orderBy, postsToShow, width, imageCrop, readMoreText, imageLocation, imageSize, imageType, imageTypeSize, avatarSize, changeCapitilization, displayTaxonomies } = attributes;
 
 		let userTaxonomies = this.state.userTaxonomies;
 		let userTaxonomiesArray = [];
 		for (var key in userTaxonomies) {
 			userTaxonomiesArray.push({value: key, label: userTaxonomies[key].label});
 		};
-		console.log(userTaxonomiesArray);
 		let latestPosts = this.state.latestPosts;
 		// Thumbnail options
 		const imageCropOptions = [
@@ -381,17 +386,6 @@ class PTAM_Custom_Posts extends Component {
 							value={ term }
 							onChange={ ( value ) => { this.props.setAttributes( { term: value } ); this.get_latest_posts({ term: value }); } }
 					/>
-					<SelectControl
-						multiple
-						label={ __( 'Select taxonomies you would like to display:', 'post-type-archive-mapping' ) }
-						value={ this.state.user_taxonomies } // e.g: value = [ 'a', 'c' ]
-						onChange={ ( userTaxonomies ) => { this.props.setAttributes(userTaxonomies, userTaxonomies ); this.setState( { userTaxonomies: userTaxonomies } ) } }
-						options={ [
-							{ value: 'a', label: 'User A' },
-							{ value: 'b', label: 'User B' },
-							{ value: 'c', label: 'User c' },
-						] }
-					/>
 					<QueryControls
 						{ ...{ order, orderBy } }
 						numberOfItems={ postsToShow }
@@ -412,6 +406,11 @@ class PTAM_Custom_Posts extends Component {
 						label={ __( 'Display Featured Image',  'post-type-archive-mapping' ) }
 						checked={ displayPostImage }
 						onChange={ this.toggleDisplayPostImage }
+					/>
+					<ToggleControl
+						label={ __( 'Display Taxonomies',  'post-type-archive-mapping' ) }
+						checked={ displayTaxonomies }
+						onChange={ this.toggleTaxonomyDisplay }
 					/>
 					{ displayPostImage &&
 						<Fragment>
@@ -610,6 +609,15 @@ class PTAM_Custom_Posts extends Component {
 											<time dateTime={ moment( post.post_date_gmt ).utc().format() } className={ 'ptam-block-post-grid-date' }>
 												{ moment( post.post_date_gmt ).local().format( 'MMMM DD, Y' ) }
 											</time>
+										}
+										{ userTaxonomiesArray.length > 0 && displayTaxonomies &&
+											<div>
+												{userTaxonomiesArray.map((key) => {
+													if( post.terms[key.value] !== false ) {
+														return (<div className="ptam-terms"><span className="ptam-term-label">{key.label}: </span><span className="ptam-term-values">{htmlToReactParser.parse(post.terms[key.value])}</span></div>);
+													}
+												})}
+											</div>
 										}
 										{
 										displayPostImage && post.featured_image_src !== undefined && post.featured_image_src  && 'below_title_and_meta' === this.state.imageLocation ? (
