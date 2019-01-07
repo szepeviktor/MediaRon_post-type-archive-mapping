@@ -43,6 +43,8 @@ function ptam_custom_posts( $attributes ) {
 			) );
 		}
 	}
+	$image_placememt_options = $attributes['imageLocation'];
+	$image_size = $attributes['imageTypeSize'];
 	$recent_posts = new WP_Query( $post_args );
 
 	$list_items_markup = '';
@@ -69,7 +71,9 @@ function ptam_custom_posts( $attributes ) {
 				'<article class="%1$s">',
 				esc_attr( $post_thumb_class )
 			);
-			$list_items_markup .= ptam_get_profile_image( $attributes, $post_thumb_id, $post->post_author, $post->ID );
+			if ( 'regular' === $image_placememt_options ) {
+				$list_items_markup .= ptam_get_profile_image( $attributes, $post_thumb_id, $post->post_author, $post->ID );
+			}
 
 			// Wrap the text content
 			$list_items_markup .= sprintf(
@@ -95,17 +99,11 @@ function ptam_custom_posts( $attributes ) {
 
 					// Get the featured image
 					if ( isset( $attributes['displayPostImage'] ) && $attributes['displayPostImage'] && $post_thumb_id && 'below_title' === $attributes['imageLocation']) {
-						if( $attributes['imageCrop'] === 'landscape' ) {
-							$post_thumb_size = 'ptam-block-post-grid-landscape';
-						} else {
-							$post_thumb_size = 'ptam-block-post-grid-square';
-						}
 
 						$list_items_markup .= sprintf(
 							'<div class="ptam-block-post-grid-image"><a href="%1$s" rel="bookmark">%2$s</a></div>',
 							esc_url( get_permalink( $post_id ) ),
-							wp_get_attachment_image( $post_thumb_id, $post_thumb_size )
-						);
+							ptam_get_profile_image( $attributes, $post_thumb_id, $post->post_author, $post->ID ) );
 					}
 
 					// Get the post author
@@ -127,16 +125,10 @@ function ptam_custom_posts( $attributes ) {
 					}
 					// Get the featured image
 					if ( isset( $attributes['displayPostImage'] ) && $attributes['displayPostImage'] && $post_thumb_id && 'below_title_and_meta' === $attributes['imageLocation']) {
-						if( $attributes['imageCrop'] === 'landscape' ) {
-							$post_thumb_size = 'ptam-block-post-grid-landscape';
-						} else {
-							$post_thumb_size = 'ptam-block-post-grid-square';
-						}
-
 						$list_items_markup .= sprintf(
 							'<div class="ptam-block-post-grid-image"><a href="%1$s" rel="bookmark">%2$s</a></div>',
 							esc_url( get_permalink( $post_id ) ),
-							wp_get_attachment_image( $post_thumb_id, $post_thumb_size )
+							ptam_get_profile_image( $attributes, $post_thumb_id, $post->post_author, $post->ID )
 						);
 					}
 
@@ -184,7 +176,7 @@ function ptam_custom_posts( $attributes ) {
 						$list_items_markup .= sprintf(
 							'<div class="ptam-block-post-grid-image"><a href="%1$s" rel="bookmark">%2$s</a></div>',
 							esc_url( get_permalink( $post_id ) ),
-							wp_get_attachment_image( $post_thumb_id, $post_thumb_size )
+							ptam_get_profile_image( $attributes, $post_thumb_id, $post->post_author, $post->ID )
 						);
 					}
 
