@@ -88,13 +88,14 @@ class PTAM_Custom_Posts extends Component {
 		let imageSizes = [];
 		const props = jQuery.extend({}, this.props.attributes, object);
 		const { postType, order, orderBy, taxonomy, avatarSize, imageType, imageTypeSize,term, terms, postsToShow, imageCrop } = props;
-		axios.get(ptam_globals.rest_url + `ptam/v1/get_posts/${postType}/${order}/${orderBy}/${taxonomy}/${term}/${postsToShow}/${image_crop}/${avatarSize}/${imageType}/${imageTypeSize}`).then( ( response ) => {
+		axios.get(ptam_globals.rest_url + `ptam/v1/get_posts/${postType}/${order}/${orderBy}/${taxonomy}/${term}/${postsToShow}/${imageCrop}/${avatarSize}/${imageType}/${imageTypeSize}`).then( ( response ) => {
 			// Now Set State
 			this.setState( {
+				loading: false,
 				latestPosts: response.data.posts,
 				imageSizes: response.data.image_sizes,
-				'userTaxonomies': response.data.taxonomies,
-				'userTerms': response.data.terms
+				userTaxonomies: response.data.taxonomies,
+				userTerms: response.data.terms
 			} );
 		} );
 	}
@@ -361,8 +362,6 @@ class PTAM_Custom_Posts extends Component {
 		imageDisplayOptionsTypes.push( { label: __('Featured Image', 'post-type-archive-mapping' ), value: 'regular' } );
 
 		const capitilization = changeCapitilization ? "ptam-text-lower-case" : '';
-
-		const isLandscape = imageCrop === 'landscape';
 
 		const inspectorControls = (
 			<InspectorControls>

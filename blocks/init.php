@@ -24,7 +24,7 @@ function ptam_blocks_block_assets() {
 	wp_enqueue_style(
 		'ptam-style-css',
 		PostTypeArchiveMapping::get_plugin_url( 'assets/dist/css/admin.css'),
-		'20190105', 'all' );
+		'20190106', 'all' );
 }
 add_action( 'enqueue_block_assets', 'ptam_blocks_block_assets' );
 
@@ -40,7 +40,7 @@ function ptam_blocks_editor_assets() {
 	wp_enqueue_script(
 		'ptam-custom-posts-gutenberg',
 		PostTypeArchiveMapping::get_plugin_url( 'assets/dist/js/gutenberg.js'),
-		array( 'wp-blocks', 'wp-element' ), '1.0.0', true
+		array( 'wp-blocks', 'wp-element' ), '20190106', true
 	);
 
 	// Pass in REST URL
