@@ -28952,6 +28952,11 @@ var PTAM_Custom_Posts = function (_Component) {
 							_this5.props.setAttributes({ term: value });_this5.get_latest_posts({ term: value });
 						}
 					}),
+					wp.element.createElement(ToggleControl, {
+						label: __('Display Taxonomies', 'post-type-archive-mapping'),
+						checked: displayTaxonomies,
+						onChange: this.toggleTaxonomyDisplay
+					}),
 					wp.element.createElement(QueryControls, _extends({ order: order, orderBy: orderBy }, {
 						numberOfItems: postsToShow,
 						onOrderChange: function onOrderChange(value) {
@@ -28977,11 +28982,6 @@ var PTAM_Custom_Posts = function (_Component) {
 						label: __('Display Featured Image', 'post-type-archive-mapping'),
 						checked: displayPostImage,
 						onChange: this.toggleDisplayPostImage
-					}),
-					wp.element.createElement(ToggleControl, {
-						label: __('Display Taxonomies', 'post-type-archive-mapping'),
-						checked: displayTaxonomies,
-						onChange: this.toggleTaxonomyDisplay
 					}),
 					displayPostImage && wp.element.createElement(
 						Fragment,
@@ -29012,7 +29012,7 @@ var PTAM_Custom_Posts = function (_Component) {
 							options: imageSizeOptions,
 							value: imageTypeSize,
 							onChange: function onChange(value) {
-								_this5.props.setAttributes({ imageTypeSize: value });_this5.onImageSizeChange('regular');
+								_this5.props.setAttributes({ imageTypeSize: value });_this5.onImageSizeChange(value);
 							} }) : ''
 					),
 					wp.element.createElement(SelectControl, {

@@ -168,8 +168,7 @@ function ptam_get_image( $post_data ) {
 	$avatar_size = $post_data['avatar_size'];
 	$image_type = $post_data['image_type'];
 	$image_size = $post_data['image_size'];
-
-	error_log($avatar_size);
+	error_log($image_size);
 
 	$post_args = array(
 		'post_type' => $post_type,

@@ -386,6 +386,11 @@ class PTAM_Custom_Posts extends Component {
 							value={ term }
 							onChange={ ( value ) => { this.props.setAttributes( { term: value } ); this.get_latest_posts({ term: value }); } }
 					/>
+					<ToggleControl
+						label={ __( 'Display Taxonomies',  'post-type-archive-mapping' ) }
+						checked={ displayTaxonomies }
+						onChange={ this.toggleTaxonomyDisplay }
+					/>
 					<QueryControls
 						{ ...{ order, orderBy } }
 						numberOfItems={ postsToShow }
@@ -406,11 +411,6 @@ class PTAM_Custom_Posts extends Component {
 						label={ __( 'Display Featured Image',  'post-type-archive-mapping' ) }
 						checked={ displayPostImage }
 						onChange={ this.toggleDisplayPostImage }
-					/>
-					<ToggleControl
-						label={ __( 'Display Taxonomies',  'post-type-archive-mapping' ) }
-						checked={ displayTaxonomies }
-						onChange={ this.toggleTaxonomyDisplay }
 					/>
 					{ displayPostImage &&
 						<Fragment>
@@ -436,7 +436,7 @@ class PTAM_Custom_Posts extends Component {
 									label={ __( 'Featured Image Size',  'post-type-archive-mapping' ) }
 									options={ imageSizeOptions }
 									value={ imageTypeSize }
-									onChange={ ( value ) => { this.props.setAttributes( { imageTypeSize: value } ); this.onImageSizeChange( 'regular' ); }}/>
+									onChange={ ( value ) => { this.props.setAttributes( { imageTypeSize: value } ); this.onImageSizeChange( value ); }}/>
 								: ''}
 						</Fragment>
 					}
