@@ -29,6 +29,13 @@ https://www.youtube.com/watch?v=QT0QIdTBrdk?rel=0
 <li>Custom Gutenberg block for showing your posts.</li>
 </ul>
 
+<h2>Gutenberg Block</h2>
+
+This 5-minute video covers how the Gutenberg block works.
+
+https://www.youtube.com/watch?v=Kozrc-1rSJY&rel=0
+
+
 == Installation ==
 
 1. Just unzip and upload the "post-type-archive-mapping" folder to your '/wp-content/plugins/' directory
