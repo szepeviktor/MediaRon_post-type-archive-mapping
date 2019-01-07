@@ -8,9 +8,8 @@ function ptam_get_profile_image( $attributes, $post_thumb_id = 0, $post_author =
 	// Get the featured image
 	$list_item_markup = '';
 	if ( isset( $attributes['displayPostImage'] ) && $attributes['displayPostImage'] ) {
-		$post_thumb_size = $attributes['imageCrop'];
+		$post_thumb_size = $attributes['imageTypeSize'];
 		$image_type = $attributes['imageType'];
-		error_log($image_type);
 		if( $image_type === 'gravatar' ) {
 			$list_item_markup .= sprintf(
 				'<div class="ptam-block-post-grid-image"><a href="%1$s" rel="bookmark">%2$s</a></div>',
