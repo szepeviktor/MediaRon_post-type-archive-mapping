@@ -1,18 +1,18 @@
 <?php
 /*
-Plugin Name: Post Type Archive Mapping
+Plugin Name: Archive Mapping and Show Posts Gutenberg Block
 Plugin URI: https://mediaron.com/portfolio/post-type-archive-mapping/
-Description: Map your post type archives to a page
+Description: Map your post type archives to a page and use our Gutenberg block to show posts
 Author: Ronald Huereca
-Version: 1.0.1
-Requires at least: 4.9
+Version: 2.0.0
+Requires at least: 5.0
 Author URI: https://mediaron.com
 Contributors: ronalfy
 Text Domain: post-type-archive-mapping
 Domain Path: /languages
 Credit: Forked from https://github.com/bigwing/post-type-archive-mapping
 Credit: Gutenberg block based on Atomic Blocks
-*/ 
+*/
 
 class PostTypeArchiveMapping {
 	private static $instance = null;
@@ -35,11 +35,11 @@ class PostTypeArchiveMapping {
 		}
 		return self::$instance;
 	} //end get_instance
-	
+
 	/**
 	 * Class constructor.
 	 *
-	 * Initialize plugin and load text domain for internationalization 
+	 * Initialize plugin and load text domain for internationalization
 	 *
 	 * @since 1.0.0
 	 * @access private
@@ -67,7 +67,7 @@ class PostTypeArchiveMapping {
 		add_action( 'admin_init', array( $this, 'init_admin_settings' ) );
 		add_action( 'pre_get_posts', array( $this, 'maybe_override_archive' ) );
 	} //end init
-	
+
 	public function maybe_override_archive( $query ) {
 		if( is_admin() ) {
 			return $query;
@@ -116,19 +116,19 @@ class PostTypeArchiveMapping {
 			}
 		}
 	}
-	
+
 	public static function get_plugin_dir( $path = '' ) {
 		$dir = rtrim( plugin_dir_path(__FILE__), '/' );
 		if ( !empty( $path ) && is_string( $path) )
 			$dir .= '/' . ltrim( $path, '/' );
-		return $dir;		
+		return $dir;
 	}
 	//Returns the plugin url
 	public static function get_plugin_url( $path = '' ) {
 		$dir = rtrim( plugin_dir_url(__FILE__), '/' );
 		if ( !empty( $path ) && is_string( $path) )
 			$dir .= '/' . ltrim( $path, '/' );
-		return $dir;	
+		return $dir;
 	}
 
 	public function post_type_save( $args ) {
@@ -140,9 +140,9 @@ class PostTypeArchiveMapping {
 		}
 		return $args;
 	}
-	
+
 	/**
-	 * Initialize options 
+	 * Initialize options
 	 *
 	 * Initialize page settings, fields, and sections and their callbacks
 	 *
@@ -160,20 +160,20 @@ class PostTypeArchiveMapping {
 				'sanitize_callback' => array( $this, 'post_type_save' ),
 			)
 		);
-		
+
 		add_settings_section( 'post-type-archive-mapping', _x( 'Post Type Archive Mapping', 'plugin settings heading' , 'post-type-archive-mapping' ), array( $this, 'settings_section' ), 'reading' );
-		
-		
-		add_settings_field( 
-			'post-type-archive-mapping', 
-			__( 'Post Type Archive Mapping', 'post-type-archive-mapping' ), 
-			array( $this, 'add_settings_post_types' ), 
-			'reading', 
+
+
+		add_settings_field(
+			'post-type-archive-mapping',
+			__( 'Post Type Archive Mapping', 'post-type-archive-mapping' ),
+			array( $this, 'add_settings_post_types' ),
+			'reading',
 			'post-type-archive-mapping'
 		);
-		
+
 	}
-	
+
 	function add_settings_post_types( $args ) {
 		$output = get_option( 'post-type-archive-mapping', array() );
 		$posts = get_posts( array(
@@ -181,7 +181,7 @@ class PostTypeArchiveMapping {
 			'posts_per_page' => 1000,
 			'post_type' => 'page',
 			'orderby' => 'name',
-			'order' => 'ASC'	
+			'order' => 'ASC'
 		) );
 		$post_types = get_post_types(
 			array(
@@ -201,15 +201,15 @@ class PostTypeArchiveMapping {
 				<?php
 				foreach( $posts as $post ) {
 					printf( '<option value="%d" %s>%s</option>', absint( $post->ID ), selected( $output[ $post_type ], $post->ID, false ), esc_html( $post->post_title ) );
-				}	
+				}
 				?>
 			</select>
 			<?php
 		}
 		?>
-		<?php	
+		<?php
 	}
-	
+
 	/**
 	 * Output settings HTML
 	 *
@@ -223,7 +223,7 @@ class PostTypeArchiveMapping {
 	 */
 	public function settings_section() {
 	}
-		
+
 }
 
 add_action( 'plugins_loaded', function() {

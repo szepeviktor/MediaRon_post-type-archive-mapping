@@ -1,9 +1,9 @@
 === Post Type Archive Mapping ===
 Contributors: ronalfy
-Tags: post types, archive, mapping, gutenberg
-Requires at least: 4.9
+Tags: post types, archive, mapping, gutenberg, block
+Requires at least: 5.0
 Tested up to: 5.0
-Stable tag: 1.0.1
+Stable tag: 2.0.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Donate link: https://mediaron.com/give/
@@ -55,6 +55,10 @@ No, this plugin only works with pages.
 3. Settings->Reading option
 
 == Changelog ==
+
+= 2.0.0 =
+* Released 2019-01-06
+* Numerous enhancements to the Gutenberg block including showing taxonomies, setting the image type (Avatar vs Regular), setting where the featured image is displayed, selecting the image size, and much more.
 
 = 1.0.1 =
 * Released 2018-11-07
