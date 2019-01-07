@@ -1,4 +1,4 @@
-=== Archive Mapping and Show Posts Gutenberg Block ===
+=== Archive Mapping and Post Selector Gutenberg Block ===
 Contributors: ronalfy
 Tags: post types, archive, mapping, gutenberg, block
 Requires at least: 5.0
