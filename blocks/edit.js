@@ -634,8 +634,10 @@ class PTAM_Custom_Posts extends Component {
 									</div>
 
 									<div class="ptam-block-post-grid-excerpt">
-										{ displayPostExcerpt && post.post_excerpt &&
-											<div dangerouslySetInnerHTML={ { __html: post.post_excerpt } } />
+										{ displayPostExcerpt && '' !==  post.post_excerpt &&
+											<Fragment>
+												{htmlToReactParser.parse(post.post_excerpt)}
+											</Fragment>
 										}
 
 										{ displayPostLink &&

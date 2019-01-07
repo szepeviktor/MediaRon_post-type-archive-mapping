@@ -121,6 +121,7 @@ function ptam_get_posts($post_data) {
 	$posts = get_posts( $post_args );
 
 	foreach( $posts as &$post) {
+
 		if ('gravatar' === $image_type ) {
 			$thumbnail = get_avatar( $post->post_author, $avatar_size );
 		} else {
@@ -142,7 +143,6 @@ function ptam_get_posts($post_data) {
 		$taxonomies = get_object_taxonomies( $post->post_type, 'objects' );
 		$terms = array();
 		foreach( $taxonomies as $key => $taxonomy ) {
-			error_log($key);
 			$terms[$key] = get_the_term_list( $post->ID, $key, '', ', ' );
 		}
 		$post->terms = $terms;
@@ -168,7 +168,6 @@ function ptam_get_image( $post_data ) {
 	$avatar_size = $post_data['avatar_size'];
 	$image_type = $post_data['image_type'];
 	$image_size = $post_data['image_size'];
-	error_log($image_size);
 
 	$post_args = array(
 		'post_type' => $post_type,

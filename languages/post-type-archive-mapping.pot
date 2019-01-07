@@ -1,4 +1,4 @@
-# Copyright (C) 2018 ConvertKit
+# Copyright (C) 2019 ConvertKit
 # This file is distributed under the same license as the ConvertKit package.
 msgid ""
 msgstr ""
@@ -13,11 +13,11 @@ msgstr ""
 "X-Poedit-SourceCharset: UTF-8\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: blocks/class-post-type-select-posts.php:184
+#: blocks/class-post-type-select-posts.php:241
 msgid "Newer Items"
 msgstr ""
 
-#: blocks/class-post-type-select-posts.php:185
+#: blocks/class-post-type-select-posts.php:242
 msgid "Older Items"
 msgstr ""
 

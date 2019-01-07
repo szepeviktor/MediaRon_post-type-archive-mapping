@@ -29234,7 +29234,11 @@ var PTAM_Custom_Posts = function (_Component) {
 									wp.element.createElement(
 										'div',
 										{ 'class': 'ptam-block-post-grid-excerpt' },
-										displayPostExcerpt && post.post_excerpt && wp.element.createElement('div', { dangerouslySetInnerHTML: { __html: post.post_excerpt } }),
+										displayPostExcerpt && '' !== post.post_excerpt && wp.element.createElement(
+											Fragment,
+											null,
+											htmlToReactParser.parse(post.post_excerpt)
+										),
 										displayPostLink && wp.element.createElement(
 											'p',
 											null,
