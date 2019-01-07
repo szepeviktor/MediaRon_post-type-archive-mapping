@@ -123,6 +123,18 @@ function ptam_custom_posts( $attributes ) {
 							esc_html( get_the_date( '', $post_id ) )
 						);
 					}
+					// Get the taxonomies
+					if ( isset( $attributes['displayTaxonomies'] ) && $attributes['displayTaxonomies'] ) {
+						$taxonomies = get_object_taxonomies( $post->post_type, 'objects' );
+						$terms = array();
+						foreach( $taxonomies as $key => $taxonomy ) {
+							$terms[$key] = get_the_term_list( $post->ID, $key, '', ', ' );
+						}
+						foreach( $taxonomies as $key => $taxonomy ) {
+							if ( false === $terms[$key] ) continue;
+							$list_items_markup .= sprintf( '<div class="ptam-terms"><span class="ptam-term-label">%s: </span><span class="ptam-term-values">%s</span></div>', $taxonomy->label, $terms[$key] );
+						}
+					}
 					// Get the featured image
 					if ( isset( $attributes['displayPostImage'] ) && $attributes['displayPostImage'] && $post_thumb_id && 'below_title_and_meta' === $attributes['imageLocation']) {
 						$list_items_markup .= sprintf(
