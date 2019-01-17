@@ -132,6 +132,7 @@ class PostTypeArchiveMapping {
 	}
 
 	public function post_type_save( $args ) {
+		if( ! is_array( $args ) ) return $args;
 		global $wpdb;
 		$query = "delete from {$wpdb->postmeta} where meta_key = '_post_type_mapped'";
 		$wpdb->query( $query );
