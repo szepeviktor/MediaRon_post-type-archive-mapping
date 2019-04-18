@@ -66,6 +66,7 @@ No, this plugin only works with pages.
 = 2.0.4 =
 * Released 2019-04-18
 * Adding support for six columns
+* Fixing undefined index error
 
 = 2.0.3 =
 * Released 2019-03-29
@@ -94,4 +95,4 @@ No, this plugin only works with pages.
 == Upgrade Notice ==
 
 = 2.0.4 =
-Adding support for six columns
+Adding support for six columns. Fixing undefined index error.
