@@ -28618,7 +28618,7 @@ var _wp$editor = wp.editor,
     BlockControls = _wp$editor.BlockControls;
 
 
-var MAX_POSTS_COLUMNS = 4;
+var MAX_POSTS_COLUMNS = 6;
 
 var PTAM_Custom_Posts = function (_Component) {
 	_inherits(PTAM_Custom_Posts, _Component);
