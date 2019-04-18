@@ -207,7 +207,7 @@ class PostTypeArchiveMapping {
 				<option value="default"><?php esc_html_e( 'Default', 'post-type-archive-mapping' ); ?></option>
 				<?php
 				foreach( $posts as $post ) {
-					printf( '<option value="%d" %s>%s</option>', absint( $post->ID ), selected( $output[ $post_type ], $post->ID, false ), esc_html( $post->post_title ) );
+					printf( '<option value="%d" %s>%s</option>', absint( $post->ID ), selected( $selection, $post->ID, false ), esc_html( $post->post_title ) );
 				}
 				?>
 			</select>
