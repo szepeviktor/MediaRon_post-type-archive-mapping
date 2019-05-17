@@ -1,5 +1,5 @@
 === Custom Post Types Block ===
-Contributors: ronalfy
+Contributors: ronalfy, chrislogan
 Tags: custom post types, archive, mapping, gutenberg, block, taxonomy, terms
 Requires at least: 5.0
 Tested up to: 5.2
