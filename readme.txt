@@ -1,6 +1,6 @@
-=== Archive Mapping and Post Selector Gutenberg Block ===
+=== Custom Post Types Block ===
 Contributors: ronalfy
-Tags: post types, archive, mapping, gutenberg, block
+Tags: custom post types, archive, mapping, gutenberg, block, taxonomy, terms
 Requires at least: 5.0
 Tested up to: 5.2
 Stable tag: 2.0.5
