@@ -20,6 +20,18 @@ Installation
 ---------------------
 Go to Settings->Reading. At the bottom you will see a place to map your post types.
 
+DEVS
+---------------------
+
+1. Clone the repo to any location you choose.
+2. Run ```npm install``` inside the folder.
+3. Run ```npm run build``` inside the folder.
+4. Set up a symlink to your WordPress installation using the folder as the base.
+5. Run ```npm run watch``` to make changes and then ```npm run build``` when you're done.
+
+1. To edit the block, they are in ```/blocks/load.js``` and ```/blocks/edit.js```. 
+2. The REST API is created and passed in ```/blocks.init.php```.
+3. The attributes and output are in ```/blocks/class-post-type-select-posts.php```.
 
 Credit
 -------------
