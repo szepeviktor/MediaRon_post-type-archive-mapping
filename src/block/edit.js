@@ -12,12 +12,6 @@ const { __ } = wp.i18n;
 
 const { decodeEntities } = wp.htmlEntities;
 
-const { apiFetch } = wp;
-
-const {
-	registerStore,
-} = wp.data;
-
 const {
 	PanelBody,
 	Placeholder,
