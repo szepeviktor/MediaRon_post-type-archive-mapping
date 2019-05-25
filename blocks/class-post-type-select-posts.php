@@ -158,11 +158,13 @@ function ptam_custom_posts( $attributes ) {
 					$excerpt = apply_filters( 'the_excerpt', get_post_field( 'post_excerpt', $post_id, 'display' ) );
 
 					if( empty( $excerpt ) ) {
-						$excerpt = apply_filters( 'the_excerpt', wp_trim_words( $post->post_content, 55 ) );
+						$excerpt = apply_filters( 'the_excerpt', $post->post_content );
 					}
 
 					if ( ! $excerpt ) {
 						$excerpt = null;
+					} else {
+						$excerpt = wp_trim_words( $excerpt, isset( $attributes['trimWords'] ) ? $attributes['trimWords'] : 55 );
 					}
 
 					if ( isset( $attributes['displayPostExcerpt'] ) && $attributes['displayPostExcerpt'] ) {
@@ -379,6 +381,10 @@ function ptam_register_custom_posts_block() {
 			'readMoreText'  => array(
 				'type' => 'string',
 				'default' => 'Continue Reading',
+			),
+			'trimWords'  => array(
+				'type' => 'int',
+				'default' => 55,
 			),
 		),
 		'render_callback' => 'ptam_custom_posts',

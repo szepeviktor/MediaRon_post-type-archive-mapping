@@ -1,13 +1,8 @@
 /**
  * External dependencies
  */
-
-import get from 'lodash/get';
-import isUndefined from 'lodash/isUndefined';
-import pickBy from 'lodash/pickBy';
 import moment from 'moment';
 import classnames from 'classnames';
-import { stringify } from 'querystringify';
 import axios from 'axios';
 var HtmlToReactParser = require('html-to-react').Parser;
 
@@ -33,7 +28,6 @@ const {
 	TextControl,
 	ToggleControl,
 	Toolbar,
-	withAPIData,
 } = wp.components;
 
 const {
@@ -59,11 +53,6 @@ class PTAM_Custom_Posts extends Component {
 		this.get_latest_posts = this.get_latest_posts.bind(this);
 		this.get_term_list = this.get_term_list.bind(this);
 
-		const default_post_type = 'post';
-		const default_taxonomy_name = 'category';
-		let taxonomies = [];
-		let terms = [{'value': 0, 'label': 'All'}];
-		let ptam_latest_posts = [];
 		this.state = {
 			loading: true,
 			postType: 'post',
@@ -84,10 +73,8 @@ class PTAM_Custom_Posts extends Component {
 
 	get_latest_posts ( object = {} ) {
 		this.setState( { 'loading': true } );
-		let latestPosts = [];
-		let imageSizes = [];
 		const props = jQuery.extend({}, this.props.attributes, object);
-		const { postType, order, orderBy, taxonomy, avatarSize, imageType, imageTypeSize,term, terms, postsToShow, imageCrop } = props;
+		const { postType, order, orderBy, taxonomy, avatarSize, imageType, imageTypeSize,term, postsToShow, imageCrop } = props;
 		axios.get(ptam_globals.rest_url + `ptam/v1/get_posts/${postType}/${order}/${orderBy}/${taxonomy}/${term}/${postsToShow}/${imageCrop}/${avatarSize}/${imageType}/${imageTypeSize}`).then( ( response ) => {
 			// Now Set State
 			this.setState( {
@@ -128,7 +115,7 @@ class PTAM_Custom_Posts extends Component {
 		let userTaxonomies = [];
 		let userTerms = [];
 		const props = jQuery.extend({}, this.props.attributes, object);
-		const { postType, order, orderBy, avatarSize,imageType,imageTypeSize,taxonomy, term, terms, postsToShow, imageCrop } = props;
+		const { postType, order, orderBy, avatarSize,imageType,imageTypeSize,taxonomy, term, postsToShow, imageCrop } = props;
 
 		// Get Latest Posts and Chain Promises
 		axios.get(ptam_globals.rest_url + `ptam/v1/get_posts/${postType}/${order}/${orderBy}/${taxonomy}/${term}/${postsToShow}/${imageCrop}/${avatarSize}/${imageType}/${imageTypeSize}`).then( ( response ) => {
@@ -234,6 +221,11 @@ class PTAM_Custom_Posts extends Component {
 		setAttributes( { displayTaxonomies: ! displayTaxonomies } );
 	}
 
+	trimWords = ( value ) => {
+		const { setAttributes } = this.props;
+		setAttributes( { trimWords: value } );
+	}
+
 	customizeReadMoreText() {
 		const { readMoreText } = this.props.attributes;
 		const { setAttributes } = this.props;
@@ -254,9 +246,6 @@ class PTAM_Custom_Posts extends Component {
 
 		let latestPosts = [];
 		let imageSizes = [];
-		let postTypeList = [];
-		let taxonomyList = [];
-		let termsList = [];
 
 		const { postType, order, orderBy, taxonomy, term, terms, imageTypeSize, avatarSize,postsToShow, imageCrop } = this.props.attributes;
 
@@ -281,11 +270,8 @@ class PTAM_Custom_Posts extends Component {
 
 		let latestPosts = [];
 		let imageSizes = [];
-		let postTypeList = [];
-		let taxonomyList = [];
-		let termsList = [];
 
-		const { postType, order, orderBy, taxonomy, term, terms, imageTypeSize, avatarSize,postsToShow, imageCrop } = this.props.attributes;
+		const { postType, order, orderBy, taxonomy, term, avatarSize,postsToShow, imageCrop } = this.props.attributes;
 
 		// Get Latest Posts and Chain Promises
 		axios.get(ptam_globals.rest_url + `ptam/v1/get_images/${postType}/${order}/${orderBy}/${taxonomy}/${term}/${postsToShow}/${imageCrop}/${avatarSize}/regular/${value}`).then( ( response ) => {
@@ -301,6 +287,16 @@ class PTAM_Custom_Posts extends Component {
 
 	}
 
+	excerptParse = ( excerpt ) => {
+		let htmlToReactParser = new HtmlToReactParser();
+		const { trimWords } = this.props.attributes;
+
+		excerpt = excerpt.split(' ').slice(0, trimWords);
+		excerpt = excerpt.join(' ');
+
+		return htmlToReactParser.parse(excerpt);
+	}
+
 	onAvatarSizeChange = ( value ) => {
 		let classRef = this;
 		this.setState( {
@@ -309,11 +305,8 @@ class PTAM_Custom_Posts extends Component {
 		setTimeout(function(){
 			let latestPosts = [];
 			let imageSizes = [];
-			let postTypeList = [];
-			let taxonomyList = [];
-			let termsList = [];
 
-			const { postType, order, orderBy, taxonomy, term, terms, postsToShow, avatarSize, imageSize,imageCrop, imageTypeSize, imageType } = classRef.props.attributes;
+			const { postType, order, orderBy, taxonomy, term, postsToShow, imageCrop, imageTypeSize, imageType } = classRef.props.attributes;
 
 			// Get Latest Posts and Chain Promises
 			axios.get(ptam_globals.rest_url + `ptam/v1/get_images/${postType}/${order}/${orderBy}/${taxonomy}/${term}/${postsToShow}/${imageCrop}/${value}/${imageType}/${imageTypeSize}`).then( ( response ) => {
@@ -332,7 +325,7 @@ class PTAM_Custom_Posts extends Component {
 	render() {
 		let htmlToReactParser = new HtmlToReactParser();
 		const { attributes, setAttributes } = this.props;
-		const { postType, term, taxonomy, displayPostDate, displayPostExcerpt, displayPostAuthor, displayPostImage,displayPostLink, align, postLayout, columns, order, pagination, orderBy, postsToShow, width, imageCrop, readMoreText, imageLocation, imageSize, imageType, imageTypeSize, avatarSize, changeCapitilization, displayTaxonomies } = attributes;
+		const { postType, term, taxonomy, displayPostDate, displayPostExcerpt, displayPostAuthor, displayPostImage,displayPostLink, align, postLayout, columns, order, pagination, orderBy, postsToShow, readMoreText, imageLocation, imageType, imageTypeSize, avatarSize, changeCapitilization, displayTaxonomies, trimWords } = attributes;
 
 		let userTaxonomies = this.state.userTaxonomies;
 		let userTaxonomiesArray = [];
@@ -340,11 +333,8 @@ class PTAM_Custom_Posts extends Component {
 			userTaxonomiesArray.push({value: key, label: userTaxonomies[key].label});
 		};
 		let latestPosts = this.state.latestPosts;
+
 		// Thumbnail options
-		const imageCropOptions = [
-			{ value: 'landscape', label: __( 'Landscape', 'post-type-archive-mapping' ) },
-			{ value: 'square', label: __( 'Square', 'post-type-archive-mapping' ) },
-		];
 		const imageLocationOptions = [
 			{ value: 'regular', label: __('Regular placement', 'post-type-archive-mapping' ) },
 			{ value: 'below_title', label: __('Image Below Title', 'post-type-archive-mapping' ) },
@@ -460,6 +450,14 @@ class PTAM_Custom_Posts extends Component {
 						checked={ displayPostExcerpt }
 						onChange={ this.toggleDisplayPostExcerpt }
 					/>
+					{ displayPostExcerpt &&
+						<TextControl
+							label={ __( 'Maximum Word Length of Excerpt',  'post-type-archive-mapping' ) }
+							type="number"
+							value={ trimWords }
+							onChange={ ( value ) => this.trimWords( value ) }
+						/>
+					}
 					<ToggleControl
 						label={ __( 'Display Pagination',  'post-type-archive-mapping' ) }
 						checked={ pagination }
@@ -494,10 +492,7 @@ class PTAM_Custom_Posts extends Component {
 						icon="admin-post"
 						label={ __( 'Custom Posts',  'post-type-archive-mapping' ) }
 					>
-						{ ! Array.isArray( latestPosts ) ?
-							<Spinner /> :
-							__( 'Loading...',  'post-type-archive-mapping' )
-						}
+						<Spinner />
 					</Placeholder>
 				</Fragment>
 			)
@@ -577,7 +572,7 @@ class PTAM_Custom_Posts extends Component {
 							>
 								{
 										displayPostImage && post.featured_image_src !== undefined && post.featured_image_src  && 'regular' === this.state.imageLocation ? (
-											<div class="ptam-block-post-grid-image">
+											<div className="ptam-block-post-grid-image">
 												<a href={ post.link } target="_blank" rel="bookmark">
 												{htmlToReactParser.parse(post.featured_image_src)}
 												</a>
@@ -587,10 +582,10 @@ class PTAM_Custom_Posts extends Component {
 										)
 								}
 
-								<div class="ptam-block-post-grid-text">
-									<h2 class="entry-title"><a href={ post.link } target="_blank" rel="bookmark">{ decodeEntities( post.post_title.trim() ) || __( '(Untitled)', 'post-type-archive-mapping' ) }</a></h2>
+								<div className="ptam-block-post-grid-text">
+									<h2 className="entry-title"><a href={ post.link } target="_blank" rel="bookmark">{ decodeEntities( post.post_title.trim() ) || __( '(Untitled)', 'post-type-archive-mapping' ) }</a></h2>
 									{displayPostImage && post.featured_image_src !== undefined && post.featured_image_src  && 'below_title' === this.state.imageLocation ? (
-											<div class="ptam-block-post-grid-image">
+											<div className="ptam-block-post-grid-image">
 												<a href={ post.link } target="_blank" rel="bookmark">
 												{htmlToReactParser.parse(post.featured_image_src)}
 												</a>
@@ -602,7 +597,7 @@ class PTAM_Custom_Posts extends Component {
 
 									<div className={`ptam-block-post-grid-byline ${capitilization}`}>
 										{ displayPostAuthor && post.author_info.display_name !== 'undefined' && post.author_info.display_name &&
-											<div class="ptam-block-post-grid-author"><a class="ptam-text-link" target="_blank" href={ post.author_info.author_link }>{ post.author_info.display_name }</a></div>
+											<div className="ptam-block-post-grid-author"><a className="ptam-text-link" target="_blank" href={ post.author_info.author_link }>{ post.author_info.display_name }</a></div>
 										}
 
 										{ displayPostDate && post.post_date_gmt &&
@@ -621,7 +616,7 @@ class PTAM_Custom_Posts extends Component {
 										}
 										{
 										displayPostImage && post.featured_image_src !== undefined && post.featured_image_src  && 'below_title_and_meta' === this.state.imageLocation ? (
-											<div class="ptam-block-post-grid-image">
+											<div className="ptam-block-post-grid-image">
 												<a href={ post.link } target="_blank" rel="bookmark">
 												{htmlToReactParser.parse(post.featured_image_src)}
 												</a>
@@ -632,19 +627,19 @@ class PTAM_Custom_Posts extends Component {
 										}
 									</div>
 
-									<div class="ptam-block-post-grid-excerpt">
+									<div className="ptam-block-post-grid-excerpt">
 										{ displayPostExcerpt && '' !==  post.post_excerpt &&
 											<Fragment>
-												{htmlToReactParser.parse(post.post_excerpt)}
+												{this.excerptParse(post.post_excerpt)}
 											</Fragment>
 										}
 
 										{ displayPostLink &&
-											<p><a class="ptam-block-post-grid-link ptam-text-link" href={ post.link } target="_blank" rel="bookmark">{ readMoreText }</a></p>
+											<p><a className="ptam-block-post-grid-link ptam-text-link" href={ post.link } target="_blank" rel="bookmark">{ readMoreText }</a></p>
 										}
 										{
 										displayPostImage && post.featured_image_src !== undefined && post.featured_image_src  && 'bottom' === this.state.imageLocation ? (
-												<div class="ptam-block-post-grid-image">
+												<div className="ptam-block-post-grid-image">
 													<a href={ post.link } target="_blank" rel="bookmark">
 													{htmlToReactParser.parse(post.featured_image_src)}
 													</a>
