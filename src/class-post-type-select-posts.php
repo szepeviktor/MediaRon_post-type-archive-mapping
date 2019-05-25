@@ -138,7 +138,7 @@ function ptam_custom_posts( $attributes ) {
 						);
 					}
 					// Get the taxonomies
-					if ( isset( $attributes['displayTaxonomies'] ) && $attributes['displayTaxonomies'] ) {
+					if ( isset( $attributes['displayTaxonomies'] ) && $attributes['displayTaxonomies'] && 'regular' === $taxonomy_placement_options ) {
 						$list_items_markup .= ptam_get_taxonomy_terms( $post );
 					}
 					// Get the featured image
@@ -204,6 +204,11 @@ function ptam_custom_posts( $attributes ) {
 				$list_items_markup .= sprintf(
 					'</div>'
 				);
+
+				// Get the taxonomies
+				if ( isset( $attributes['displayTaxonomies'] ) && $attributes['displayTaxonomies'] && 'below_content' === $taxonomy_placement_options ) {
+					$list_items_markup .= ptam_get_taxonomy_terms( $post );
+				}
 
 			// Wrap the text content
 			$list_items_markup .= sprintf(

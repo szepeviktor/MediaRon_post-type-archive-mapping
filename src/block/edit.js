@@ -59,7 +59,8 @@ class PTAM_Custom_Posts extends Component {
 			imageSizes: [],
 			userTaxonomies: [],
 			userTerms: [],
-			imageLocation: this.props.attributes.imageLocation
+			imageLocation: this.props.attributes.imageLocation,
+			taxonomyLocation: this.props.attributes.taxonomyLocation,
 		};
 
 		this.get_latest_data();
@@ -233,6 +234,12 @@ class PTAM_Custom_Posts extends Component {
 		});
 	}
 
+	onChangeTaxonomyLocation = (value) => {
+		this.setState( {
+			taxonomyLocation: value
+		});
+	}
+
 	onImageTypeChange = ( imageType ) => {
 		this.setState( {
 			loading: true
@@ -319,7 +326,7 @@ class PTAM_Custom_Posts extends Component {
 	render() {
 		let htmlToReactParser = new HtmlToReactParser();
 		const { attributes, setAttributes } = this.props;
-		const { postType, term, taxonomy, displayPostDate, displayPostExcerpt, displayPostAuthor, displayPostImage,displayPostLink, align, postLayout, columns, order, pagination, orderBy, postsToShow, readMoreText, imageLocation, imageType, imageTypeSize, avatarSize, changeCapitilization, displayTaxonomies, trimWords } = attributes;
+		const { postType, term, taxonomy, displayPostDate, displayPostExcerpt, displayPostAuthor, displayPostImage,displayPostLink, align, postLayout, columns, order, pagination, orderBy, postsToShow, readMoreText, imageLocation, taxonomyLocation, imageType, imageTypeSize, avatarSize, changeCapitilization, displayTaxonomies, trimWords } = attributes;
 
 		let userTaxonomies = this.state.userTaxonomies;
 		let userTaxonomiesArray = [];
@@ -346,6 +353,11 @@ class PTAM_Custom_Posts extends Component {
 		imageDisplayOptionsTypes.push( { label: __('Featured Image', 'post-type-archive-mapping' ), value: 'regular' } );
 
 		const capitilization = changeCapitilization ? "ptam-text-lower-case" : '';
+
+		const taxonomyLocationOptions = [
+			{ value: 'regular', label: __('Regular placement', 'post-type-archive-mapping' ) },
+			{ value: 'below_content', label: __('Below Content', 'post-type-archive-mapping' ) },
+		];
 
 		const inspectorControls = (
 			<InspectorControls>
@@ -385,6 +397,8 @@ class PTAM_Custom_Posts extends Component {
 							max={ ! hasPosts ? MAX_POSTS_COLUMNS : Math.min( MAX_POSTS_COLUMNS, latestPosts.length ) }
 						/>
 					}
+				</PanelBody>
+				<PanelBody title={ __( 'Options', 'post-type-archive-mapping' ) } initialOpen={false}>
 					<ToggleControl
 						label={ __( 'Display Featured Image',  'post-type-archive-mapping' ) }
 						checked={ displayPostImage }
@@ -419,7 +433,7 @@ class PTAM_Custom_Posts extends Component {
 								: ''
 							}
 							<SelectControl
-								label={ __( 'Image location',  'post-type-archive-mapping' ) }
+								label={ __( 'Image Location',  'post-type-archive-mapping' ) }
 								options={ imageLocationOptions }
 								value={ this.state.imageLocation }
 								onChange={ ( value ) => {this.onChangeLocation(value); this.props.setAttributes( { imageLocation: value } ) } }
@@ -431,6 +445,14 @@ class PTAM_Custom_Posts extends Component {
 						checked={ displayTaxonomies }
 						onChange={ this.toggleTaxonomyDisplay }
 					/>
+					{ displayTaxonomies &&
+						<SelectControl
+							label={ __( 'Taxonomy Location',  'post-type-archive-mapping' ) }
+							options={ taxonomyLocationOptions }
+							value={ this.state.taxonomyLocation }
+							onChange={ ( value ) => {this.onChangeTaxonomyLocation(value); this.props.setAttributes( { taxonomyLocation: value } ) } }
+						/>
+					}
 					<ToggleControl
 						label={ __( 'Display Post Author',  'post-type-archive-mapping' ) }
 						checked={ displayPostAuthor }
@@ -601,7 +623,7 @@ class PTAM_Custom_Posts extends Component {
 												{ moment( post.post_date_gmt ).local().format( 'MMMM DD, Y' ) }
 											</time>
 										}
-										{ userTaxonomiesArray.length > 0 && displayTaxonomies &&
+										{ userTaxonomiesArray.length > 0 && displayTaxonomies && 'regular' === taxonomyLocation &&
 											<div>
 												{userTaxonomiesArray.map((key) => {
 													if( post.terms[key.value] !== false ) {
@@ -645,6 +667,15 @@ class PTAM_Custom_Posts extends Component {
 											)
 										}
 									</div>
+									{ userTaxonomiesArray.length > 0 && displayTaxonomies && 'below_content' === taxonomyLocation &&
+											<div>
+												{userTaxonomiesArray.map((key) => {
+													if( post.terms[key.value] !== false ) {
+														return (<div className="ptam-terms"><span className="ptam-term-label">{key.label}: </span><span className="ptam-term-values">{htmlToReactParser.parse(post.terms[key.value])}</span></div>);
+													}
+												})}
+											</div>
+										}
 								</div>
 							</article>
 						) }
