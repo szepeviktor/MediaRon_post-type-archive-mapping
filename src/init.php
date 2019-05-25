@@ -23,7 +23,7 @@ function ptam_blocks_block_assets() {
 	// Load the compiled styles
 	wp_enqueue_style(
 		'ptam-style-css',
-		PostTypeArchiveMapping::get_plugin_url( 'assets/dist/css/admin.css'),
+		PostTypeArchiveMapping::get_plugin_url( 'dist/blocks.style.build.css'),
 		PTAM_VERSION, 'all' );
 }
 add_action( 'enqueue_block_assets', 'ptam_blocks_block_assets' );
@@ -39,7 +39,7 @@ function ptam_blocks_editor_assets() {
 	// Load the compiled blocks into the editor
 	wp_enqueue_script(
 		'ptam-custom-posts-gutenberg',
-		PostTypeArchiveMapping::get_plugin_url( 'assets/dist/js/gutenberg.js'),
+		PostTypeArchiveMapping::get_plugin_url( 'dist/blocks.build.js'),
 		array( 'wp-blocks', 'wp-element' ), PTAM_VERSION, true
 	);
 
