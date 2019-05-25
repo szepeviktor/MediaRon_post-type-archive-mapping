@@ -3,7 +3,7 @@ Contributors: ronalfy, chrislogan
 Tags: custom post types, archive, mapping, gutenberg, block, taxonomy, terms
 Requires at least: 5.0
 Tested up to: 5.2
-Stable tag: 2.0.5
+Stable tag: 2.0.7
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Donate link: https://mediaron.com/give/
@@ -63,6 +63,11 @@ No, this plugin only works with pages.
 
 == Changelog ==
 
+= 2.0.7 =
+* Released 2019-05-24
+* Added the ability to trim the excerpt length.
+* Reduce the file size of the Gutenberg block script using a new build technique.
+
 = 2.0.5 =
 * Released 2019-04-21
 * Conditional term filtering
@@ -97,6 +102,9 @@ No, this plugin only works with pages.
 * Initial release.
 
 == Upgrade Notice ==
+
+= 2.0.7 =
+Added the ability to trim the excerpt length. Reduce the file size of the Gutenberg block script using a new build technique.
 
 = 2.0.5 =
 Conditional term filtering
