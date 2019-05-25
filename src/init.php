@@ -174,7 +174,6 @@ function ptam_get_image( $post_data ) {
 	$term = $post_data['term'];
 	$post_type = $post_data['post_type'];
 	$posts_per_page = $post_data['posts_per_page'];
-	$image_crop = $post_data['image_crop'];
 	$avatar_size = $post_data['avatar_size'];
 	$image_type = $post_data['image_type'];
 	$image_size = $post_data['image_size'];

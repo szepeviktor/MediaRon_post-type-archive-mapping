@@ -369,11 +369,6 @@ class PTAM_Custom_Posts extends Component {
 							value={ term }
 							onChange={ ( value ) => { this.props.setAttributes( { term: value } ); this.get_latest_posts({ term: value }); } }
 					/>
-					<ToggleControl
-						label={ __( 'Display Taxonomies',  'post-type-archive-mapping' ) }
-						checked={ displayTaxonomies }
-						onChange={ this.toggleTaxonomyDisplay }
-					/>
 					<QueryControls
 						{ ...{ order, orderBy } }
 						numberOfItems={ postsToShow }
@@ -413,22 +408,29 @@ class PTAM_Custom_Posts extends Component {
 										max={ 512 }
 									/>
 								</div>
-								: ''}
-								{ 'regular' === imageType ?
+								: ''
+							}
+							{ 'regular' === imageType ?
 								<SelectControl
 									label={ __( 'Featured Image Size',  'post-type-archive-mapping' ) }
 									options={ imageSizeOptions }
 									value={ imageTypeSize }
 									onChange={ ( value ) => { this.props.setAttributes( { imageTypeSize: value } ); this.onImageSizeChange( value ); }}/>
-								: ''}
+								: ''
+							}
+							<SelectControl
+								label={ __( 'Image location',  'post-type-archive-mapping' ) }
+								options={ imageLocationOptions }
+								value={ this.state.imageLocation }
+								onChange={ ( value ) => {this.onChangeLocation(value); this.props.setAttributes( { imageLocation: value } ) } }
+							/>
 						</Fragment>
 					}
-					<SelectControl
-							label={ __( 'Featured Image location',  'post-type-archive-mapping' ) }
-							options={ imageLocationOptions }
-							value={ this.state.imageLocation }
-							onChange={ ( value ) => {this.onChangeLocation(value); this.props.setAttributes( { imageLocation: value } ) } }
-						/>
+					<ToggleControl
+						label={ __( 'Display Taxonomies',  'post-type-archive-mapping' ) }
+						checked={ displayTaxonomies }
+						onChange={ this.toggleTaxonomyDisplay }
+					/>
 					<ToggleControl
 						label={ __( 'Display Post Author',  'post-type-archive-mapping' ) }
 						checked={ displayPostAuthor }
