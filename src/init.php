@@ -219,6 +219,17 @@ function ptam_get_image( $post_data ) {
 		}
 		$post->terms = $terms;
 
+		// Get excerpt
+		if( empty( $post->post_excerpt ) ) {
+			$post->post_excerpt = apply_filters( 'the_excerpt', $post->post_content );
+		}
+
+		if ( ! $post->post_excerpt ) {
+			$post->post_excerpt = null;
+		}
+
+		$post->post_excerpt = wp_kses_post( $post->post_excerpt );
+
 	}
 	$return = array( 'posts' => $posts, 'image_sizes' => ptam_get_all_image_sizes(), 'taxonomies' => $taxonomies );
 	die( json_encode( $return ) );
