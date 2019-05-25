@@ -7,6 +7,7 @@ function ptam_get_profile_image( $attributes, $post_thumb_id = 0, $post_author =
 	ob_start();
 	// Get the featured image
 	$list_item_markup = '';
+
 	if ( isset( $attributes['displayPostImage'] ) && $attributes['displayPostImage'] ) {
 		$post_thumb_size = $attributes['imageTypeSize'];
 		$image_type = $attributes['imageType'];
@@ -72,7 +73,12 @@ function ptam_custom_posts( $attributes ) {
 			$post_id = $post->ID;
 
 			// Get the post thumbnail
-			$post_thumb_id = get_post_thumbnail_id( $post_id );
+			if ( 'gravatar' === $attributes['imageType'] ) {
+				$post_thumb_id = -1;
+			} else {
+				$post_thumb_id = get_post_thumbnail_id( $post_id );
+			}
+
 
 			if ( $post_thumb_id && isset( $attributes['displayPostImage'] ) && $attributes['displayPostImage'] ) {
 				$post_thumb_class = 'has-thumb';

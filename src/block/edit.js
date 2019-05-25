@@ -436,7 +436,7 @@ class PTAM_Custom_Posts extends Component {
 								label={ __( 'Image Location',  'post-type-archive-mapping' ) }
 								options={ imageLocationOptions }
 								value={ this.state.imageLocation }
-								onChange={ ( value ) => {this.onChangeLocation(value); this.props.setAttributes( { imageLocation: value } ) } }
+								onChange={ ( value ) => { this.props.setAttributes( { imageLocation: value } ); this.onChangeLocation(value);  } }
 							/>
 						</Fragment>
 					}
