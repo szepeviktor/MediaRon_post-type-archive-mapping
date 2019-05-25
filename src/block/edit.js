@@ -560,6 +560,9 @@ class PTAM_Custom_Posts extends Component {
 					<BlockAlignmentToolbar
 						value={ align }
 						onChange={ ( value ) => {
+							if ( undefined == value ) {
+								value = 'wide';
+							}
 							setAttributes( { align: value } );
 						} }
 						controls={ [ 'center', 'wide' ] }
