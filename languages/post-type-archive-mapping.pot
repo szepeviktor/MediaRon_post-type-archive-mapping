@@ -13,11 +13,11 @@ msgstr ""
 "X-Poedit-SourceCharset: UTF-8\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: blocks/class-post-type-select-posts.php:241
+#: blocks/class-post-type-select-posts.php:243
 msgid "Newer Items"
 msgstr ""
 
-#: blocks/class-post-type-select-posts.php:242
+#: blocks/class-post-type-select-posts.php:244
 msgid "Older Items"
 msgstr ""
 
