@@ -27,6 +27,19 @@ function ptam_get_profile_image( $attributes, $post_thumb_id = 0, $post_author =
 	}
 	return ob_get_clean();
 }
+function ptam_get_taxonomy_terms( $post ) {
+	$markup = '';
+	$taxonomies = get_object_taxonomies( $post->post_type, 'objects' );
+	$terms = array();
+	foreach( $taxonomies as $key => $taxonomy ) {
+		$terms[$key] = get_the_term_list( $post->ID, $key, '', ', ' );
+	}
+	foreach( $taxonomies as $key => $taxonomy ) {
+		if ( false === $terms[$key] ) continue;
+		$markup .= sprintf( '<div class="ptam-terms"><span class="ptam-term-label">%s: </span><span class="ptam-term-values">%s</span></div>', esc_html( $taxonomy->label ), $terms[$key] );
+	}
+	return $markup;
+}
 function ptam_custom_posts( $attributes ) {
 	$post_args = array(
 		'post_type' => $attributes['postType'],
@@ -44,6 +57,7 @@ function ptam_custom_posts( $attributes ) {
 		}
 	}
 	$image_placememt_options = $attributes['imageLocation'];
+	$taxonomy_placement_options = $attributes['taxonomyLocation'];
 	$image_size = $attributes['imageTypeSize'];
 	$recent_posts = new WP_Query( $post_args );
 
@@ -125,15 +139,7 @@ function ptam_custom_posts( $attributes ) {
 					}
 					// Get the taxonomies
 					if ( isset( $attributes['displayTaxonomies'] ) && $attributes['displayTaxonomies'] ) {
-						$taxonomies = get_object_taxonomies( $post->post_type, 'objects' );
-						$terms = array();
-						foreach( $taxonomies as $key => $taxonomy ) {
-							$terms[$key] = get_the_term_list( $post->ID, $key, '', ', ' );
-						}
-						foreach( $taxonomies as $key => $taxonomy ) {
-							if ( false === $terms[$key] ) continue;
-							$list_items_markup .= sprintf( '<div class="ptam-terms"><span class="ptam-term-label">%s: </span><span class="ptam-term-values">%s</span></div>', $taxonomy->label, $terms[$key] );
-						}
+						$list_items_markup .= ptam_get_taxonomy_terms( $post );
 					}
 					// Get the featured image
 					if ( isset( $attributes['displayPostImage'] ) && $attributes['displayPostImage'] && $post_thumb_id && 'below_title_and_meta' === $attributes['imageLocation']) {
@@ -306,6 +312,10 @@ function ptam_register_custom_posts_block() {
 			'displayTaxonomies' => array(
 				'type' => 'bool',
 				'default' => true,
+			),
+			'taxonomyLocation' => array(
+				'type' => 'string',
+				'default' => 'regular',
 			),
 			'term' => array(
 				'type' => 'int',

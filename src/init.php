@@ -102,7 +102,6 @@ function ptam_get_posts($post_data) {
 	$term = $post_data['term'];
 	$post_type = $post_data['post_type'];
 	$posts_per_page = $post_data['posts_per_page'];
-	$image_crop = $post_data['image_crop'];
 	$image_type = $post_data['image_type'];
 	$image_size = $post_data['image_size'];
 	$avatar_size = $post_data['avatar_size'];
@@ -149,6 +148,15 @@ function ptam_get_posts($post_data) {
 		}
 		$post->terms = $terms;
 
+		if( empty( $post->post_excerpt ) ) {
+			$post->post_excerpt = apply_filters( 'the_excerpt', $post->post_content );
+		}
+
+		if ( ! $post->post_excerpt ) {
+			$post->post_excerpt = null;
+		}
+
+		$post->post_excerpt = wp_kses_post( $post->post_excerpt );
 	}
 	$return = array( 'posts' => $posts, 'image_sizes' => ptam_get_all_image_sizes(), 'taxonomies' => $taxonomies );
 	die( json_encode( $return ) );
