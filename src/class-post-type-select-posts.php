@@ -30,12 +30,22 @@ function ptam_get_profile_image( $attributes, $post_thumb_id = 0, $post_author =
 	}
 	return ob_get_clean();
 }
-function ptam_get_taxonomy_terms( $post ) {
+function ptam_get_taxonomy_terms( $post, $attributes = array() ) {
 	$markup = '';
 	$taxonomies = get_object_taxonomies( $post->post_type, 'objects' );
 	$terms = array();
 	foreach( $taxonomies as $key => $taxonomy ) {
-		$terms[$key] = get_the_term_list( $post->ID, $key, '', ', ' );
+		$term_list = get_the_terms( $post->ID, $key );
+		$term_array = array();
+		if ( $term_list && ! empty( $term_list ) ) {
+			foreach ( $term_list as $term ) {
+				$term_permalink = get_term_link( $term, $key );
+				$term_array[] = sprintf( '<a href="%s" style="color: %s; text-decoration: none; box-shadow: unset;">%s</a>', esc_url( $term_permalink ),  esc_attr( $attributes['linkColor'] ), esc_html( $term->name ) );
+			}
+			$terms[$key] = implode( ', ', $term_array );
+		} else {
+			$terms[$key] = false;
+		}
 	}
 	foreach( $taxonomies as $key => $taxonomy ) {
 		if ( false === $terms[$key] ) continue;
@@ -157,7 +167,7 @@ function ptam_custom_posts( $attributes ) {
 					}
 					// Get the taxonomies
 					if ( isset( $attributes['displayTaxonomies'] ) && $attributes['displayTaxonomies'] && 'regular' === $taxonomy_placement_options ) {
-						$list_items_markup .= ptam_get_taxonomy_terms( $post );
+						$list_items_markup .= ptam_get_taxonomy_terms( $post, $attributes );
 					}
 					// Get the featured image
 					if ( isset( $attributes['displayPostImage'] ) && $attributes['displayPostImage'] && $post_thumb_id && 'below_title_and_meta' === $attributes['imageLocation']) {
@@ -198,9 +208,10 @@ function ptam_custom_posts( $attributes ) {
 
 					if ( isset( $attributes['displayPostLink'] ) && $attributes['displayPostLink'] ) {
 						$list_items_markup .= sprintf(
-							'<p><a class="ptam-block-post-grid-link ptam-text-link" href="%1$s" rel="bookmark">%2$s</a></p>',
+							'<p><a class="ptam-block-post-grid-link ptam-text-link" href="%1$s" rel="bookmark" style="color: %3$s">%2$s</a></p>',
 							esc_url( get_permalink( $post_id ) ),
-							esc_html( $attributes['readMoreText'] )
+							esc_html( $attributes['readMoreText'] ),
+							esc_attr( $attributes['continueReadingColor'] )
 						);
 					}
 
@@ -226,8 +237,8 @@ function ptam_custom_posts( $attributes ) {
 
 				// Get the taxonomies
 				if ( isset( $attributes['displayTaxonomies'] ) && $attributes['displayTaxonomies'] && 'below_content' === $taxonomy_placement_options ) {
-					$list_items_markup .= sprintf( '<div %s>', 'grid' === $attributes['postLayout'] ? "style='text-align: {$attributes['metaAlignment']}'" : '' );
-					$list_items_markup .= ptam_get_taxonomy_terms( $post );
+					$list_items_markup .= sprintf( '<div %s>', 'grid' === $attributes['postLayout'] ? "style='text-align: {$attributes['metaAlignment']};color: {$attributes['contentColor']};'" : "style='color: {$attributes['contentColor']};'" );
+					$list_items_markup .= ptam_get_taxonomy_terms( $post, $attributes );
 					$list_items_markup .= '</div>';
 				}
 
