@@ -28,7 +28,7 @@ const {
 	InspectorControls,
 	BlockAlignmentToolbar,
 	BlockControls,
-	AlignmentToolbar,
+	PanelColorSettings,
 } = wp.editor;
 
 
@@ -72,8 +72,9 @@ class PTAM_Custom_Posts extends Component {
 	get_latest_posts ( object = {} ) {
 		this.setState( { 'loading': true } );
 		const props = jQuery.extend({}, this.props.attributes, object);
-		const { postType, order, orderBy, taxonomy, avatarSize, imageType, imageTypeSize,term, postsToShow, imageCrop } = props;
-		axios.get(ptam_globals.rest_url + `ptam/v1/get_posts/${postType}/${order}/${orderBy}/${taxonomy}/${term}/${postsToShow}/${imageCrop}/${avatarSize}/${imageType}/${imageTypeSize}`).then( ( response ) => {
+		let { postType, order, orderBy, taxonomy, avatarSize, imageType, imageTypeSize,term, postsToShow, imageCrop, linkColor } = props;
+		linkColor = linkColor.replace( '#', '' );
+		axios.get(ptam_globals.rest_url + `ptam/v1/get_posts/${postType}/${order}/${orderBy}/${taxonomy}/${term}/${postsToShow}/${imageCrop}/${avatarSize}/${imageType}/${imageTypeSize}/${linkColor}`).then( ( response ) => {
 			// Now Set State
 			this.setState( {
 				loading: false,
@@ -113,10 +114,12 @@ class PTAM_Custom_Posts extends Component {
 		let userTaxonomies = [];
 		let userTerms = [];
 		const props = jQuery.extend({}, this.props.attributes, object);
-		const { postType, order, orderBy, avatarSize,imageType,imageTypeSize,taxonomy, term, postsToShow, imageCrop } = props;
+		let { postType, order, orderBy, avatarSize,imageType,imageTypeSize,taxonomy, term, postsToShow, imageCrop, linkColor } = props;
+
+		linkColor = linkColor.replace( '#', '' );
 
 		// Get Latest Posts and Chain Promises
-		axios.get(ptam_globals.rest_url + `ptam/v1/get_posts/${postType}/${order}/${orderBy}/${taxonomy}/${term}/${postsToShow}/${imageCrop}/${avatarSize}/${imageType}/${imageTypeSize}`).then( ( response ) => {
+		axios.get(ptam_globals.rest_url + `ptam/v1/get_posts/${postType}/${order}/${orderBy}/${taxonomy}/${term}/${postsToShow}/${imageCrop}/${avatarSize}/${imageType}/${imageTypeSize}/${linkColor}`).then( ( response ) => {
 				latestPosts = response.data.posts;
 				imageSizes = response.data.image_sizes;
 				userTaxonomies = response.data.taxonomies;
@@ -251,10 +254,12 @@ class PTAM_Custom_Posts extends Component {
 		let latestPosts = [];
 		let imageSizes = [];
 
-		const { postType, order, orderBy, taxonomy, term, terms, imageTypeSize, avatarSize,postsToShow, imageCrop } = this.props.attributes;
+		let { postType, order, orderBy, taxonomy, term, terms, imageTypeSize, avatarSize,postsToShow, imageCrop, linkColor } = this.props.attributes;
+
+		linkColor = linkColor.replace( '#', '' );
 
 		// Get Latest Posts and Chain Promises
-		axios.get(ptam_globals.rest_url + `ptam/v1/get_images/${postType}/${order}/${orderBy}/${taxonomy}/${term}/${postsToShow}/${imageCrop}/${avatarSize}/${imageType}/${imageTypeSize}`).then( ( response ) => {
+		axios.get(ptam_globals.rest_url + `ptam/v1/get_images/${postType}/${order}/${orderBy}/${taxonomy}/${term}/${postsToShow}/${imageCrop}/${avatarSize}/${imageType}/${imageTypeSize}/${linkColor}`).then( ( response ) => {
 				latestPosts = response.data.posts;
 				imageSizes = response.data.image_sizes;
 				this.setState( {
@@ -275,10 +280,12 @@ class PTAM_Custom_Posts extends Component {
 		let latestPosts = [];
 		let imageSizes = [];
 
-		const { postType, order, orderBy, taxonomy, term, avatarSize,postsToShow, imageCrop } = this.props.attributes;
+		let { postType, order, orderBy, taxonomy, term, avatarSize,postsToShow, imageCrop, linkColor } = this.props.attributes;
+
+		linkColor = linkColor.replace( '#', '' );
 
 		// Get Latest Posts and Chain Promises
-		axios.get(ptam_globals.rest_url + `ptam/v1/get_images/${postType}/${order}/${orderBy}/${taxonomy}/${term}/${postsToShow}/${imageCrop}/${avatarSize}/regular/${value}`).then( ( response ) => {
+		axios.get(ptam_globals.rest_url + `ptam/v1/get_images/${postType}/${order}/${orderBy}/${taxonomy}/${term}/${postsToShow}/${imageCrop}/${avatarSize}/regular/${value}/${linkColor}`).then( ( response ) => {
 			latestPosts = response.data.posts;
 			imageSizes = response.data.image_sizes;
 			this.setState( {
@@ -311,10 +318,12 @@ class PTAM_Custom_Posts extends Component {
 			let latestPosts = [];
 			let imageSizes = [];
 
-			const { postType, order, orderBy, taxonomy, term, postsToShow, imageCrop, imageTypeSize, imageType } = classRef.props.attributes;
+			let { postType, order, orderBy, taxonomy, term, postsToShow, imageCrop, imageTypeSize, imageType, linkColor } = classRef.props.attributes;
+
+			linkColor = linkColor.replace( '#', '' );
 
 			// Get Latest Posts and Chain Promises
-			axios.get(ptam_globals.rest_url + `ptam/v1/get_images/${postType}/${order}/${orderBy}/${taxonomy}/${term}/${postsToShow}/${imageCrop}/${value}/${imageType}/${imageTypeSize}`).then( ( response ) => {
+			axios.get(ptam_globals.rest_url + `ptam/v1/get_images/${postType}/${order}/${orderBy}/${taxonomy}/${term}/${postsToShow}/${imageCrop}/${value}/${imageType}/${imageTypeSize}/${linkColor}`).then( ( response ) => {
 				latestPosts = response.data.posts;
 				imageSizes = response.data.image_sizes;
 				classRef.setState( {
@@ -327,10 +336,32 @@ class PTAM_Custom_Posts extends Component {
 		}, 3000);
 	}
 
+	// Colors
+	onChangeBorderColor = ( value ) => {
+		this.props.setAttributes( { borderColor: value } );
+	}
+	onChangeBackgroundColor = ( value ) => {
+		this.props.setAttributes( { backgroundColor: value } );
+	}
+	onChangeTitleColor = ( value ) => {
+		this.props.setAttributes( { titleColor: value } );
+	}
+	onChangeContentColor = ( value ) => {
+		this.props.setAttributes( { contentColor: value } );
+	}
+	onChangeLinkColor = ( value ) => {
+		this.props.attributes.linkColor = value;
+		this.props.setAttributes( { linkColor: value } );
+		this.get_latest_posts( {} );
+	}
+	onChangeContinueReadingColor = ( value ) => {
+		this.props.setAttributes( { continueReadingColor: value } );
+	}
+
 	render() {
 		let htmlToReactParser = new HtmlToReactParser();
 		const { attributes, setAttributes } = this.props;
-		const { postType, term, taxonomy, displayPostDate, displayPostExcerpt, displayPostAuthor, displayPostImage,displayPostLink, align, postLayout, columns, order, pagination, orderBy, postsToShow, readMoreText, imageLocation, taxonomyLocation, imageType, imageTypeSize, avatarSize, changeCapitilization, displayTaxonomies, trimWords, titleAlignment, imageAlignment, metaAlignment, contentAlignment } = attributes;
+		const { postType, term, taxonomy, displayPostDate, displayPostExcerpt, displayPostAuthor, displayPostImage,displayPostLink, align, postLayout, columns, order, pagination, orderBy, postsToShow, readMoreText, imageLocation, taxonomyLocation, imageType, imageTypeSize, avatarSize, changeCapitilization, displayTaxonomies, trimWords, titleAlignment, imageAlignment, metaAlignment, contentAlignment, padding, border, borderRounded, borderColor, backgroundColor, titleColor, linkColor, contentColor, continueReadingColor } = attributes;
 
 		let userTaxonomies = this.state.userTaxonomies;
 		let userTaxonomiesArray = [];
@@ -368,6 +399,13 @@ class PTAM_Custom_Posts extends Component {
 			{ value: 'center', label: __('Center', 'post-type-archive-mapping' ) },
 			{ value: 'right', label: __('Right', 'post-type-archive-mapping' ) },
 		];
+
+		const borderPaddingStyles = {
+			padding: padding + 'px',
+			border: border + 'px solid ' + borderColor,
+			borderRadius: borderRounded + 'px',
+			backgroundColor: backgroundColor,
+		};
 
 
 		const inspectorControls = (
@@ -539,6 +577,94 @@ class PTAM_Custom_Posts extends Component {
 						/>
 					</PanelBody>
 				}
+				<PanelBody title={ __( 'Borders and Padding', 'post-type-archive-mapping' ) } initialOpen={false}>
+					<RangeControl
+						label={ __( 'Padding', 'post-type-archive-mapping' ) }
+						value={ padding }
+						onChange={ ( value ) => this.props.setAttributes( { padding: value } ) }
+						min={ 0 }
+						max={ 60 }
+						step={ 1 }
+					/>
+					<RangeControl
+						label={ __( 'Border', 'post-type-archive-mapping' ) }
+						value={ border }
+						onChange={ ( value ) => this.props.setAttributes( { border: value } ) }
+						min={ 0 }
+						max={ 10 }
+						step={ 1 }
+					/>
+					<PanelColorSettings
+						title={ __( 'Border Color', 'post-type-archive-mapping' ) }
+						initialOpen={ true }
+						colorSettings={ [ {
+							value: borderColor,
+							onChange: this.onChangeBorderColor,
+							label: __( 'Border Color', 'post-type-archive-mapping' ),
+						} ] }
+						>
+					</PanelColorSettings>
+					<RangeControl
+						label={ __( 'Border Rounded', 'post-type-archive-mapping' ) }
+						value={ borderRounded }
+						onChange={ ( value ) => this.props.setAttributes( { borderRounded: value } ) }
+						min={ 0 }
+						max={ 10 }
+						step={ 1 }
+					/>
+				</PanelBody>
+				<PanelBody title={ __( 'Background and Colors', 'post-type-archive-mapping' ) } initialOpen={false}>
+					<PanelColorSettings
+						title={ __( 'Background Color', 'post-type-archive-mapping' ) }
+						initialOpen={ true }
+						colorSettings={ [ {
+							value: backgroundColor,
+							onChange: this.onChangeBackgroundColor,
+							label: __( 'Background Color', 'post-type-archive-mapping' ),
+						} ] }
+						>
+					</PanelColorSettings>
+					<PanelColorSettings
+						title={ __( 'Title Color', 'post-type-archive-mapping' ) }
+						initialOpen={ true }
+						colorSettings={ [ {
+							value: titleColor,
+							onChange: this.onChangeTitleColor,
+							label: __( 'Title Color', 'post-type-archive-mapping' ),
+						} ] }
+						>
+					</PanelColorSettings>
+					<PanelColorSettings
+						title={ __( 'Content Color', 'post-type-archive-mapping' ) }
+						initialOpen={ true }
+						colorSettings={ [ {
+							value: contentColor,
+							onChange: this.onChangeContentColor,
+							label: __( 'Content Color', 'post-type-archive-mapping' ),
+						} ] }
+						>
+					</PanelColorSettings>
+					<PanelColorSettings
+						title={ __( 'Link Color', 'post-type-archive-mapping' ) }
+						initialOpen={ true }
+						colorSettings={ [ {
+							value: linkColor,
+							onChange: this.onChangeLinkColor,
+							label: __( 'Link Color', 'post-type-archive-mapping' ),
+						} ] }
+						>
+					</PanelColorSettings>
+					<PanelColorSettings
+						title={ __( 'Continue Reading Color', 'post-type-archive-mapping' ) }
+						initialOpen={ true }
+						colorSettings={ [ {
+							value: continueReadingColor,
+							onChange: this.onChangeContinueReadingColor,
+							label: __( 'Continue Reading Color', 'post-type-archive-mapping' ),
+						} ] }
+						>
+					</PanelColorSettings>
+				</PanelBody>
 			</InspectorControls>
 		);
 		if( this.state.loading ) {
@@ -595,8 +721,14 @@ class PTAM_Custom_Posts extends Component {
 		// Alignment Styles
 		const titleAlignmentStyles = postLayout === 'grid' ? { textAlign: titleAlignment } : {};
 		const imageAlignmentStyles = postLayout === 'grid' ? { textAlign: imageAlignment } : {};
-		const metaAlignmentStyles = postLayout === 'grid' ? { textAlign: metaAlignment } : {};
-		const contentAlignmentStyles = postLayout === 'grid' ? { textAlign: contentAlignment } : {};
+		const metaAlignmentStyles = postLayout === 'grid' ? { textAlign: metaAlignment, color: contentColor } : { color: contentColor };
+		const contentAlignmentStyles = postLayout === 'grid' ? { textAlign: contentAlignment, color: contentColor } : { color: contentColor };
+
+		// Color Styles
+		const titleColorStyles = { color: titleColor };
+		const linkColorStyles = { color: linkColor };
+		const continueReadingColorStyles = { color: continueReadingColor };
+
 
 		return (
 			<Fragment>
@@ -635,6 +767,7 @@ class PTAM_Custom_Posts extends Component {
 								className={ classnames(
 									post.featured_image_src && displayPostImage ? 'has-thumb' : 'no-thumb'
 								) }
+								style={ borderPaddingStyles }
 							>
 								{
 										displayPostImage && post.featured_image_src !== undefined && post.featured_image_src  && 'regular' === this.state.imageLocation ? (
@@ -649,7 +782,7 @@ class PTAM_Custom_Posts extends Component {
 								}
 
 								<div className="ptam-block-post-grid-text">
-									<h2 className="entry-title" style={titleAlignmentStyles}><a href={ post.link } target="_blank" rel="bookmark">{ decodeEntities( post.post_title.trim() ) || __( '(Untitled)', 'post-type-archive-mapping' ) }</a></h2>
+									<h2 className="entry-title" style={titleAlignmentStyles}><a href={ post.link } target="_blank" rel="bookmark" style={titleColorStyles}>{ decodeEntities( post.post_title.trim() ) || __( '(Untitled)', 'post-type-archive-mapping' ) }</a></h2>
 									{displayPostImage && post.featured_image_src !== undefined && post.featured_image_src  && 'below_title' === this.state.imageLocation ? (
 											<div className="ptam-block-post-grid-image" style={imageAlignmentStyles}>
 												<a href={ post.link } target="_blank" rel="bookmark">
@@ -663,7 +796,7 @@ class PTAM_Custom_Posts extends Component {
 
 									<div className={`ptam-block-post-grid-byline ${capitilization}`} style={metaAlignmentStyles}>
 										{ displayPostAuthor && post.author_info.display_name !== 'undefined' && post.author_info.display_name &&
-											<div className="ptam-block-post-grid-author"><a className="ptam-text-link" target="_blank" href={ post.author_info.author_link }>{ post.author_info.display_name }</a></div>
+											<div className="ptam-block-post-grid-author"><a className="ptam-text-link" target="_blank" href={ post.author_info.author_link } style={linkColorStyles}>{ post.author_info.display_name }</a></div>
 										}
 
 										{ displayPostDate && post.post_date_gmt &&
@@ -675,7 +808,7 @@ class PTAM_Custom_Posts extends Component {
 											<div>
 												{userTaxonomiesArray.map((key) => {
 													if( post.terms[key.value] !== false ) {
-														return (<div className="ptam-terms"><span className="ptam-term-label">{key.label}: </span><span className="ptam-term-values">{htmlToReactParser.parse(post.terms[key.value])}</span></div>);
+														return (<div className="ptam-terms"><span className="ptam-term-label">{key.label}: </span><span className="ptam-term-values" style={linkColorStyles}>{htmlToReactParser.parse(post.terms[key.value])}</span></div>);
 													}
 												})}
 											</div>
@@ -701,7 +834,7 @@ class PTAM_Custom_Posts extends Component {
 										}
 
 										{ displayPostLink &&
-											<p><a className="ptam-block-post-grid-link ptam-text-link" href={ post.link } target="_blank" rel="bookmark">{ readMoreText }</a></p>
+											<p><a className="ptam-block-post-grid-link ptam-text-link" href={ post.link } target="_blank" rel="bookmark" style={continueReadingColorStyles}>{ readMoreText }</a></p>
 										}
 										{
 										displayPostImage && post.featured_image_src !== undefined && post.featured_image_src  && 'bottom' === this.state.imageLocation ? (
@@ -719,7 +852,7 @@ class PTAM_Custom_Posts extends Component {
 											<div style={metaAlignmentStyles}>
 												{userTaxonomiesArray.map((key) => {
 													if( post.terms[key.value] !== false ) {
-														return (<div className="ptam-terms"><span className="ptam-term-label">{key.label}: </span><span className="ptam-term-values">{htmlToReactParser.parse(post.terms[key.value])}</span></div>);
+														return (<div className="ptam-terms"><span className="ptam-term-label">{key.label}: </span><span className="ptam-term-values" style={linkColorStyles}>{htmlToReactParser.parse(post.terms[key.value])}</span></div>);
 													}
 												})}
 											</div>

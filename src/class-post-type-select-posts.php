@@ -434,6 +434,42 @@ function ptam_register_custom_posts_block() {
 				'type' => 'string',
 				'default' => 'left',
 			),
+			'padding' => array(
+				'type' => 'number',
+				'default' => 0,
+			),
+			'border' => array(
+				'type' => 'number',
+				'default' => 0,
+			),
+			'borderRounded' => array(
+				'type' => 'number',
+				'default' => 0
+			),
+			'borderColor' => array(
+				'type' => 'string',
+				'default' => '#000000',
+			),
+			'backgroundColor' => array(
+				'type' => 'string',
+				'default' => 'inherit',
+			),
+			'titleColor' => array(
+				'type' => 'string',
+				'default' => 'inherit',
+			),
+			'linkColor' => array(
+				'type' => 'string',
+				'default' => 'inherit',
+			),
+			'contentColor' => array(
+				'type' => 'string',
+				'default' => 'inherit',
+			),
+			'continueReadingColor' => array(
+				'type' => 'string',
+				'default' => 'inherit',
+			),
 		),
 		'render_callback' => 'ptam_custom_posts',
 		'editor_script'   => 'ptam-custom-posts-gutenberg'
