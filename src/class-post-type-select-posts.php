@@ -89,9 +89,11 @@ function ptam_custom_posts( $attributes ) {
 			}
 
 			// Start the markup for the post
+			$article_style = sprintf( 'border: %d solid %s; background: %s; padding: %dpx;', absint( $attributes['border'] ), esc_attr( $attributes['borderColor'] ), esc_attr( $attributes['backgroundColor'] ), absint( $attributes['padding'] ) );
 			$list_items_markup .= sprintf(
-				'<article class="%1$s">',
-				esc_attr( $post_thumb_class )
+				'<article class="%1$s" style="%2$s">',
+				esc_attr( $post_thumb_class ),
+				$article_style
 			);
 			if ( 'regular' === $image_placememt_options ) {
 				$list_items_markup .= ptam_get_profile_image( $attributes, $post_thumb_id, $post->post_author, $post->ID );
