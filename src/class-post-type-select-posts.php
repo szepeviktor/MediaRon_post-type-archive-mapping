@@ -89,7 +89,7 @@ function ptam_custom_posts( $attributes ) {
 			}
 
 			// Start the markup for the post
-			$article_style = sprintf( 'border: %d solid %s; background: %s; padding: %dpx;', absint( $attributes['border'] ), esc_attr( $attributes['borderColor'] ), esc_attr( $attributes['backgroundColor'] ), absint( $attributes['padding'] ) );
+			$article_style = sprintf( 'border: %dpx solid %s;  background: %s; padding: %dpx; border-radius: %dpx;', absint( $attributes['border'] ), esc_attr( $attributes['borderColor'] ), esc_attr( $attributes['backgroundColor'] ), absint( $attributes['padding'] ), absint( $attributes['borderRounded'] ) );
 			$list_items_markup .= sprintf(
 				'<article class="%1$s" style="%2$s">',
 				esc_attr( $post_thumb_class ),
@@ -112,10 +112,11 @@ function ptam_custom_posts( $attributes ) {
 				}
 
 				$list_items_markup .= sprintf(
-					'<h2 class="ptam-block-post-grid-title" %3$s><a href="%1$s" rel="bookmark">%2$s</a></h2>',
+					'<h2 class="ptam-block-post-grid-title" %3$s><a href="%1$s" rel="bookmark" style="color: %4$s; text-decoration: none;">%2$s</a></h2>',
 					esc_url( get_permalink( $post_id ) ),
 					esc_html( $title ),
-					'grid' === $attributes['postLayout'] ? "style='text-align: {$attributes['titleAlignment']}'" : ''
+					'grid' === $attributes['postLayout'] ? "style='text-align: {$attributes['titleAlignment']}'" : '',
+					esc_attr( $attributes['titleColor'] )
 				);
 
 				// Wrap the byline content
