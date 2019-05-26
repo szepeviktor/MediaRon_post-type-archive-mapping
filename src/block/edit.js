@@ -28,6 +28,7 @@ const {
 	InspectorControls,
 	BlockAlignmentToolbar,
 	BlockControls,
+	AlignmentToolbar,
 } = wp.editor;
 
 
@@ -61,6 +62,8 @@ class PTAM_Custom_Posts extends Component {
 			userTerms: [],
 			imageLocation: this.props.attributes.imageLocation,
 			taxonomyLocation: this.props.attributes.taxonomyLocation,
+			avatarSize: this.props.attributes.avatarSize,
+			imageType: this.props.attributes.imageType,
 		};
 
 		this.get_latest_data();
@@ -303,6 +306,7 @@ class PTAM_Custom_Posts extends Component {
 		this.setState( {
 			loading: true
 		} );
+		this.props.setAttributes( { avatarSize: value } );
 		setTimeout(function(){
 			let latestPosts = [];
 			let imageSizes = [];
@@ -326,7 +330,7 @@ class PTAM_Custom_Posts extends Component {
 	render() {
 		let htmlToReactParser = new HtmlToReactParser();
 		const { attributes, setAttributes } = this.props;
-		const { postType, term, taxonomy, displayPostDate, displayPostExcerpt, displayPostAuthor, displayPostImage,displayPostLink, align, postLayout, columns, order, pagination, orderBy, postsToShow, readMoreText, imageLocation, taxonomyLocation, imageType, imageTypeSize, avatarSize, changeCapitilization, displayTaxonomies, trimWords } = attributes;
+		const { postType, term, taxonomy, displayPostDate, displayPostExcerpt, displayPostAuthor, displayPostImage,displayPostLink, align, postLayout, columns, order, pagination, orderBy, postsToShow, readMoreText, imageLocation, taxonomyLocation, imageType, imageTypeSize, avatarSize, changeCapitilization, displayTaxonomies, trimWords, titleAlignment, imageAlignment, metaAlignment, contentAlignment } = attributes;
 
 		let userTaxonomies = this.state.userTaxonomies;
 		let userTaxonomiesArray = [];
@@ -358,6 +362,13 @@ class PTAM_Custom_Posts extends Component {
 			{ value: 'regular', label: __('Regular placement', 'post-type-archive-mapping' ) },
 			{ value: 'below_content', label: __('Below Content', 'post-type-archive-mapping' ) },
 		];
+
+		const alignmentOptions = [
+			{ value: 'left', label: __('Left', 'post-type-archive-mapping' ) },
+			{ value: 'center', label: __('Center', 'post-type-archive-mapping' ) },
+			{ value: 'right', label: __('Right', 'post-type-archive-mapping' ) },
+		];
+
 
 		const inspectorControls = (
 			<InspectorControls>
@@ -398,7 +409,7 @@ class PTAM_Custom_Posts extends Component {
 						/>
 					}
 				</PanelBody>
-				<PanelBody title={ __( 'Options', 'post-type-archive-mapping' ) } initialOpen={false}>
+				<PanelBody title={ __( 'Options', 'post-type-archive-mapping' ) }>
 					<ToggleControl
 						label={ __( 'Display Featured Image',  'post-type-archive-mapping' ) }
 						checked={ displayPostImage }
@@ -500,6 +511,34 @@ class PTAM_Custom_Posts extends Component {
 					/>
 					}
 				</PanelBody>
+				{ postLayout === 'grid' &&
+					<PanelBody title={ __( 'Alignment', 'post-type-archive-mapping' ) } initialOpen={false}>
+						<SelectControl
+							label={ __( 'Title Alignment', 'post-type-archive-mapping' ) }
+							options={ alignmentOptions }
+							value={ titleAlignment }
+							onChange={ ( value ) => { this.props.setAttributes( { titleAlignment: value } ); } }
+						/>
+						<SelectControl
+							label={ __( 'Image Alignment', 'post-type-archive-mapping' ) }
+							options={ alignmentOptions }
+							value={ imageAlignment }
+							onChange={ ( value ) => { this.props.setAttributes( { imageAlignment: value } ); } }
+						/>
+						<SelectControl
+							label={ __( 'Meta Alignment', 'post-type-archive-mapping' ) }
+							options={ alignmentOptions }
+							value={ metaAlignment }
+							onChange={ ( value ) => { this.props.setAttributes( { metaAlignment: value } ); } }
+						/>
+						<SelectControl
+							label={ __( 'Content Alignment', 'post-type-archive-mapping' ) }
+							options={ alignmentOptions }
+							value={ contentAlignment }
+							onChange={ ( value ) => { this.props.setAttributes( { contentAlignment: value } ); } }
+						/>
+					</PanelBody>
+				}
 			</InspectorControls>
 		);
 		if( this.state.loading ) {
@@ -553,6 +592,12 @@ class PTAM_Custom_Posts extends Component {
 			},
 		];
 
+		// Alignment Styles
+		const titleAlignmentStyles = postLayout === 'grid' ? { textAlign: titleAlignment } : {};
+		const imageAlignmentStyles = postLayout === 'grid' ? { textAlign: imageAlignment } : {};
+		const metaAlignmentStyles = postLayout === 'grid' ? { textAlign: metaAlignment } : {};
+		const contentAlignmentStyles = postLayout === 'grid' ? { textAlign: contentAlignment } : {};
+
 		return (
 			<Fragment>
 				{ inspectorControls }
@@ -593,7 +638,7 @@ class PTAM_Custom_Posts extends Component {
 							>
 								{
 										displayPostImage && post.featured_image_src !== undefined && post.featured_image_src  && 'regular' === this.state.imageLocation ? (
-											<div className="ptam-block-post-grid-image">
+											<div className="ptam-block-post-grid-image" style={imageAlignmentStyles}>
 												<a href={ post.link } target="_blank" rel="bookmark">
 												{htmlToReactParser.parse(post.featured_image_src)}
 												</a>
@@ -604,9 +649,9 @@ class PTAM_Custom_Posts extends Component {
 								}
 
 								<div className="ptam-block-post-grid-text">
-									<h2 className="entry-title"><a href={ post.link } target="_blank" rel="bookmark">{ decodeEntities( post.post_title.trim() ) || __( '(Untitled)', 'post-type-archive-mapping' ) }</a></h2>
+									<h2 className="entry-title" style={titleAlignmentStyles}><a href={ post.link } target="_blank" rel="bookmark">{ decodeEntities( post.post_title.trim() ) || __( '(Untitled)', 'post-type-archive-mapping' ) }</a></h2>
 									{displayPostImage && post.featured_image_src !== undefined && post.featured_image_src  && 'below_title' === this.state.imageLocation ? (
-											<div className="ptam-block-post-grid-image">
+											<div className="ptam-block-post-grid-image" style={imageAlignmentStyles}>
 												<a href={ post.link } target="_blank" rel="bookmark">
 												{htmlToReactParser.parse(post.featured_image_src)}
 												</a>
@@ -616,7 +661,7 @@ class PTAM_Custom_Posts extends Component {
 										)
 									}
 
-									<div className={`ptam-block-post-grid-byline ${capitilization}`}>
+									<div className={`ptam-block-post-grid-byline ${capitilization}`} style={metaAlignmentStyles}>
 										{ displayPostAuthor && post.author_info.display_name !== 'undefined' && post.author_info.display_name &&
 											<div className="ptam-block-post-grid-author"><a className="ptam-text-link" target="_blank" href={ post.author_info.author_link }>{ post.author_info.display_name }</a></div>
 										}
@@ -637,7 +682,7 @@ class PTAM_Custom_Posts extends Component {
 										}
 										{
 										displayPostImage && post.featured_image_src !== undefined && post.featured_image_src  && 'below_title_and_meta' === this.state.imageLocation ? (
-											<div className="ptam-block-post-grid-image">
+											<div className="ptam-block-post-grid-image" style={imageAlignmentStyles}>
 												<a href={ post.link } target="_blank" rel="bookmark">
 												{htmlToReactParser.parse(post.featured_image_src)}
 												</a>
@@ -648,7 +693,7 @@ class PTAM_Custom_Posts extends Component {
 										}
 									</div>
 
-									<div className="ptam-block-post-grid-excerpt">
+									<div className="ptam-block-post-grid-excerpt" style={contentAlignmentStyles}>
 										{ displayPostExcerpt && '' !==  post.post_excerpt &&
 											<Fragment>
 												{this.excerptParse(post.post_excerpt)}
@@ -660,7 +705,7 @@ class PTAM_Custom_Posts extends Component {
 										}
 										{
 										displayPostImage && post.featured_image_src !== undefined && post.featured_image_src  && 'bottom' === this.state.imageLocation ? (
-												<div className="ptam-block-post-grid-image">
+												<div className="ptam-block-post-grid-image" style={imageAlignmentStyles}>
 													<a href={ post.link } target="_blank" rel="bookmark">
 													{htmlToReactParser.parse(post.featured_image_src)}
 													</a>
@@ -671,7 +716,7 @@ class PTAM_Custom_Posts extends Component {
 										}
 									</div>
 									{ userTaxonomiesArray.length > 0 && displayTaxonomies && 'below_content' === taxonomyLocation &&
-											<div>
+											<div style={metaAlignmentStyles}>
 												{userTaxonomiesArray.map((key) => {
 													if( post.terms[key.value] !== false ) {
 														return (<div className="ptam-terms"><span className="ptam-term-label">{key.label}: </span><span className="ptam-term-values">{htmlToReactParser.parse(post.terms[key.value])}</span></div>);

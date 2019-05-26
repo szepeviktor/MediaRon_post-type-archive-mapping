@@ -74,7 +74,7 @@ function ptam_custom_posts( $attributes ) {
 
 			// Get the post thumbnail
 			if ( 'gravatar' === $attributes['imageType'] ) {
-				$post_thumb_id = -1;
+				$post_thumb_id = 1;
 			} else {
 				$post_thumb_id = get_post_thumbnail_id( $post_id );
 			}
@@ -167,16 +167,16 @@ function ptam_custom_posts( $attributes ) {
 				);
 
 					// Get the excerpt
-					$excerpt = apply_filters( 'the_excerpt', get_post_field( 'post_excerpt', $post_id, 'display' ) );
+					$excerpt = $post->post_excerpt;
 
 					if( empty( $excerpt ) ) {
-						$excerpt = apply_filters( 'the_excerpt', $post->post_content );
+						$excerpt = $post->post_content;
 					}
 
 					if ( ! $excerpt ) {
 						$excerpt = null;
 					} else {
-						$excerpt = wp_trim_words( $excerpt, isset( $attributes['trimWords'] ) ? $attributes['trimWords'] : 55 );
+						$excerpt = wp_trim_words( apply_filters( 'the_excerpt', $excerpt ), isset( $attributes['trimWords'] ) ? $attributes['trimWords'] : 55 );
 					}
 
 					if ( isset( $attributes['displayPostExcerpt'] ) && $attributes['displayPostExcerpt'] ) {
@@ -313,7 +313,7 @@ function ptam_register_custom_posts_block() {
 				'default' => 'regular'
 			),
 			'avatarSize' => array(
-				'type' => 'string',
+				'type' => 'int',
 				'default' => 500
 			),
 			'taxonomy' => array(
@@ -406,6 +406,22 @@ function ptam_register_custom_posts_block() {
 			'trimWords'  => array(
 				'type' => 'int',
 				'default' => 55,
+			),
+			'titleAlignment'  => array(
+				'type' => 'string',
+				'default' => 'left',
+			),
+			'imageAlignment'  => array(
+				'type' => 'string',
+				'default' => 'left',
+			),
+			'metaAlignment'  => array(
+				'type' => 'string',
+				'default' => 'left',
+			),
+			'contentAlignment'  => array(
+				'type' => 'string',
+				'default' => 'left',
 			),
 		),
 		'render_callback' => 'ptam_custom_posts',
