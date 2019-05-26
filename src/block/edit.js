@@ -350,8 +350,8 @@ class PTAM_Custom_Posts extends Component {
 		this.props.setAttributes( { contentColor: value } );
 	}
 	onChangeLinkColor = ( value ) => {
-		this.props.attributes.linkColor = value;
 		this.props.setAttributes( { linkColor: value } );
+		this.props.attributes.linkColor = value;
 		this.get_latest_posts( {} );
 	}
 	onChangeContinueReadingColor = ( value ) => {
