@@ -112,7 +112,7 @@ function ptam_custom_posts( $attributes ) {
 				}
 
 				$list_items_markup .= sprintf(
-					'<h2 class="ptam-block-post-grid-title" %3$s><a href="%1$s" rel="bookmark" style="color: %4$s; text-decoration: none;">%2$s</a></h2>',
+					'<h2 class="ptam-block-post-grid-title" %3$s><a href="%1$s" rel="bookmark" style="color: %4$s; box-shadow: unset;">%2$s</a></h2>',
 					esc_url( get_permalink( $post_id ) ),
 					esc_html( $title ),
 					'grid' === $attributes['postLayout'] ? "style='text-align: {$attributes['titleAlignment']}'" : '',
@@ -122,7 +122,7 @@ function ptam_custom_posts( $attributes ) {
 				// Wrap the byline content
 				$list_items_markup .= sprintf(
 					'<div class="ptam-block-post-grid-byline %s" %s>', $attributes['changeCapitilization'] ? 'ptam-text-lower-case' : '',
-					'grid' === $attributes['postLayout'] ? "style='text-align: {$attributes['metaAlignment']}'" : ''
+					'grid' === $attributes['postLayout'] ? "style='text-align: {$attributes['metaAlignment']}; color: {$attributes['contentColor']}'" : "style='color: {$attributes['contentColor']};'"
 
 				);
 
@@ -140,9 +140,10 @@ function ptam_custom_posts( $attributes ) {
 					// Get the post author
 					if ( isset( $attributes['displayPostAuthor'] ) && $attributes['displayPostAuthor'] ) {
 						$list_items_markup .= sprintf(
-							'<div class="ptam-block-post-grid-author"><a class="ptam-text-link" href="%2$s">%1$s</a></div>',
+							'<div class="ptam-block-post-grid-author"><a class="ptam-text-link" href="%2$s" style="color: %3$s">%1$s</a></div>',
 							esc_html( get_the_author_meta( 'display_name', $post->post_author ) ),
-							esc_html( get_author_posts_url( $post->post_author ) )
+							esc_html( get_author_posts_url( $post->post_author ) ),
+							esc_attr( $attributes['linkColor'] )
 						);
 					}
 
@@ -175,7 +176,7 @@ function ptam_custom_posts( $attributes ) {
 				// Wrap the excerpt content
 				$list_items_markup .= sprintf(
 					'<div class="ptam-block-post-grid-excerpt" %s>'
-					, 'grid' === $attributes['postLayout'] ? "style='text-align: {$attributes['contentAlignment']}'" : ''
+					, 'grid' === $attributes['postLayout'] ? "style='text-align: {$attributes['contentAlignment']}; color: {$attributes['contentColor']};'" : "style='color: {$attributes['contentColor']};'"
 				);
 
 					// Get the excerpt
