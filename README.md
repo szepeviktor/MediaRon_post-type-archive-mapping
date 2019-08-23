@@ -1,6 +1,8 @@
 Post Type Archive Mapping
 ===================
 
+[![Build Status](https://travis-ci.org/ronalfy/post-type-archive-mapping.svg?branch=master)](https://travis-ci.org/ronalfy/post-type-archive-mapping)
+
 Map a page to the archive of your post types.
 
 Features
@@ -29,7 +31,7 @@ DEVS
 4. Set up a symlink to your WordPress installation using the folder as the base.
 5. Run ```npm run watch``` to make changes and then ```npm run build``` when you're done.
 
-1. To edit the block, they are in ```/blocks/load.js``` and ```/blocks/edit.js```. 
+1. To edit the block, they are in ```/blocks/load.js``` and ```/blocks/edit.js```.
 2. The REST API is created and passed in ```/blocks.init.php```.
 3. The attributes and output are in ```/blocks/class-post-type-select-posts.php```.
 
