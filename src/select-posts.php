@@ -395,7 +395,7 @@ function ptam_register_custom_posts_block() {
 					'default' => 'regular',
 				),
 				'avatarSize'           => array(
-					'type'    => 'integer',
+					'type'    => 'int',
 					'default' => 500,
 				),
 				'taxonomy'             => array(
@@ -411,7 +411,7 @@ function ptam_register_custom_posts_block() {
 					'default' => 'regular',
 				),
 				'term'                 => array(
-					'type'    => 'integer',
+					'type'    => 'int',
 					'default' => 0,
 				),
 				'terms'                => array(
@@ -458,7 +458,7 @@ function ptam_register_custom_posts_block() {
 					'default' => 'grid',
 				),
 				'columns'              => array(
-					'type'    => 'integer',
+					'type'    => 'int',
 					'default' => 2,
 				),
 				'align'                => array(
@@ -486,7 +486,7 @@ function ptam_register_custom_posts_block() {
 					'default' => 'Continue Reading',
 				),
 				'trimWords'            => array(
-					'type'    => 'integer',
+					'type'    => 'int',
 					'default' => 55,
 				),
 				'titleAlignment'       => array(
@@ -506,11 +506,11 @@ function ptam_register_custom_posts_block() {
 					'default' => 'left',
 				),
 				'padding'              => array(
-					'type'    => 'integer',
+					'type'    => 'int',
 					'default' => 0,
 				),
 				'border'               => array(
-					'type'    => 'integer',
+					'type'    => 'int',
 					'default' => 0,
 				),
 				'borderRounded'        => array(
@@ -538,6 +538,10 @@ function ptam_register_custom_posts_block() {
 					'default' => 'inherit',
 				),
 				'continueReadingColor' => array(
+					'type'    => 'string',
+					'default' => 'inherit',
+				),
+				'titleFont'            => array(
 					'type'    => 'string',
 					'default' => 'inherit',
 				),

@@ -186,6 +186,7 @@ function ptam_get_posts( $post_data ) {
 		'posts'       => $posts,
 		'image_sizes' => ptam_get_all_image_sizes(),
 		'taxonomies'  => $taxonomies,
+		'fonts'       => ptam_get_fonts(),
 	);
 	die( wp_json_encode( $return ) );
 }
@@ -280,6 +281,7 @@ function ptam_get_image( $post_data ) {
 		'posts'       => $posts,
 		'image_sizes' => ptam_get_all_image_sizes(),
 		'taxonomies'  => $taxonomies,
+		'fonts'       => ptam_get_fonts(),
 	);
 	die( wp_json_encode( $return ) );
 }
@@ -310,6 +312,35 @@ function ptam_get_all_image_sizes() {
 
 	return $image_sizes;
 }
+
+/**
+ * Get web safe fonts
+ *
+ * @return array $fonts Fonts to Use
+ */
+function ptam_get_fonts() {
+	$fonts = apply_filters(
+		'ptam_fonts',
+		array(
+			'arial'           => 'Arial',
+			'helvetica'       => 'Helvetica',
+			'times new roman' => 'Times New Roman',
+			'times'           => 'Times',
+			'courier new'     => 'Courier New',
+			'courier'         => 'Courier',
+			'verdana'         => 'Verdana',
+			'georgia'         => 'Georgia',
+			'palatino'        => 'Palatino',
+			'garamond'        => 'Garamond',
+			'bookman'         => 'Bookman',
+			'trebuchet ms'    => 'Trebuchet MS',
+			'arial black'     => 'Arial Black',
+			'impact'          => 'Impact',
+		)
+	);
+	return $fonts;
+}
+
 /**
  * Register route for getting taxonomy terms
  *

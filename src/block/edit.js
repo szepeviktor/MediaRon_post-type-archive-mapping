@@ -58,6 +58,7 @@ class PTAM_Custom_Posts extends Component {
 			taxonomyList: [],
 			termsList: [],
 			imageSizes: [],
+			fonts: [],
 			userTaxonomies: [],
 			userTerms: [],
 			imageLocation: this.props.attributes.imageLocation,
@@ -80,6 +81,7 @@ class PTAM_Custom_Posts extends Component {
 				loading: false,
 				latestPosts: response.data.posts,
 				imageSizes: response.data.image_sizes,
+				fonts: response.data.fonts,
 				userTaxonomies: response.data.taxonomies,
 				userTerms: response.data.terms
 			} );
@@ -152,14 +154,15 @@ class PTAM_Custom_Posts extends Component {
 
 							// Now Set State
 							this.setState( {
-								'loading': false,
-								'imageSizes': imageSizes,
-								'latestPosts': latestPosts,
-								'postTypeList': postTypeList,
-								'taxonomyList': taxonomyList,
-								'termsList': termsList,
-								'userTaxonomies': userTaxonomies,
-								'userTerms': userTerms,
+								loading: false,
+								imageSizes: imageSizes,
+								fonts: response.data.fonts,
+								latestPosts: latestPosts,
+								postTypeList: postTypeList,
+								taxonomyList: taxonomyList,
+								termsList: termsList,
+								userTaxonomies: userTaxonomies,
+								userTerms: userTerms,
 							} );
 						});
 
@@ -361,7 +364,7 @@ class PTAM_Custom_Posts extends Component {
 	render() {
 		let htmlToReactParser = new HtmlToReactParser();
 		const { attributes, setAttributes } = this.props;
-		const { postType, term, taxonomy, displayPostDate, displayPostExcerpt, displayPostAuthor, displayPostImage,displayPostLink, align, postLayout, columns, order, pagination, orderBy, postsToShow, readMoreText, imageLocation, taxonomyLocation, imageType, imageTypeSize, avatarSize, changeCapitilization, displayTaxonomies, trimWords, titleAlignment, imageAlignment, metaAlignment, contentAlignment, padding, border, borderRounded, borderColor, backgroundColor, titleColor, linkColor, contentColor, continueReadingColor } = attributes;
+		const { postType, term, taxonomy, displayPostDate, displayPostExcerpt, displayPostAuthor, displayPostImage,displayPostLink, align, postLayout, columns, order, pagination, orderBy, postsToShow, readMoreText, imageLocation, taxonomyLocation, imageType, imageTypeSize, avatarSize, changeCapitilization, displayTaxonomies, trimWords, titleAlignment, imageAlignment, metaAlignment, contentAlignment, padding, border, borderRounded, borderColor, backgroundColor, titleColor, linkColor, contentColor, continueReadingColor, titleFont } = attributes;
 
 		let userTaxonomies = this.state.userTaxonomies;
 		let userTaxonomiesArray = [];
@@ -381,6 +384,13 @@ class PTAM_Custom_Posts extends Component {
 		let imageSizes = this.state.imageSizes;
 		for ( var key in imageSizes ) {
 			imageSizeOptions.push( { value: key, label: key })
+		}
+
+		// Fonts
+		let fontOptions = [];
+		let fonts = this.state.fonts;
+		for ( var key in fonts ) {
+			fontOptions.push( { value: key, label: key })
 		}
 
 		let imageDisplayOptionsTypes = [];
@@ -665,6 +675,14 @@ class PTAM_Custom_Posts extends Component {
 						} ] }
 						>
 					</PanelColorSettings>
+				</PanelBody>
+				<PanelBody title={ __( 'Fonts', 'post-type-archive-mapping' ) } initialOpen={false}>
+					<SelectControl
+						label={ __( 'Title Font', 'post-type-archive-mapping' ) }
+						options={ fontOptions }
+						value={ titleFont }
+						onChange={ ( value ) => { this.props.setAttributes( { titleFont: value } ); } }
+					/>
 				</PanelBody>
 			</InspectorControls>
 		);
