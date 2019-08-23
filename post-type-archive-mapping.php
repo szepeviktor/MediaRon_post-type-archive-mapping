@@ -1,4 +1,4 @@
-<?php
+<?php // phpcs:ignore
 /*
 Plugin Name: Custom Post Types Block
 Plugin URI: https://mediaron.com/portfolio/post-type-archive-mapping/
@@ -15,9 +15,29 @@ Credit: Gutenberg block based on Atomic Blocks
 */
 define( 'PTAM_VERSION', '2.1.2' );
 
+/**
+ * Main plugin class.
+ */
 class PostTypeArchiveMapping {
+	/**
+	 * Holds the class instance.
+	 *
+	 * @var PostTypeArchiveMapping $instance
+	 */
 	private static $instance = null;
+
+	/**
+	 * Holds the paged argument.
+	 *
+	 * @var int $paged
+	 */
 	private $paged = null;
+
+	/**
+	 * Holds the paged reset argument.
+	 *
+	 * @var bool $paged_reset
+	 */
 	private $paged_reset = false;
 
 	/**
@@ -31,8 +51,8 @@ class PostTypeArchiveMapping {
 	 * @return PostTypeArchiveMapping class instance.
 	 */
 	public static function get_instance() {
-		if ( null == self::$instance ) {
-			self::$instance = new self;
+		if ( null === self::$instance ) {
+			self::$instance = new self();
 		}
 		return self::$instance;
 	} //end get_instance
@@ -44,12 +64,11 @@ class PostTypeArchiveMapping {
 	 *
 	 * @since 1.0.0
 	 * @access private
-	 *
 	 */
 	private function __construct() {
 		add_action( 'init', array( $this, 'init' ), 9 );
 		load_plugin_textdomain( 'post-type-archive-mapping', false, basename( dirname( __FILE__ ) ) . '/languages' );
-		include 'src/class-post-type-select-posts.php';
+		include 'src/select-posts.php';
 	} //end constructor
 
 	/**
@@ -61,29 +80,33 @@ class PostTypeArchiveMapping {
 	 * @access public
 	 *
 	 * @see __construct
-	 *
 	 */
 	public function init() {
-		//Admin Settings
+		// Admin Settings.
 		add_action( 'admin_init', array( $this, 'init_admin_settings' ) );
 		add_action( 'pre_get_posts', array( $this, 'maybe_override_archive' ) );
 	} //end init
 
+	/**
+	 * Override an archive page based on passed query arguments.
+	 *
+	 * @param WP_Query $query The query to check.
+	 */
 	public function maybe_override_archive( $query ) {
-		if( is_admin() ) {
+		if ( is_admin() ) {
 			return $query;
 		}
 
-		// Maybe Redirect
-		if( is_page() ) {
+		// Maybe Redirect.
+		if ( is_page() ) {
 			$object_id = get_queried_object_id();
-			$meta = get_post_meta( $object_id, '_post_type_mapped', true );
-			if( $meta ) {
-				wp_redirect( get_post_type_archive_link( $meta ) );
+			$meta      = get_post_meta( $object_id, '_post_type_mapped', true );
+			if ( $meta ) {
+				wp_safe_redirect( get_post_type_archive_link( $meta ) );
 				exit();
 			} else {
-				if( get_query_var('paged' ) ) {
-					$query->set( 'paged', get_query_var('paged' ) );
+				if ( get_query_var( 'paged' ) ) {
+					$query->set( 'paged', get_query_var( 'paged' ) );
 				}
 				return;
 			}
@@ -107,15 +130,15 @@ class PostTypeArchiveMapping {
 			$this->paged = get_query_var( 'paged' );
 		}
 
-		foreach( $post_types as $post_type => $post_id ) {
-			if ( is_post_type_archive( $post_type ) && 'default' != $post_id && $query->is_main_query() ) {
+		foreach ( $post_types as $post_type => $post_id ) {
+			if ( is_post_type_archive( $post_type ) && 'default' !== $post_id && $query->is_main_query() ) {
 				$post_id = absint( $post_id );
 				$query->set( 'post_type', 'page' );
 				$query->set( 'page_id', $post_id );
 				$query->set( 'paged', $this->paged );
-				$query->is_archive = false;
-				$query->is_single = true;
-				$query->is_singular = true;
+				$query->is_archive           = false;
+				$query->is_single            = true;
+				$query->is_singular          = true;
 				$query->is_post_type_archive = false;
 
 				$this->paged_reset = true;
@@ -123,26 +146,45 @@ class PostTypeArchiveMapping {
 		}
 	}
 
+	/**
+	 * Get an absolute path for a plugin asset.
+	 *
+	 * @param string $path The relative path to the asset.
+	 */
 	public static function get_plugin_dir( $path = '' ) {
-		$dir = rtrim( plugin_dir_path(__FILE__), '/' );
-		if ( !empty( $path ) && is_string( $path) )
+		$dir = rtrim( plugin_dir_path( __FILE__ ), '/' );
+		if ( ! empty( $path ) && is_string( $path ) ) {
 			$dir .= '/' . ltrim( $path, '/' );
-		return $dir;
-	}
-	//Returns the plugin url
-	public static function get_plugin_url( $path = '' ) {
-		$dir = rtrim( plugin_dir_url(__FILE__), '/' );
-		if ( !empty( $path ) && is_string( $path) )
-			$dir .= '/' . ltrim( $path, '/' );
+		}
 		return $dir;
 	}
 
+	/**
+	 * Get an absolute path for a plugin asset.
+	 *
+	 * @param string $path The relative path to the asset.
+	 */
+	public static function get_plugin_url( $path = '' ) {
+		$dir = rtrim( plugin_dir_url( __FILE__ ), '/' );
+		if ( ! empty( $path ) && is_string( $path ) ) {
+			$dir .= '/' . ltrim( $path, '/' );
+		}
+		return $dir;
+	}
+
+	/**
+	 * Save post meta if selected on the reading screen.
+	 *
+	 * @param array $args Post Type arguments.
+	 */
 	public function post_type_save( $args ) {
-		if( ! is_array( $args ) ) return $args;
+		if ( ! is_array( $args ) ) {
+			return $args;
+		}
 		global $wpdb;
 		$query = "delete from {$wpdb->postmeta} where meta_key = '_post_type_mapped'";
-		$wpdb->query( $query );
-		foreach( $args as $post_type => $page_id ) {
+		$wpdb->query( $query ); // phpcs:ignore
+		foreach ( $args as $post_type => $page_id ) {
 			update_post_meta( $page_id, '_post_type_mapped', $post_type );
 		}
 		return $args;
@@ -157,7 +199,6 @@ class PostTypeArchiveMapping {
 	 * @access public
 	 *
 	 * @see init
-	 *
 	 */
 	public function init_admin_settings() {
 		register_setting(
@@ -168,8 +209,7 @@ class PostTypeArchiveMapping {
 			)
 		);
 
-		add_settings_section( 'post-type-archive-mapping', _x( 'Post Type Archive Mapping', 'plugin settings heading' , 'post-type-archive-mapping' ), array( $this, 'settings_section' ), 'reading' );
-
+		add_settings_section( 'post-type-archive-mapping', _x( 'Post Type Archive Mapping', 'plugin settings heading', 'post-type-archive-mapping' ), array( $this, 'settings_section' ), 'reading' );
 
 		add_settings_field(
 			'post-type-archive-mapping',
@@ -181,22 +221,29 @@ class PostTypeArchiveMapping {
 
 	}
 
-	function add_settings_post_types( $args ) {
-		$output = get_option( 'post-type-archive-mapping', array() );
-		$posts = get_posts( array(
-			'post_status' => array( 'publish' ),
-			'posts_per_page' => 1000,
-			'post_type' => 'page',
-			'orderby' => 'name',
-			'order' => 'ASC'
-		) );
-		$post_types = get_post_types(
+	/**
+	 * Add post type options to Settings->Reading screen.
+	 *
+	 * @param array $args Post Type arguments.
+	 */
+	public function add_settings_post_types( $args ) {
+		$output     = get_option( 'post-type-archive-mapping', array() );
+		$posts      = get_posts(
 			array(
-				'public' => true,
-				'has_archive' => true
+				'post_status'    => array( 'publish' ),
+				'posts_per_page' => 200, // phpcs:ignore
+				'post_type'      => 'page',
+				'orderby'        => 'name',
+				'order'          => 'ASC',
 			)
 		);
-		foreach( $post_types as $index => $post_type ) {
+		$post_types = get_post_types(
+			array(
+				'public'      => true,
+				'has_archive' => true,
+			)
+		);
+		foreach ( $post_types as $index => $post_type ) {
 			$selection = 'default';
 			if ( isset( $output[ $post_type ] ) ) {
 				$selection = $output[ $post_type ];
@@ -206,7 +253,7 @@ class PostTypeArchiveMapping {
 			<select name="post-type-archive-mapping[<?php echo esc_html( $post_type ); ?>]">
 				<option value="default"><?php esc_html_e( 'Default', 'post-type-archive-mapping' ); ?></option>
 				<?php
-				foreach( $posts as $post ) {
+				foreach ( $posts as $post ) {
 					printf( '<option value="%d" %s>%s</option>', absint( $post->ID ), selected( $selection, $post->ID, false ), esc_html( $post->post_title ) );
 				}
 				?>
@@ -226,13 +273,15 @@ class PostTypeArchiveMapping {
 	 * @access public
 	 *
 	 * @see init_admin_settings
-	 *
 	 */
 	public function settings_section() {
 	}
 
 }
 
-add_action( 'plugins_loaded', function() {
-	PostTypeArchiveMapping::get_instance();
-} );
+add_action(
+	'plugins_loaded',
+	function() {
+		PostTypeArchiveMapping::get_instance();
+	}
+);
