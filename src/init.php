@@ -4,7 +4,7 @@
  *
  * Enqueue CSS/JS of all the blocks.
  *
- * @since 	1.0.0
+ * @since 1.0.0
  * @package Post Type Archive Mapping
  */
 
@@ -20,11 +20,13 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 function ptam_blocks_block_assets() {
 
-	// Load the compiled styles
+	// Load the compiled styles.
 	wp_enqueue_style(
 		'ptam-style-css',
-		PostTypeArchiveMapping::get_plugin_url( 'dist/blocks.style.build.css'),
-		PTAM_VERSION, 'all' );
+		PostTypeArchiveMapping::get_plugin_url( 'dist/blocks.style.build.css' ),
+		PTAM_VERSION,
+		'all'
+	);
 }
 add_action( 'enqueue_block_assets', 'ptam_blocks_block_assets' );
 
@@ -36,44 +38,49 @@ add_action( 'enqueue_block_assets', 'ptam_blocks_block_assets' );
  */
 function ptam_blocks_editor_assets() {
 
-	// Load the compiled blocks into the editor
+	// Load the compiled blocks into the editor.
 	wp_enqueue_script(
 		'ptam-custom-posts-gutenberg',
-		PostTypeArchiveMapping::get_plugin_url( 'dist/blocks.build.js'),
-		array( 'wp-blocks', 'wp-element' ), PTAM_VERSION, true
+		PostTypeArchiveMapping::get_plugin_url( 'dist/blocks.build.js' ),
+		array( 'wp-blocks', 'wp-element' ),
+		PTAM_VERSION,
+		true
 	);
 
-	// Pass in REST URL
+	// Pass in REST URL.
 	wp_localize_script(
 		'ptam-custom-posts-gutenberg',
 		'ptam_globals',
 		array(
-			'rest_url' => esc_url( rest_url() )
+			'rest_url' => esc_url( rest_url() ),
 		)
 	);
 }
 add_action( 'enqueue_block_editor_assets', 'ptam_blocks_editor_assets' );
 
 /**
- * Return terms for taxonomy
+ * Return terms for taxonomy.
  *
  * @since 1.0.0
- * @param WP_REST_Request $tax_data
+ *
+ * @param WP_REST_Request $tax_data The tax data.
  */
-function ptam_get_all_terms($tax_data) {
-	$taxonomy = $tax_data['taxonomy'];
+function ptam_get_all_terms( $tax_data ) {
+	$taxonomy  = $tax_data['taxonomy'];
 	$post_type = $tax_data['post_type'];
 	add_filter( 'terms_clauses', 'ptam_terms_clauses', 10, 3 );
-	$terms = get_terms( array(
-		'taxonomy' => $taxonomy,
-		'hide_empty' => true,
-		'post_type' => $post_type,
-	) );
+	$terms = get_terms(
+		array(
+			'taxonomy'   => $taxonomy,
+			'hide_empty' => true,
+			'post_type'  => $post_type,
+		)
+	);
 	remove_filter( 'terms_clauses', 'ptam_terms_clauses', 10, 3 );
-	if( is_wp_error( $terms ) ) {
-		die( json_encode( array() ) );
+	if ( is_wp_error( $terms ) ) {
+		die( wp_json_encode( array() ) );
 	} else {
-		die( json_encode( $terms ) );
+		die( wp_json_encode( $terms ) );
 	}
 }
 
@@ -81,85 +88,87 @@ function ptam_get_all_terms($tax_data) {
  * Return Posts
  *
  * @since 1.0.0
- * @param WP_REST_Request $post_data
+ * @param WP_REST_Request $post_data Post data.
  */
-function ptam_get_taxonomies($post_data) {
-	$post_type = $post_data['post_type'];
+function ptam_get_taxonomies( $post_data ) {
+	$post_type  = $post_data['post_type'];
 	$taxonomies = get_object_taxonomies( $post_type, 'objects' );
-	die( json_encode( $taxonomies ) );
+	die( wp_json_encode( $taxonomies ) );
 }
 
 /**
  * Return Posts
  *
  * @since 1.0.0
- * @param WP_REST_Request $post_data
+ * @param WP_REST_Request $post_data Post data.
  */
-function ptam_get_posts($post_data) {
-	$taxonomy = $post_data['taxonomy'];
-	$order = $post_data['order'];
-	$orderby = $post_data['orderby'];
-	$term = $post_data['term'];
-	$post_type = $post_data['post_type'];
+function ptam_get_posts( $post_data ) {
+	$taxonomy       = $post_data['taxonomy'];
+	$order          = $post_data['order'];
+	$orderby        = $post_data['orderby'];
+	$term           = $post_data['term'];
+	$post_type      = $post_data['post_type'];
 	$posts_per_page = $post_data['posts_per_page'];
-	$image_type = $post_data['image_type'];
-	$image_size = $post_data['image_size'];
-	$avatar_size = $post_data['avatar_size'];
-	$link_color = $post_data['link_color'];
+	$image_type     = $post_data['image_type'];
+	$image_size     = $post_data['image_size'];
+	$avatar_size    = $post_data['avatar_size'];
+	$link_color     = $post_data['link_color'];
 
 	$post_args = array(
-		'post_type' => $post_type,
-		'post_status' => 'publish',
-		'order' => $order,
-		'orderby' => $orderby,
-		'posts_per_page' => $posts_per_page
+		'post_type'      => $post_type,
+		'post_status'    => 'publish',
+		'order'          => $order,
+		'orderby'        => $orderby,
+		'posts_per_page' => $posts_per_page,
 	);
-	if( 'all' !== $term && '0' !== $term && 'none' !== $taxonomy ) {
-		$post_args[ 'tax_query' ] = array( array(
-			'taxonomy' => $taxonomy,
-			'terms' => $term
-		) );
+	if ( 'all' !== $term && '0' !== $term && 'none' !== $taxonomy ) {
+		$post_args['tax_query'] = array( // phpcs:ignore
+			array(
+				'taxonomy' => $taxonomy,
+				'terms'    => $term,
+			),
+		);
 	}
 	$posts = get_posts( $post_args );
 
-	foreach( $posts as &$post) {
+	foreach ( $posts as &$post ) {
 
-		if ('gravatar' === $image_type ) {
+		if ( 'gravatar' === $image_type ) {
 			$thumbnail = get_avatar( $post->post_author, $avatar_size );
 		} else {
 			$thumbnail = get_the_post_thumbnail( $post->ID, $image_size );
 		}
 		$post->featured_image_src = $thumbnail;
 
-		// Get author information
+		// Get author information.
 		$display_name = get_the_author_meta( 'display_name', $post->post_author );
-		$author_url = get_author_posts_url( $post->post_author );
+		$author_url   = get_author_posts_url( $post->post_author );
 
-		$post->author_info = new stdClass();
+		$post->author_info               = new stdClass();
 		$post->author_info->display_name = $display_name;
-		$post->author_info->author_link = $author_url;
+		$post->author_info->author_link  = $author_url;
 
 		$post->link = get_permalink( $post->ID );
 
-		// Get taxonomy information
+		// Get taxonomy information.
 		$taxonomies = get_object_taxonomies( $post->post_type, 'objects' );
-		$terms = array();
-		foreach( $taxonomies as $key => $taxonomy ) {
-			$term_list = get_the_terms( $post->ID, $key );
+		$terms      = array();
+		foreach ( $taxonomies as $key => $taxonomy ) {
+			$term_list  = get_the_terms( $post->ID, $key );
 			$term_array = array();
 			if ( $term_list && ! empty( $term_list ) ) {
 				foreach ( $term_list as $term ) {
 					$term_permalink = get_term_link( $term, $key );
-					$term_array[] = sprintf( '<a href="%s" style="color: %s; text-decoration: none; box-shadow: unset;">%s</a>', esc_url( $term_permalink ), esc_attr( 6 === strlen( $link_color ) ? '#' . $link_color : $link_color ), esc_html( $term->name ) );
+					$term_array[]   = sprintf( '<a href="%s" style="color: %s; text-decoration: none; box-shadow: unset;">%s</a>', esc_url( $term_permalink ), esc_attr( 6 === strlen( $link_color ) ? '#' . $link_color : $link_color ), esc_html( $term->name ) );
 				}
-				$terms[$key] = implode( ', ', $term_array );
+				$terms[ $key ] = implode( ', ', $term_array );
 			} else {
-				$terms[$key] = false;
+				$terms[ $key ] = false;
 			}
 		}
 		$post->terms = $terms;
 
-		if( empty( $post->post_excerpt ) ) {
+		if ( empty( $post->post_excerpt ) ) {
 			$post->post_excerpt = apply_filters( 'the_excerpt', wp_strip_all_tags( strip_shortcodes( $post->post_content ) ) );
 		}
 
@@ -169,80 +178,86 @@ function ptam_get_posts($post_data) {
 
 		$post->post_excerpt = wp_kses_post( $post->post_excerpt );
 	}
-	$return = array( 'posts' => $posts, 'image_sizes' => ptam_get_all_image_sizes(), 'taxonomies' => $taxonomies );
-	die( json_encode( $return ) );
+	$return = array(
+		'posts'       => $posts,
+		'image_sizes' => ptam_get_all_image_sizes(),
+		'taxonomies'  => $taxonomies,
+	);
+	die( wp_json_encode( $return ) );
 }
 
 /**
  * Get an image based on what a user has selected
  *
- * @return string Image sizee
+ * @param WP_REST_Request $post_data Post data.
  */
 function ptam_get_image( $post_data ) {
-	$taxonomy = $post_data['taxonomy'];
-	$order = $post_data['order'];
-	$orderby = $post_data['orderby'];
-	$term = $post_data['term'];
-	$post_type = $post_data['post_type'];
+	$taxonomy       = $post_data['taxonomy'];
+	$order          = $post_data['order'];
+	$orderby        = $post_data['orderby'];
+	$term           = $post_data['term'];
+	$post_type      = $post_data['post_type'];
 	$posts_per_page = $post_data['posts_per_page'];
-	$avatar_size = $post_data['avatar_size'];
-	$image_type = $post_data['image_type'];
-	$image_size = $post_data['image_size'];
-	$link_color = $post_data['link_color'];
+	$avatar_size    = $post_data['avatar_size'];
+	$image_type     = $post_data['image_type'];
+	$image_size     = $post_data['image_size'];
+	$link_color     = $post_data['link_color'];
 
 	$post_args = array(
-		'post_type' => $post_type,
-		'post_status' => 'publish',
-		'order' => $order,
-		'orderby' => $orderby,
-		'posts_per_page' => $posts_per_page
+		'post_type'      => $post_type,
+		'post_status'    => 'publish',
+		'order'          => $order,
+		'orderby'        => $orderby,
+		'posts_per_page' => $posts_per_page,
 	);
-	if( 'all' !== $term && '0' !== $term && 'none' !== $taxonomy ) {
-		$post_args[ 'tax_query' ] = array( array(
-			'taxonomy' => $taxonomy,
-			'terms' => $term
-		) );
+	if ( 'all' !== $term && '0' !== $term && 'none' !== $taxonomy ) {
+		$post_args['tax_query'] = array( // phpcs:ignore
+			array(
+				'taxonomy' => $taxonomy,
+				'terms'    => $term,
+			),
+		);
 	}
 	$posts = get_posts( $post_args );
-	foreach( $posts as &$post) {
+	foreach ( $posts as &$post ) {
 		$thumbnail = '';
-		if ('gravatar' === $image_type ) {
+		if ( 'gravatar' === $image_type ) {
 			$thumbnail = get_avatar( $post->post_author, $avatar_size );
 		} else {
 			$thumbnail = get_the_post_thumbnail( $post->ID, $image_size );
 		}
 		$post->featured_image_src = $thumbnail;
 
-		// Get author information
+		// Get author information.
 		$display_name = get_the_author_meta( 'display_name', $post->post_author );
-		$author_url = get_author_posts_url( $post->post_author );
+		$author_url   = get_author_posts_url( $post->post_author );
 
-		$post->author_info = new stdClass();
+		$post->author_info               = new stdClass();
 		$post->author_info->display_name = $display_name;
-		$post->author_info->author_link = $author_url;
+		$post->author_info->author_link  = $author_url;
 
 		$post->link = get_permalink( $post->ID );
 
-		// Get taxonomy information
+		// Get taxonomy information.
 		$taxonomies = get_object_taxonomies( $post->post_type, 'objects' );
-		$terms = array();
-		foreach( $taxonomies as $key => $taxonomy ) {
-			$term_list = get_the_terms( $post->ID, $key );
+		$terms      = array();
+		foreach ( $taxonomies as $key => $taxonomy ) {
+			$term_list  = get_the_terms( $post->ID, $key );
 			$term_array = array();
 			if ( $term_list && ! empty( $term_list ) ) {
 				foreach ( $term_list as $term ) {
 					$term_permalink = get_term_link( $term, $key );
-					$term_array[] = sprintf( '<a href="%s" style="color: %s; text-decoration: none; box-shadow: unset;">%s</a>', esc_url( $term_permalink ),  esc_attr( 6 === strlen( $link_color ) ? '#' . $link_color : $link_color ), esc_html( $term->name ) );
+					$term_array[]   = sprintf( '<a href="%s" style="color: %s; text-decoration: none; box-shadow: unset;">%s</a>', esc_url( $term_permalink ), esc_attr( 6 === strlen( $link_color ) ? '#' . $link_color : $link_color ), esc_html( $term->name ) );
 				}
-				$terms[$key] = implode( ', ', $term_array );
+				$terms[ $key ] = implode( ', ', $term_array );
 			} else {
-				$terms[$key] = false;
+				$terms[ $key ] = false;
 			}
 		}
 		$post->terms = $terms;
 
-		// Get excerpt
-		if( empty( $post->post_excerpt ) ) {
+		// Get excerpt.
+		if ( empty( $post->post_excerpt ) ) {
 			$post->post_excerpt = apply_filters( 'the_excerpt', wp_strip_all_tags( strip_shortcodes( $post->post_content ) ) );
 		}
 
@@ -253,8 +268,12 @@ function ptam_get_image( $post_data ) {
 		$post->post_excerpt = wp_kses_post( $post->post_excerpt );
 
 	}
-	$return = array( 'posts' => $posts, 'image_sizes' => ptam_get_all_image_sizes(), 'taxonomies' => $taxonomies );
-	die( json_encode( $return ) );
+	$return = array(
+		'posts'       => $posts,
+		'image_sizes' => ptam_get_all_image_sizes(),
+		'taxonomies'  => $taxonomies,
+	);
+	die( wp_json_encode( $return ) );
 }
 
 /**
@@ -272,9 +291,9 @@ function ptam_get_all_image_sizes() {
 	$default_image_sizes = get_intermediate_image_sizes();
 
 	foreach ( $default_image_sizes as $size ) {
-		$image_sizes[ $size ][ 'width' ] = intval( get_option( "{$size}_size_w" ) );
-		$image_sizes[ $size ][ 'height' ] = intval( get_option( "{$size}_size_h" ) );
-		$image_sizes[ $size ][ 'crop' ] = get_option( "{$size}_crop" ) ? get_option( "{$size}_crop" ) : false;
+		$image_sizes[ $size ]['width']  = intval( get_option( "{$size}_size_w" ) );
+		$image_sizes[ $size ]['height'] = intval( get_option( "{$size}_size_h" ) );
+		$image_sizes[ $size ]['crop']   = get_option( "{$size}_crop" ) ? get_option( "{$size}_crop" ) : false;
 	}
 
 	if ( isset( $_wp_additional_image_sizes ) && count( $_wp_additional_image_sizes ) ) {
@@ -289,38 +308,54 @@ function ptam_get_all_image_sizes() {
  * @since 1.0.0
  */
 function ptam_register_route() {
-	register_rest_route('ptam/v1', '/get_terms/(?P<taxonomy>[-_a-zA-Z]+)/(?P<post_type>[-_a-zA-Z]+)', array(
-		'methods' => 'GET',
-		'callback' => 'ptam_get_all_terms',
-	));
-	register_rest_route('ptam/v1', '/get_posts/(?P<post_type>[-_a-zA-Z]+)/(?P<order>[a-zA-Z]+)/(?P<orderby>[a-zA-Z]+)/(?P<taxonomy>[-_a-zA-Z]+)/(?P<term>\d+)/(?P<posts_per_page>\d+)/(?P<image_crop>[-a-zA-Z]+)/(?P<avatar_size>\d+)/(?P<image_type>[-_A-Za-z]+)/(?P<image_size>[_-a-zA-Z0-9]+)/(?P<link_color>[a-zA-Z0-9]+)', array(
-		'methods' => 'GET',
-		'callback' => 'ptam_get_posts',
-	));
+	register_rest_route(
+		'ptam/v1',
+		'/get_terms/(?P<taxonomy>[-_a-zA-Z]+)/(?P<post_type>[-_a-zA-Z]+)',
+		array(
+			'methods'  => 'GET',
+			'callback' => 'ptam_get_all_terms',
+		)
+	);
+	register_rest_route(
+		'ptam/v1',
+		'/get_posts/(?P<post_type>[-_a-zA-Z]+)/(?P<order>[a-zA-Z]+)/(?P<orderby>[a-zA-Z]+)/(?P<taxonomy>[-_a-zA-Z]+)/(?P<term>\d+)/(?P<posts_per_page>\d+)/(?P<image_crop>[-a-zA-Z]+)/(?P<avatar_size>\d+)/(?P<image_type>[-_A-Za-z]+)/(?P<image_size>[_-a-zA-Z0-9]+)/(?P<link_color>[a-zA-Z0-9]+)',
+		array(
+			'methods'  => 'GET',
+			'callback' => 'ptam_get_posts',
+		)
+	);
 
-	register_rest_route('ptam/v1', '/get_taxonomies/(?P<post_type>[-_a-zA-Z]+)', array(
-		'methods' => 'GET',
-		'callback' => 'ptam_get_taxonomies',
-	));
+	register_rest_route(
+		'ptam/v1',
+		'/get_taxonomies/(?P<post_type>[-_a-zA-Z]+)',
+		array(
+			'methods'  => 'GET',
+			'callback' => 'ptam_get_taxonomies',
+		)
+	);
 
-	register_rest_route('ptam/v1', '/get_images/(?P<post_type>[-_a-zA-Z]+)/(?P<order>[a-zA-Z]+)/(?P<orderby>[a-zA-Z]+)/(?P<taxonomy>[-_a-zA-Z]+)/(?P<term>\d+)/(?P<posts_per_page>\d+)/(?P<image_crop>[-a-zA-Z]+)/(?P<avatar_size>\d+)/(?P<image_type>[-_A-Za-z]+)/(?P<image_size>[_-a-zA-Z0-9]+)/(?P<link_color>[a-zA-Z0-9]+)', array(
-		'methods' => 'GET',
-		'callback' => 'ptam_get_image'
-	));
+	register_rest_route(
+		'ptam/v1',
+		'/get_images/(?P<post_type>[-_a-zA-Z]+)/(?P<order>[a-zA-Z]+)/(?P<orderby>[a-zA-Z]+)/(?P<taxonomy>[-_a-zA-Z]+)/(?P<term>\d+)/(?P<posts_per_page>\d+)/(?P<image_crop>[-a-zA-Z]+)/(?P<avatar_size>\d+)/(?P<image_type>[-_A-Za-z]+)/(?P<image_size>[_-a-zA-Z0-9]+)/(?P<link_color>[a-zA-Z0-9]+)',
+		array(
+			'methods'  => 'GET',
+			'callback' => 'ptam_get_image',
+		)
+	);
 }
-add_action('rest_api_init', 'ptam_register_route' );
+add_action( 'rest_api_init', 'ptam_register_route' );
 
 /**
  * Extend get terms with post type parameter.
  *
  * @global $wpdb
- * @param string $clauses
- * @param string $taxonomy
- * @param array $args
+ * @param string $clauses Term clauses.
+ * @param string $taxonomy Taxonomy.
+ * @param array  $args Aaaarghhhhs.
  * @return string
  */
 function ptam_terms_clauses( $clauses, $taxonomy, $args ) {
-	if ( isset( $args['post_type'] ) && ! empty( $args['post_type'] ) && $args['fields'] !== 'count' ) {
+	if ( isset( $args['post_type'] ) && ! empty( $args['post_type'] ) && 'count' === $args['fields'] ) {
 		global $wpdb;
 
 		$post_types = array();
@@ -334,9 +369,9 @@ function ptam_terms_clauses( $clauses, $taxonomy, $args ) {
 		}
 
 		if ( ! empty( $post_types ) ) {
-			$clauses['fields'] = 'DISTINCT ' . str_replace( 'tt.*', 'tt.term_taxonomy_id, tt.taxonomy, tt.description, tt.parent', $clauses['fields'] ) . ', COUNT(p.post_type) AS count';
-			$clauses['join'] .= ' LEFT JOIN ' . $wpdb->term_relationships . ' AS r ON r.term_taxonomy_id = tt.term_taxonomy_id LEFT JOIN ' . $wpdb->posts . ' AS p ON p.ID = r.object_id';
-			$clauses['where'] .= ' AND (p.post_type IN (' . implode( ',', $post_types ) . ') OR p.post_type IS NULL)';
+			$clauses['fields']  = 'DISTINCT ' . str_replace( 'tt.*', 'tt.term_taxonomy_id, tt.taxonomy, tt.description, tt.parent', $clauses['fields'] ) . ', COUNT(p.post_type) AS count';
+			$clauses['join']   .= ' LEFT JOIN ' . $wpdb->term_relationships . ' AS r ON r.term_taxonomy_id = tt.term_taxonomy_id LEFT JOIN ' . $wpdb->posts . ' AS p ON p.ID = r.object_id';
+			$clauses['where']  .= ' AND (p.post_type IN (' . implode( ',', $post_types ) . ') OR p.post_type IS NULL)';
 			$clauses['orderby'] = 'GROUP BY t.term_id ' . $clauses['orderby'];
 		}
 	}
