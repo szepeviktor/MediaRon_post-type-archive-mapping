@@ -322,6 +322,7 @@ function ptam_get_fonts() {
 	$fonts = apply_filters(
 		'ptam_fonts',
 		array(
+			'inherit'         => 'Default',
 			'arial'           => 'Arial',
 			'helvetica'       => 'Helvetica',
 			'times new roman' => 'Times New Roman',

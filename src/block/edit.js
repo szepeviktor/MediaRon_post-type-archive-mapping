@@ -115,6 +115,7 @@ class PTAM_Custom_Posts extends Component {
 		let termsList = [];
 		let userTaxonomies = [];
 		let userTerms = [];
+		let fonts = [];
 		const props = jQuery.extend({}, this.props.attributes, object);
 		let { postType, order, orderBy, avatarSize,imageType,imageTypeSize,taxonomy, term, postsToShow, imageCrop, linkColor } = props;
 
@@ -125,6 +126,7 @@ class PTAM_Custom_Posts extends Component {
 				latestPosts = response.data.posts;
 				imageSizes = response.data.image_sizes;
 				userTaxonomies = response.data.taxonomies;
+				fonts = response.data.fonts;
 
 				// Get Post Types
 				axios.get(ptam_globals.rest_url + 'wp/v2/types').then( ( response ) => {
@@ -156,7 +158,7 @@ class PTAM_Custom_Posts extends Component {
 							this.setState( {
 								loading: false,
 								imageSizes: imageSizes,
-								fonts: response.data.fonts,
+								fonts: fonts,
 								latestPosts: latestPosts,
 								postTypeList: postTypeList,
 								taxonomyList: taxonomyList,
@@ -364,7 +366,7 @@ class PTAM_Custom_Posts extends Component {
 	render() {
 		let htmlToReactParser = new HtmlToReactParser();
 		const { attributes, setAttributes } = this.props;
-		const { postType, term, taxonomy, displayPostDate, displayPostExcerpt, displayPostAuthor, displayPostImage,displayPostLink, align, postLayout, columns, order, pagination, orderBy, postsToShow, readMoreText, imageLocation, taxonomyLocation, imageType, imageTypeSize, avatarSize, changeCapitilization, displayTaxonomies, trimWords, titleAlignment, imageAlignment, metaAlignment, contentAlignment, padding, border, borderRounded, borderColor, backgroundColor, titleColor, linkColor, contentColor, continueReadingColor, titleFont } = attributes;
+		const { postType, term, taxonomy, displayPostDate, displayPostExcerpt, displayPostAuthor, displayPostImage,displayPostLink, align, postLayout, columns, order, pagination, orderBy, postsToShow, readMoreText, imageLocation, taxonomyLocation, imageType, imageTypeSize, avatarSize, changeCapitilization, displayTaxonomies, trimWords, titleAlignment, imageAlignment, metaAlignment, contentAlignment, padding, border, borderRounded, borderColor, backgroundColor, titleColor, linkColor, contentColor, continueReadingColor, titleFont, metaFont, contentFont, continueReadingFont } = attributes;
 
 		let userTaxonomies = this.state.userTaxonomies;
 		let userTaxonomiesArray = [];
@@ -390,7 +392,7 @@ class PTAM_Custom_Posts extends Component {
 		let fontOptions = [];
 		let fonts = this.state.fonts;
 		for ( var key in fonts ) {
-			fontOptions.push( { value: key, label: key })
+			fontOptions.push( { value: key, label: fonts[key] })
 		}
 
 		let imageDisplayOptionsTypes = [];
@@ -683,6 +685,24 @@ class PTAM_Custom_Posts extends Component {
 						value={ titleFont }
 						onChange={ ( value ) => { this.props.setAttributes( { titleFont: value } ); } }
 					/>
+					<SelectControl
+						label={ __( 'Meta Font', 'post-type-archive-mapping' ) }
+						options={ fontOptions }
+						value={ metaFont }
+						onChange={ ( value ) => { this.props.setAttributes( { metaFont: value } ); } }
+					/>
+					<SelectControl
+						label={ __( 'Content Font', 'post-type-archive-mapping' ) }
+						options={ fontOptions }
+						value={ contentFont }
+						onChange={ ( value ) => { this.props.setAttributes( { contentFont: value } ); } }
+					/>
+					<SelectControl
+						label={ __( 'Continue Reading Font', 'post-type-archive-mapping' ) }
+						options={ fontOptions }
+						value={ continueReadingFont }
+						onChange={ ( value ) => { this.props.setAttributes( { continueReadingFont: value } ); } }
+					/>
 				</PanelBody>
 			</InspectorControls>
 		);
@@ -737,17 +757,22 @@ class PTAM_Custom_Posts extends Component {
 			},
 		];
 
-		// Alignment Styles
-		const titleAlignmentStyles = postLayout === 'grid' ? { textAlign: titleAlignment } : {};
+		// Styles
+		let titleStyles = postLayout === 'grid' ? { textAlign: titleAlignment } : {};
+		titleStyles.fontFamily = titleFont;
 		const imageAlignmentStyles = postLayout === 'grid' ? { textAlign: imageAlignment } : {};
-		const metaAlignmentStyles = postLayout === 'grid' ? { textAlign: metaAlignment, color: contentColor } : { color: contentColor };
-		const contentAlignmentStyles = postLayout === 'grid' ? { textAlign: contentAlignment, color: contentColor } : { color: contentColor };
+		let metaStyles = postLayout === 'grid' ? { textAlign: metaAlignment, color: contentColor } : { color: contentColor };
+		metaStyles.fontFamily = metaFont;
+		let contentStyles = postLayout === 'grid' ? { textAlign: contentAlignment, color: contentColor } : { color: contentColor };
+		contentStyles.fontFamily = contentFont;
+		let continueReadingStyles = {
+			color: continueReadingColor,
+			fontFamily: continueReadingFont
+		};
 
 		// Color Styles
 		const titleColorStyles = { color: titleColor };
 		const linkColorStyles = { color: linkColor };
-		const continueReadingColorStyles = { color: continueReadingColor };
-
 
 		return (
 			<Fragment>
@@ -801,7 +826,7 @@ class PTAM_Custom_Posts extends Component {
 								}
 
 								<div className="ptam-block-post-grid-text">
-									<h2 className="entry-title" style={titleAlignmentStyles}><a href={ post.link } target="_blank" rel="bookmark" style={titleColorStyles}>{ decodeEntities( post.post_title.trim() ) || __( '(Untitled)', 'post-type-archive-mapping' ) }</a></h2>
+									<h2 className="entry-title" style={titleStyles}><a href={ post.link } target="_blank" rel="bookmark" style={titleColorStyles}>{ decodeEntities( post.post_title.trim() ) || __( '(Untitled)', 'post-type-archive-mapping' ) }</a></h2>
 									{displayPostImage && post.featured_image_src !== undefined && post.featured_image_src  && 'below_title' === this.state.imageLocation ? (
 											<div className="ptam-block-post-grid-image" style={imageAlignmentStyles}>
 												<a href={ post.link } target="_blank" rel="bookmark">
@@ -813,7 +838,7 @@ class PTAM_Custom_Posts extends Component {
 										)
 									}
 
-									<div className={`ptam-block-post-grid-byline ${capitilization}`} style={metaAlignmentStyles}>
+									<div className={`ptam-block-post-grid-byline ${capitilization}`} style={metaStyles}>
 										{ displayPostAuthor && post.author_info.display_name !== 'undefined' && post.author_info.display_name &&
 											<div className="ptam-block-post-grid-author"><a className="ptam-text-link" target="_blank" href={ post.author_info.author_link } style={linkColorStyles}>{ post.author_info.display_name }</a></div>
 										}
@@ -845,7 +870,7 @@ class PTAM_Custom_Posts extends Component {
 										}
 									</div>
 
-									<div className="ptam-block-post-grid-excerpt" style={contentAlignmentStyles}>
+									<div className="ptam-block-post-grid-excerpt" style={contentStyles}>
 										{ displayPostExcerpt && '' !==  post.post_excerpt &&
 											<Fragment>
 												{this.excerptParse(post.post_excerpt)}
@@ -853,7 +878,7 @@ class PTAM_Custom_Posts extends Component {
 										}
 
 										{ displayPostLink &&
-											<p><a className="ptam-block-post-grid-link ptam-text-link" href={ post.link } target="_blank" rel="bookmark" style={continueReadingColorStyles}>{ readMoreText }</a></p>
+											<p><a className="ptam-block-post-grid-link ptam-text-link" href={ post.link } target="_blank" rel="bookmark" style={continueReadingStyles}>{ readMoreText }</a></p>
 										}
 										{
 										displayPostImage && post.featured_image_src !== undefined && post.featured_image_src  && 'bottom' === this.state.imageLocation ? (
@@ -868,7 +893,7 @@ class PTAM_Custom_Posts extends Component {
 										}
 									</div>
 									{ userTaxonomiesArray.length > 0 && displayTaxonomies && 'below_content' === taxonomyLocation &&
-											<div style={metaAlignmentStyles}>
+											<div style={metaStyles}>
 												{userTaxonomiesArray.map((key) => {
 													if( post.terms[key.value] !== false ) {
 														return (<div className="ptam-terms"><span className="ptam-term-label">{key.label}: </span><span className="ptam-term-values" style={linkColorStyles}>{htmlToReactParser.parse(post.terms[key.value])}</span></div>);
