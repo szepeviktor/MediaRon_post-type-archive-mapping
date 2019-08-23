@@ -3,7 +3,7 @@ Contributors: ronalfy, chrislogan
 Tags: custom post types, archive, mapping, gutenberg, block, taxonomy, terms
 Requires at least: 5.0
 Tested up to: 5.2
-Stable tag: 2.1.2
+Stable tag: 2.2.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Donate link: https://mediaron.com/give/
@@ -66,6 +66,13 @@ No, this plugin only works with pages.
 
 == Changelog ==
 
+= 2.2.0 =
+* Released 2019-08-23
+* Bug fix when in grid mode and image is placed below the title.
+* Bug fix: skipping taxonomies when there are none.
+* Bug fix: fixing capitalization error.
+* Enhancement: You can now select fonts for your content areas.
+
 = 2.1.2 =
 * Released 2019-06-11
 * Fixing pagination
@@ -122,6 +129,9 @@ No, this plugin only works with pages.
 * Initial release.
 
 == Upgrade Notice ==
+
+= 2.2.0 =
+Numerous bug fixes and the ability to select fonts for your content areas.
 
 = 2.1.2 =
 Fixing pagination.
