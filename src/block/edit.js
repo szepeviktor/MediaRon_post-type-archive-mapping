@@ -443,7 +443,7 @@ class PTAM_Custom_Posts extends Component {
 							label={ __( 'Columns',  'post-type-archive-mapping' ) }
 							value={ columns }
 							onChange={ ( value ) => this.props.setAttributes( { columns: value } ) }
-							min={ 2 }
+							min={ 1 }
 							max={ ! hasPosts ? MAX_POSTS_COLUMNS : Math.min( MAX_POSTS_COLUMNS, latestPosts.length ) }
 						/>
 					}

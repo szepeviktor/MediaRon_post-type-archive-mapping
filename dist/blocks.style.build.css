@@ -220,6 +220,8 @@
     grid-gap: 0 2em; }
     .ptam-block-post-grid .is-grid article {
       margin-bottom: 2.5em; }
+  .ptam-block-post-grid .is-grid.columns-1 {
+    grid-template-columns: 1fr; }
   .ptam-block-post-grid .is-grid.columns-2 {
     grid-template-columns: 1fr 1fr; }
     @media only screen and (max-width: 600px) {
