@@ -132,7 +132,7 @@ function ptam_custom_posts( $attributes ) {
 
 				// Wrap the byline content
 				$list_items_markup .= sprintf(
-					'<div class="ptam-block-post-grid-byline %s" %s>', $attributes['changeCapitilization'] ? 'ptam-text-lower-case' : '',
+					'<div class="ptam-block-post-grid-byline %s" %s>', isset( $attributes['changeCapitilization'] ) && $attributes['changeCapitilization'] ? 'ptam-text-lower-case' : '',
 					'grid' === $attributes['postLayout'] ? "style='text-align: {$attributes['metaAlignment']}; color: {$attributes['contentColor']}'" : "style='color: {$attributes['contentColor']};'"
 
 				);
@@ -324,7 +324,7 @@ function ptam_register_custom_posts_block() {
 				'default' => 'regular'
 			),
 			'changeCapitilization' => array(
-				'type' => 'bool',
+				'type' => 'boolean',
 				'value' => false
 			),
 			'imageSize' => array(

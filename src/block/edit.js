@@ -425,6 +425,7 @@ class PTAM_Custom_Posts extends Component {
 							onChange={ ( value ) => { this.props.setAttributes( { taxonomy: value } ); this.get_term_list( { taxonomy: value } ); this.get_latest_posts({ taxonomy: value }); } }
 					/>
 					<SelectControl
+							mutltiple
 							label={ __( 'Terms',  'post-type-archive-mapping' ) }
 							options={ this.state.termsList }
 							value={ term }
