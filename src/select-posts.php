@@ -301,11 +301,6 @@ function ptam_custom_posts( $attributes ) {
 				$list_items_markup .= '</div>';
 			}
 
-			// Wrap the text content.
-			$list_items_markup .= sprintf(
-				'</div>'
-			);
-
 			// Close the markup for the post.
 			$list_items_markup .= "</article>\n";
 		}
