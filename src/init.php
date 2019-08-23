@@ -85,7 +85,7 @@ function ptam_get_all_terms( $tax_data ) {
 }
 
 /**
- * Return Posts
+ * Return Taxonomies
  *
  * @since 1.0.0
  * @param WP_REST_Request $post_data Post data.
@@ -154,6 +154,10 @@ function ptam_get_posts( $post_data ) {
 		$taxonomies = get_object_taxonomies( $post->post_type, 'objects' );
 		$terms      = array();
 		foreach ( $taxonomies as $key => $taxonomy ) {
+			if ( 'author' === $key ) {
+				unset( $taxonomies[ $key ] );
+				continue;
+			}
 			$term_list  = get_the_terms( $post->ID, $key );
 			$term_array = array();
 			if ( $term_list && ! empty( $term_list ) ) {
@@ -242,6 +246,10 @@ function ptam_get_image( $post_data ) {
 		$taxonomies = get_object_taxonomies( $post->post_type, 'objects' );
 		$terms      = array();
 		foreach ( $taxonomies as $key => $taxonomy ) {
+			if ( 'author' === $key ) {
+				unset( $taxonomies[ $key ] );
+				continue;
+			}
 			$term_list  = get_the_terms( $post->ID, $key );
 			$term_array = array();
 			if ( $term_list && ! empty( $term_list ) ) {

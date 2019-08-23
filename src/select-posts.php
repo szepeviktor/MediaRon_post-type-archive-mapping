@@ -69,6 +69,9 @@ function ptam_get_taxonomy_terms( $post, $attributes = array() ) {
 	$taxonomies = get_object_taxonomies( $post->post_type, 'objects' );
 	$terms      = array();
 	foreach ( $taxonomies as $key => $taxonomy ) {
+		if ( 'author' === $key ) {
+			continue;
+		}
 		$term_list  = get_the_terms( $post->ID, $key );
 		$term_array = array();
 		if ( $term_list && ! empty( $term_list ) ) {
@@ -82,6 +85,9 @@ function ptam_get_taxonomy_terms( $post, $attributes = array() ) {
 		}
 	}
 	foreach ( $taxonomies as $key => $taxonomy ) {
+		if ( 'author' === $key ) {
+			continue;
+		}
 		if ( false === $terms[ $key ] ) {
 			continue;
 		}
