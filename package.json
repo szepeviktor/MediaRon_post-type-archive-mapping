@@ -13,6 +13,7 @@
   "devDependencies": {
     "axios": "^0.18.1",
     "classnames": "^2.2.6",
+    "dayjs": "^1.8.15",
     "del": "^5.1.0",
     "gulp": "^4.0.2",
     "gulp-run": "^1.7.1",

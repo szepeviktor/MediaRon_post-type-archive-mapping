@@ -1,7 +1,7 @@
 /**
  * External dependencies
  */
-import moment from 'moment';
+import dayjs from 'dayjs';
 import classnames from 'classnames';
 import axios from 'axios';
 var HtmlToReactParser = require('html-to-react').Parser;
@@ -844,8 +844,8 @@ class PTAM_Custom_Posts extends Component {
 										}
 
 										{ displayPostDate && post.post_date_gmt &&
-											<time dateTime={ moment( post.post_date_gmt ).utc().format() } className={ 'ptam-block-post-grid-date' }>
-												{ moment( post.post_date_gmt ).local().format( 'MMMM DD, Y' ) }
+											<time dateTime={ dayjs( post.post_date_gmt ).format() } className={ 'ptam-block-post-grid-date' }>
+												{ dayjs( post.post_date_gmt ).format( 'MMMM DD, YYYY' ) }
 											</time>
 										}
 										{ userTaxonomiesArray.length > 0 && displayTaxonomies && 'regular' === taxonomyLocation &&
