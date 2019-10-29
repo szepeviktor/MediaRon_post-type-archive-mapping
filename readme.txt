@@ -2,8 +2,8 @@
 Contributors: ronalfy, chrislogan
 Tags: custom post types, archive, mapping, gutenberg, block, taxonomy, terms
 Requires at least: 5.0
-Tested up to: 5.2
-Stable tag: 2.2.0
+Tested up to: 5.3
+Stable tag: 2.2.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Donate link: https://mediaron.com/give/
@@ -65,6 +65,11 @@ No, this plugin only works with pages.
 3. Settings->Reading option
 
 == Changelog ==
+
+= 2.2.1 =
+* Released 2019-10-29
+* Testing up to WordPress 5.3.
+* Fixing JS error when jQuery is not defined as a $ variable.
 
 = 2.2.0 =
 * Released 2019-08-23
@@ -130,11 +135,5 @@ No, this plugin only works with pages.
 
 == Upgrade Notice ==
 
-= 2.2.0 =
-Numerous bug fixes and the ability to select fonts for your content areas.
-
-= 2.1.2 =
-Fixing pagination.
-
-= 2.1.1 =
-Some users were seeing featured images twice in the back-end.
+= 2.2.1 =
+Testing up to WordPress 5.3. Fixing JS error when jQuery is not defined as a $ variable.
