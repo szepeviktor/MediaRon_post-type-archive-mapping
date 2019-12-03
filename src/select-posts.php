@@ -123,6 +123,7 @@ function ptam_custom_posts( $attributes ) {
 		}
 	}
 	$attributes['displayTitle']        = isset( $attributes['displayTitle'] ) ? esc_html( $attributes['displayTitle'] ) : true;
+	$attributes['displayCustomFields'] = isset( $attributes['displayCustomFields'] ) ? esc_html( $attributes['displayCustomFields'] ) : true;
 	$attributes['titleFont']           = isset( $attributes['titleFont'] ) ? esc_attr( $attributes['titleFont'] ) : 'inherit';
 	$attributes['metaFont']            = isset( $attributes['metaFont'] ) ? esc_attr( $attributes['metaFont'] ) : 'inherit';
 	$attributes['contentFont']         = isset( $attributes['contentFont'] ) ? esc_attr( $attributes['contentFont'] ) : 'inherit';
@@ -188,6 +189,40 @@ function ptam_custom_posts( $attributes ) {
 					esc_attr( $attributes['titleColor'] ),
 					esc_attr( $attributes['titleFont'] )
 				);
+			}
+
+			if ( $attributes['displayCustomFields'] ) {
+				$custom_fields_markup = isset( $attributes['customFields'] ) ? $attributes['customFields'] : '';
+				if ( ! empty( $custom_fields_markup ) ) {
+					$list_items_markup .= '<div class="ptam-block-post-custom-fields">';
+					preg_match_all( '/{([-_a-zA-Z0-9]+)}/', $custom_fields_markup, $matches );
+					if ( isset( $matches[0] ) && is_array( $matches[0] ) ) {
+						foreach ( $matches[0] as $custom_field_match ) {
+							// Strip out the {}.
+							$maybe_custom_field = str_replace( '{', '', $custom_field_match );
+							$maybe_custom_field = str_replace( '}', '', $maybe_custom_field );
+
+							$custom_field_value = '';
+
+							// We may have a custom field. Try ACF first.
+							if ( function_exists( 'get_field' ) ) {
+								$custom_field_value = get_field( $maybe_custom_field, $post_id );
+								if ( $custom_field_value ) {
+									$custom_fields_markup = str_replace( $custom_field_match, $custom_field_value, $custom_fields_markup );
+								}
+							}
+							// ACF Failed. Let's try post meta.
+							if ( empty( $custom_field_value ) ) {
+								$custom_field_value = get_post_meta( $post_id, $maybe_custom_field, true );
+								if ( $custom_field_value ) {
+									$custom_fields_markup = str_replace( $custom_field_match, $custom_field_value, $custom_fields_markup );
+								}
+							}
+						}
+					}
+					$list_items_markup .= wp_kses_post( $custom_fields_markup );
+					$list_items_markup .= '</div>';
+				}
 			}
 
 			// Wrap the byline content.
