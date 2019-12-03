@@ -78,7 +78,7 @@ class PTAM_Custom_Posts extends Component {
 		const props = jQuery.extend({}, this.props.attributes, object);
 		let { postType, order, orderBy, taxonomy, avatarSize, imageType, imageTypeSize,term, postsToShow, imageCrop, linkColor } = props;
 		linkColor = linkColor.replace( '#', '' );
-		axios.post(ptam_globals.rest_url + `ptam/v2/get_posts`, { postType: postType, order: order, orderBy: orderBy, taxonomy: taxonomy, term: term, postsToShow: postsToShow, imageCrop: imageCrop, avatarSize: avatarSize, imageType: imageType, imageTypeSize: imageTypeSize, linkColor: linkColor } ).then( ( response ) => {
+		axios.post(ptam_globals.rest_url + `ptam/v2/get_posts`, { post_type: postType, order: order, orderby: orderBy, taxonomy: taxonomy, term: term, posts_per_page: postsToShow, image_size: imageCrop, avatar_size: avatarSize, image_type: imageType, image_size: imageTypeSize, link_color: linkColor } ).then( ( response ) => {
 			// Now Set State
 			this.setState( {
 				loading: false,
@@ -95,7 +95,7 @@ class PTAM_Custom_Posts extends Component {
 		let termsList = [];
 		const props = jQuery.extend({}, this.props.attributes, object);
 		const { postType, taxonomy } = props;
-		axios.post( ptam_globals.rest_url + `ptam/v2/get_terms`, { taxonomy: taxonomy, postType: postType } ).then( ( response ) => {
+		axios.post( ptam_globals.rest_url + `ptam/v2/get_terms`, { taxonomy: taxonomy, post_type: postType } ).then( ( response ) => {
 			if( Object.keys(response.data).length > 0 ) {
 				termsList.push( { 'value': 0, 'label': __('All',  'post-type-archive-mapping') } );
 				$.each( response.data, function( key, value ) {
@@ -125,7 +125,7 @@ class PTAM_Custom_Posts extends Component {
 		linkColor = linkColor.replace( '#', '' );
 
 		// Get Latest Posts and Chain Promises
-		axios.post(ptam_globals.rest_url + `ptam/v2/get_posts`, { postType: postType, order: order, orderBy: orderBy, taxonomy: taxonomy, term: term, postsToShow: postsToShow, imageCrop: imageCrop, avatarSize: avatarSize, imageType: imageType, imageTypeSize: imageTypeSize, linkColor: linkColor } ).then( ( response ) => {
+		axios.post(ptam_globals.rest_url + `ptam/v2/get_posts`, { post_type: postType, order: order, orderby: orderBy, taxonomy: taxonomy, term: term, posts_per_page: postsToShow, image_size: imageCrop, avatar_size: avatarSize, image_type: imageType, image_size: imageTypeSize, link_color: linkColor } ).then( ( response ) => {
 				latestPosts = response.data.posts;
 				imageSizes = response.data.image_sizes;
 				userTaxonomies = response.data.taxonomies;
@@ -140,7 +140,7 @@ class PTAM_Custom_Posts extends Component {
 					} );
 
 					// Get Terms
-					axios.post(ptam_globals.rest_url + `ptam/v2/get_terms`, { taxonomy: taxonomy, postType: postType } ).then( ( response ) => {
+					axios.post(ptam_globals.rest_url + `ptam/v2/get_terms`, { taxonomy: taxonomy, post_type: postType } ).then( ( response ) => {
 						if( Object.keys(response.data).length > 0 ) {
 							termsList.push( { 'value': 0, 'label': __('All',  'post-type-archive-mapping') } );
 							jQuery.each( response.data, function( key, value ) {
@@ -149,7 +149,7 @@ class PTAM_Custom_Posts extends Component {
 						}
 
 						// Get Taxonomies
-						axios.post(ptam_globals.rest_url + `ptam/v2/get_taxonomies`, { postType: postType } ).then( ( response ) => {
+						axios.post(ptam_globals.rest_url + `ptam/v2/get_taxonomies`, { post_type: postType } ).then( ( response ) => {
 							if( Object.keys(response.data).length > 0 ) {
 								taxonomyList.push( { 'value': 'none', 'label': __('Select a Taxonomy',  'post-type-archive-mapping') } );
 								jQuery.each( response.data, function( key, value ) {
@@ -277,7 +277,7 @@ class PTAM_Custom_Posts extends Component {
 		linkColor = linkColor.replace( '#', '' );
 
 		// Get Latest Posts and Chain Promises
-		axios.get(ptam_globals.rest_url + `ptam/v1/get_images/${postType}/${order}/${orderBy}/${taxonomy}/${term}/${postsToShow}/${imageCrop}/${avatarSize}/${imageType}/${imageTypeSize}/${linkColor}`).then( ( response ) => {
+		axios.post(ptam_globals.rest_url + `ptam/v2/get_images`, { post_type: postType, order: order, orderby: orderBy, taxonomy: taxonomy, term: term, posts_per_page: postsToShow, image_type: imageCrop, avatar_size: avatarSize, image_type: imageType, image_size: imageTypeSize, link_color: linkColor } ).then( ( response ) => {
 				latestPosts = response.data.posts;
 				imageSizes = response.data.image_sizes;
 				this.setState( {
@@ -341,7 +341,7 @@ class PTAM_Custom_Posts extends Component {
 			linkColor = linkColor.replace( '#', '' );
 
 			// Get Latest Posts and Chain Promises
-			axios.get(ptam_globals.rest_url + `ptam/v1/get_images/${postType}/${order}/${orderBy}/${taxonomy}/${term}/${postsToShow}/${imageCrop}/${value}/${imageType}/${imageTypeSize}/${linkColor}`).then( ( response ) => {
+			axios.get(ptam_globals.rest_url + `ptam/v2/get_images`, { post_type: postType, order: order, orderBy: orderBy, taxonomy: taxonomy, term: term, posts_per_page: postsToShow, image_type: imageCrop, avatar_size: value, image_type: imageType, image_size: imageTypeSize, link_color: linkColor } ).then( ( response ) => {
 				latestPosts = response.data.posts;
 				imageSizes = response.data.image_sizes;
 				classRef.setState( {
