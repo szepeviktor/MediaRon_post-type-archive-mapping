@@ -112,7 +112,6 @@ function ptam_get_posts( $post_data ) {
 	$image_size     = $post_data['image_size'];
 	$avatar_size    = $post_data['avatar_size'];
 	$link_color     = $post_data['link_color'];
-
 	$post_args = array(
 		'post_type'      => $post_type,
 		'post_status'    => 'publish',
@@ -120,7 +119,7 @@ function ptam_get_posts( $post_data ) {
 		'orderby'        => $orderby,
 		'posts_per_page' => $posts_per_page,
 	);
-	if ( 'all' !== $term && '0' !== $term && 'none' !== $taxonomy ) {
+	if ( 'all' !== $term && 0 !== absint( $term ) && 'none' !== $taxonomy ) {
 		$post_args['tax_query'] = array( // phpcs:ignore
 			array(
 				'taxonomy' => $taxonomy,
