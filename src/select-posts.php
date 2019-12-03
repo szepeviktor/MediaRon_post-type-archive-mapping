@@ -442,6 +442,10 @@ function ptam_register_custom_posts_block() {
 					'type'    => 'boolean',
 					'default' => true,
 				),
+				'displayCustomFields'  => array(
+					'type'    => 'boolean',
+					'default' => false,
+				),
 				'displayPostDate'      => array(
 					'type'    => 'boolean',
 					'default' => true,
@@ -502,6 +506,10 @@ function ptam_register_custom_posts_block() {
 					'type'    => 'string',
 					'default' => 'left',
 				),
+				'customFieldAlignment' => array(
+					'type'    => 'string',
+					'default' => 'left',
+				),
 				'imageAlignment'       => array(
 					'type'    => 'string',
 					'default' => 'left',
@@ -538,6 +546,10 @@ function ptam_register_custom_posts_block() {
 					'type'    => 'string',
 					'default' => 'inherit',
 				),
+				'customFieldsColor'    => array(
+					'type'    => 'string',
+					'default' => 'inherit',
+				),
 				'linkColor'            => array(
 					'type'    => 'string',
 					'default' => 'inherit',
@@ -554,6 +566,10 @@ function ptam_register_custom_posts_block() {
 					'type'    => 'string',
 					'default' => 'inherit',
 				),
+				'customFieldsFont'     => array(
+					'type'    => 'string',
+					'default' => 'inherit',
+				),
 				'metaFont'             => array(
 					'type'    => 'string',
 					'default' => 'inherit',
@@ -565,6 +581,10 @@ function ptam_register_custom_posts_block() {
 				'continueReadingFont'  => array(
 					'type'    => 'string',
 					'default' => 'inherit',
+				),
+				'customFields'         => array(
+					'type'    => 'string',
+					'default' => '',
 				),
 			),
 			'render_callback' => 'ptam_custom_posts',
