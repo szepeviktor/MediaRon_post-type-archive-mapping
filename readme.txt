@@ -1,9 +1,9 @@
 === Custom Post Types Block ===
 Contributors: ronalfy, chrislogan
 Tags: custom post types, archive, mapping, gutenberg, block, taxonomy, terms
-Requires at least: 5.0
+Requires at least: 5.3
 Tested up to: 5.3
-Stable tag: 2.2.2
+Stable tag: 3.0.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Donate link: https://mediaron.com/give/
@@ -74,8 +74,13 @@ Yes, just post in the support forums here and I'll do my best to address your is
 
 == Changelog ==
 
+= 3.0.0 =
+* Released 2019-12-03
+* Adding custom field support.
+* Updating REST API for faster loading.
+
 = 2.2.2 =
-* Released 2019-11-02
+* Released 2019-12-02
 * Added ability to remove title from displaying.
 * Added new branded loading animation.
 
@@ -148,5 +153,5 @@ Yes, just post in the support forums here and I'll do my best to address your is
 
 == Upgrade Notice ==
 
-= 2.2.2 =
-Added ability to remove title from displaying. Added new branded loading animation.
+= 3.0.0 =
+Updating REST API for faster loading. Adding custom field support (a highly requested feature).
