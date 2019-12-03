@@ -208,6 +208,18 @@ function ptam_custom_posts( $attributes ) {
 							if ( function_exists( 'get_field' ) ) {
 								$custom_field_value = get_field( $maybe_custom_field, $post_id );
 								if ( $custom_field_value ) {
+									/**
+									 * Filter the custom field value.
+									 *
+									 * Filter the custom field value.
+									 *
+									 * @since 3.0.0
+									 *
+									 * @param mixed  $custom_field_value The custom field value.
+									 * @param string $maybe_custom_field The custom field name.
+									 * @param int    $post_id            The Post ID.
+									 */
+									$custom_field_value   = apply_filters( 'ptam_custom_field', $custom_field_value, $maybe_custom_field );
 									$custom_fields_markup = str_replace( $custom_field_match, $custom_field_value, $custom_fields_markup );
 								}
 							}
@@ -215,12 +227,24 @@ function ptam_custom_posts( $attributes ) {
 							if ( empty( $custom_field_value ) ) {
 								$custom_field_value = get_post_meta( $post_id, $maybe_custom_field, true );
 								if ( $custom_field_value ) {
+									/**
+									 * Filter the custom field value.
+									 *
+									 * Filter the custom field value.
+									 *
+									 * @since 3.0.0
+									 *
+									 * @param mixed  $custom_field_value The custom field value.
+									 * @param string $maybe_custom_field The custom field name.
+									 * @param int    $post_id            The Post ID.
+									 */
+									$custom_field_value   = apply_filters( 'ptam_custom_field', $custom_field_value, $maybe_custom_field, $post_id );
 									$custom_fields_markup = str_replace( $custom_field_match, $custom_field_value, $custom_fields_markup );
 								}
 							}
 						}
 					}
-					$list_items_markup .= wp_kses_post( $custom_fields_markup );
+					$list_items_markup .= wp_kses_post( $custom_fields_markup ); // wp_kses_post used to strip out harmful HTML.
 					$list_items_markup .= '</div>';
 				}
 			}
