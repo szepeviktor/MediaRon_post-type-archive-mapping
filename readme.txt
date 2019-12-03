@@ -3,7 +3,7 @@ Contributors: ronalfy, chrislogan
 Tags: custom post types, archive, mapping, gutenberg, block, taxonomy, terms
 Requires at least: 5.0
 Tested up to: 5.3
-Stable tag: 2.2.1
+Stable tag: 2.2.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Donate link: https://mediaron.com/give/
@@ -50,13 +50,21 @@ https://www.youtube.com/watch?v=QT0QIdTBrdk?rel=0
 
 == Frequently Asked Questions ==
 
+= Can I Add Custom Fields? =
+
+Unfortunately no.
+
 = I don't see the post types. What's wrong? =
 
-Make sure your post type has <code>has_archive</code> set to true.
+Make sure your post type has <code>has_archive</code> set to true and <code>show_in_rest</code> set to true.
 
 = Can you do posts instead of pages? =
 
-No, this plugin only works with pages.
+This plugin should work for any post type.
+
+= I need help. Can you help me? =
+
+Yes, just post in the support forums here and I'll do my best to address your issue. For priority support, you can <a href="https://mediaron.com/support/">visit my support form</a>.
 
 == Screenshots ==
 
@@ -65,6 +73,11 @@ No, this plugin only works with pages.
 3. Settings->Reading option
 
 == Changelog ==
+
+= 2.2.2 =
+* Released 2019-11-02
+* Added ability to remove title from displaying.
+* Added new branded loading animation.
 
 = 2.2.1 =
 * Released 2019-10-29
@@ -135,5 +148,5 @@ No, this plugin only works with pages.
 
 == Upgrade Notice ==
 
-= 2.2.1 =
-Testing up to WordPress 5.3. Fixing JS error when jQuery is not defined as a $ variable.
+= 2.2.2 =
+Added ability to remove title from displaying. Added new branded loading animation.
