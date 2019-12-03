@@ -154,4 +154,4 @@ Yes, just post in the support forums here and I'll do my best to address your is
 == Upgrade Notice ==
 
 = 3.0.0 =
-Updating REST API for faster loading. Adding custom field support (a highly requested feature).
+Updating REST API for faster loading. Adding custom field support (a highly requested feature). You may need to clear your cache to see the posts properly.
