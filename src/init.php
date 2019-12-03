@@ -112,7 +112,7 @@ function ptam_get_posts( $post_data ) {
 	$image_size     = $post_data['image_size'];
 	$avatar_size    = $post_data['avatar_size'];
 	$link_color     = $post_data['link_color'];
-	$post_args = array(
+	$post_args      = array(
 		'post_type'      => $post_type,
 		'post_status'    => 'publish',
 		'order'          => $order,
