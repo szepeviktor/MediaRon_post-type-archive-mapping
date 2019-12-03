@@ -194,7 +194,12 @@ function ptam_custom_posts( $attributes ) {
 			if ( $attributes['displayCustomFields'] ) {
 				$custom_fields_markup = isset( $attributes['customFields'] ) ? $attributes['customFields'] : '';
 				if ( ! empty( $custom_fields_markup ) ) {
-					$list_items_markup .= '<div class="ptam-block-post-custom-fields">';
+					$list_items_markup .= sprintf(
+						'<div class="ptam-block-post-custom-fields" style="color: %s; font-family: %s; text-align: %s;">',
+						isset( $attributes['customFieldsColor'] ) ? esc_attr( $attributes['customFieldsColor'] ) : 'inherit',
+						isset( $attributes['customFieldsFont'] ) ? esc_attr( $attributes['customFieldsFont'] ) : 'inherit',
+						isset( $attributes['customFieldAlignment'] ) ? esc_attr( $attributes['customFieldAlignment'] ) : 'inherit'
+					);
 					preg_match_all( '/{([-_a-zA-Z0-9]+)}/', $custom_fields_markup, $matches );
 					if ( isset( $matches[0] ) && is_array( $matches[0] ) ) {
 						foreach ( $matches[0] as $custom_field_match ) {
