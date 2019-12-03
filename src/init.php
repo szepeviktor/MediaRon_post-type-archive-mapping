@@ -52,6 +52,7 @@ function ptam_blocks_editor_assets() {
 		'ptam-custom-posts-gutenberg',
 		'ptam_globals',
 		array(
+			'img_url'  => esc_url( PostTypeArchiveMapping::get_plugin_url( 'img/loading.png' ) ),
 			'rest_url' => esc_url( rest_url() ),
 		)
 	);

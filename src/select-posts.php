@@ -122,6 +122,7 @@ function ptam_custom_posts( $attributes ) {
 			);
 		}
 	}
+	$attributes['displayTitle']        = isset( $attributes['displayTitle'] ) ? esc_html( $attributes['displayTitle'] ) : true;
 	$attributes['titleFont']           = isset( $attributes['titleFont'] ) ? esc_attr( $attributes['titleFont'] ) : 'inherit';
 	$attributes['metaFont']            = isset( $attributes['metaFont'] ) ? esc_attr( $attributes['metaFont'] ) : 'inherit';
 	$attributes['contentFont']         = isset( $attributes['contentFont'] ) ? esc_attr( $attributes['contentFont'] ) : 'inherit';
@@ -178,14 +179,16 @@ function ptam_custom_posts( $attributes ) {
 				$title = __( 'Untitled' );
 			}
 
-			$list_items_markup .= sprintf(
-				'<h2 class="ptam-block-post-grid-title" %3$s><a href="%1$s" rel="bookmark" style="color: %4$s; font-family: %5$s; box-shadow: unset;">%2$s</a></h2>',
-				esc_url( get_permalink( $post_id ) ),
-				esc_html( $title ),
-				'grid' === $attributes['postLayout'] ? "style='text-align: {$attributes['titleAlignment']}'" : '',
-				esc_attr( $attributes['titleColor'] ),
-				esc_attr( $attributes['titleFont'] )
-			);
+			if ( $attributes['displayTitle'] ) {
+				$list_items_markup .= sprintf(
+					'<h2 class="ptam-block-post-grid-title" %3$s><a href="%1$s" rel="bookmark" style="color: %4$s; font-family: %5$s; box-shadow: unset;">%2$s</a></h2>',
+					esc_url( get_permalink( $post_id ) ),
+					esc_html( $title ),
+					'grid' === $attributes['postLayout'] ? "style='text-align: {$attributes['titleAlignment']}'" : '',
+					esc_attr( $attributes['titleColor'] ),
+					esc_attr( $attributes['titleFont'] )
+				);
+			}
 
 			// Wrap the byline content.
 			$list_items_markup .= sprintf(
@@ -434,6 +437,10 @@ function ptam_register_custom_posts_block() {
 				'pagination'           => array(
 					'type'    => 'boolean',
 					'default' => false,
+				),
+				'displayTitle'         => array(
+					'type'    => 'boolean',
+					'default' => true,
 				),
 				'displayPostDate'      => array(
 					'type'    => 'boolean',

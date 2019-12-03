@@ -44,6 +44,7 @@ class PTAM_Custom_Posts extends Component {
 		this.toggleDisplayPostImage = this.toggleDisplayPostImage.bind( this );
 		this.toggleDisplayPostLink = this.toggleDisplayPostLink.bind( this );
 		this.toggleDisplayPagination = this.toggleDisplayPagination.bind(this);
+		this.toggleDisplayTitle = this.toggleDisplayTitle.bind(this);
 		this.get_latest_data = this.get_latest_data.bind(this);
 		this.get_latest_posts = this.get_latest_posts.bind(this);
 		this.get_term_list = this.get_term_list.bind(this);
@@ -173,6 +174,11 @@ class PTAM_Custom_Posts extends Component {
 			});
 	}
 
+	toggleDisplayTitle() {
+		const { displayTitle } = this.props.attributes;
+		const { setAttributes } = this.props;
+		setAttributes( { displayTitle: ! displayTitle } );
+	}
 	toggleDisplayPostDate() {
 		const { displayPostDate } = this.props.attributes;
 		const { setAttributes } = this.props;
@@ -366,7 +372,7 @@ class PTAM_Custom_Posts extends Component {
 	render() {
 		let htmlToReactParser = new HtmlToReactParser();
 		const { attributes, setAttributes } = this.props;
-		const { postType, term, taxonomy, displayPostDate, displayPostExcerpt, displayPostAuthor, displayPostImage,displayPostLink, align, postLayout, columns, order, pagination, orderBy, postsToShow, readMoreText, imageLocation, taxonomyLocation, imageType, imageTypeSize, avatarSize, changeCapitilization, displayTaxonomies, trimWords, titleAlignment, imageAlignment, metaAlignment, contentAlignment, padding, border, borderRounded, borderColor, backgroundColor, titleColor, linkColor, contentColor, continueReadingColor, titleFont, metaFont, contentFont, continueReadingFont } = attributes;
+		const { postType, term, taxonomy, displayPostDate, displayPostExcerpt, displayPostAuthor, displayPostImage,displayPostLink, align, postLayout, columns, order, pagination, orderBy, postsToShow, readMoreText, imageLocation, taxonomyLocation, imageType, imageTypeSize, avatarSize, changeCapitilization, displayTaxonomies, trimWords, titleAlignment, imageAlignment, metaAlignment, contentAlignment, padding, border, borderRounded, borderColor, backgroundColor, titleColor, linkColor, contentColor, continueReadingColor, titleFont, metaFont, contentFont, continueReadingFont, displayTitle } = attributes;
 
 		let userTaxonomies = this.state.userTaxonomies;
 		let userTaxonomiesArray = [];
@@ -502,6 +508,11 @@ class PTAM_Custom_Posts extends Component {
 							/>
 						</Fragment>
 					}
+					<ToggleControl
+						label={ __( 'Display Title',  'post-type-archive-mapping' ) }
+						checked={ displayTitle }
+						onChange={ this.toggleDisplayTitle }
+					/>
 					<ToggleControl
 						label={ __( 'Display Taxonomies',  'post-type-archive-mapping' ) }
 						checked={ displayTaxonomies }
@@ -710,10 +721,10 @@ class PTAM_Custom_Posts extends Component {
 			return (
 				<Fragment>
 					{ inspectorControls }
-					<Placeholder
-						icon="admin-post"
-						label={ __( 'Custom Posts',  'post-type-archive-mapping' ) }
-					>
+					<Placeholder>
+						<div>
+							<img src={ptam_globals.img_url} alt="MediaRon Custom Post Types Block" />
+						</div>
 						<Spinner />
 					</Placeholder>
 				</Fragment>
@@ -826,7 +837,9 @@ class PTAM_Custom_Posts extends Component {
 								}
 
 								<div className="ptam-block-post-grid-text">
-									<h2 className="entry-title" style={titleStyles}><a href={ post.link } target="_blank" rel="bookmark" style={titleColorStyles}>{ decodeEntities( post.post_title.trim() ) || __( '(Untitled)', 'post-type-archive-mapping' ) }</a></h2>
+									{ displayTitle &&
+										<h2 className="entry-title" style={titleStyles}><a href={ post.link } target="_blank" rel="bookmark" style={titleColorStyles}>{ decodeEntities( post.post_title.trim() ) || __( '(Untitled)', 'post-type-archive-mapping' ) }</a></h2>
+									}
 									{displayPostImage && post.featured_image_src !== undefined && post.featured_image_src  && 'below_title' === this.state.imageLocation ? (
 											<div className="ptam-block-post-grid-image" style={imageAlignmentStyles}>
 												<a href={ post.link } target="_blank" rel="bookmark">
