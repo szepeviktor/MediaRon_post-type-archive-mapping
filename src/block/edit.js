@@ -20,6 +20,7 @@ const {
 	SelectControl,
 	Spinner,
 	TextControl,
+	TextareaControl,
 	ToggleControl,
 	Toolbar,
 } = wp.components;
@@ -44,6 +45,7 @@ class PTAM_Custom_Posts extends Component {
 		this.toggleDisplayPostImage = this.toggleDisplayPostImage.bind( this );
 		this.toggleDisplayPostLink = this.toggleDisplayPostLink.bind( this );
 		this.toggleDisplayPagination = this.toggleDisplayPagination.bind(this);
+		this.toggleDisplayCustomFields = this.toggleDisplayCustomFields.bind(this);
 		this.toggleDisplayTitle = this.toggleDisplayTitle.bind(this);
 		this.get_latest_data = this.get_latest_data.bind(this);
 		this.get_latest_posts = this.get_latest_posts.bind(this);
@@ -76,7 +78,7 @@ class PTAM_Custom_Posts extends Component {
 		const props = jQuery.extend({}, this.props.attributes, object);
 		let { postType, order, orderBy, taxonomy, avatarSize, imageType, imageTypeSize,term, postsToShow, imageCrop, linkColor } = props;
 		linkColor = linkColor.replace( '#', '' );
-		axios.get(ptam_globals.rest_url + `ptam/v1/get_posts/${postType}/${order}/${orderBy}/${taxonomy}/${term}/${postsToShow}/${imageCrop}/${avatarSize}/${imageType}/${imageTypeSize}/${linkColor}`).then( ( response ) => {
+		axios.post(ptam_globals.rest_url + `ptam/v2/get_posts`, { post_type: postType, order: order, orderby: orderBy, taxonomy: taxonomy, term: term, posts_per_page: postsToShow, image_size: imageCrop, avatar_size: avatarSize, image_type: imageType, image_size: imageTypeSize, link_color: linkColor } ).then( ( response ) => {
 			// Now Set State
 			this.setState( {
 				loading: false,
@@ -93,10 +95,10 @@ class PTAM_Custom_Posts extends Component {
 		let termsList = [];
 		const props = jQuery.extend({}, this.props.attributes, object);
 		const { postType, taxonomy } = props;
-		axios.get( ptam_globals.rest_url + `ptam/v1/get_terms/${taxonomy}/${postType}` ).then( ( response ) => {
+		axios.post( ptam_globals.rest_url + `ptam/v2/get_terms`, { taxonomy: taxonomy, post_type: postType } ).then( ( response ) => {
 			if( Object.keys(response.data).length > 0 ) {
 				termsList.push( { 'value': 0, 'label': __('All',  'post-type-archive-mapping') } );
-				$.each( response.data, function( key, value ) {
+				jQuery.each( response.data, function( key, value ) {
 					termsList.push( { 'value': value.term_id, 'label': value.name } );
 				} );
 			}
@@ -123,7 +125,7 @@ class PTAM_Custom_Posts extends Component {
 		linkColor = linkColor.replace( '#', '' );
 
 		// Get Latest Posts and Chain Promises
-		axios.get(ptam_globals.rest_url + `ptam/v1/get_posts/${postType}/${order}/${orderBy}/${taxonomy}/${term}/${postsToShow}/${imageCrop}/${avatarSize}/${imageType}/${imageTypeSize}/${linkColor}`).then( ( response ) => {
+		axios.post(ptam_globals.rest_url + `ptam/v2/get_posts`, { post_type: postType, order: order, orderby: orderBy, taxonomy: taxonomy, term: term, posts_per_page: postsToShow, image_size: imageCrop, avatar_size: avatarSize, image_type: imageType, image_size: imageTypeSize, link_color: linkColor } ).then( ( response ) => {
 				latestPosts = response.data.posts;
 				imageSizes = response.data.image_sizes;
 				userTaxonomies = response.data.taxonomies;
@@ -138,7 +140,7 @@ class PTAM_Custom_Posts extends Component {
 					} );
 
 					// Get Terms
-					axios.get(ptam_globals.rest_url + `ptam/v1/get_terms/${taxonomy}/${postType}` ).then( ( response ) => {
+					axios.post(ptam_globals.rest_url + `ptam/v2/get_terms`, { taxonomy: taxonomy, post_type: postType } ).then( ( response ) => {
 						if( Object.keys(response.data).length > 0 ) {
 							termsList.push( { 'value': 0, 'label': __('All',  'post-type-archive-mapping') } );
 							jQuery.each( response.data, function( key, value ) {
@@ -147,7 +149,7 @@ class PTAM_Custom_Posts extends Component {
 						}
 
 						// Get Taxonomies
-						axios.get(ptam_globals.rest_url + `ptam/v1/get_taxonomies/${postType}`).then( ( response ) => {
+						axios.post(ptam_globals.rest_url + `ptam/v2/get_taxonomies`, { post_type: postType } ).then( ( response ) => {
 							if( Object.keys(response.data).length > 0 ) {
 								taxonomyList.push( { 'value': 'none', 'label': __('Select a Taxonomy',  'post-type-archive-mapping') } );
 								jQuery.each( response.data, function( key, value ) {
@@ -178,6 +180,11 @@ class PTAM_Custom_Posts extends Component {
 		const { displayTitle } = this.props.attributes;
 		const { setAttributes } = this.props;
 		setAttributes( { displayTitle: ! displayTitle } );
+	}
+	toggleDisplayCustomFields() {
+		const { displayCustomFields } = this.props.attributes;
+		const { setAttributes } = this.props;
+		setAttributes( { displayCustomFields: ! displayCustomFields } );
 	}
 	toggleDisplayPostDate() {
 		const { displayPostDate } = this.props.attributes;
@@ -270,7 +277,7 @@ class PTAM_Custom_Posts extends Component {
 		linkColor = linkColor.replace( '#', '' );
 
 		// Get Latest Posts and Chain Promises
-		axios.get(ptam_globals.rest_url + `ptam/v1/get_images/${postType}/${order}/${orderBy}/${taxonomy}/${term}/${postsToShow}/${imageCrop}/${avatarSize}/${imageType}/${imageTypeSize}/${linkColor}`).then( ( response ) => {
+		axios.post(ptam_globals.rest_url + `ptam/v2/get_images`, { post_type: postType, order: order, orderby: orderBy, taxonomy: taxonomy, term: term, posts_per_page: postsToShow, image_type: imageCrop, avatar_size: avatarSize, image_type: imageType, image_size: imageTypeSize, link_color: linkColor } ).then( ( response ) => {
 				latestPosts = response.data.posts;
 				imageSizes = response.data.image_sizes;
 				this.setState( {
@@ -296,7 +303,7 @@ class PTAM_Custom_Posts extends Component {
 		linkColor = linkColor.replace( '#', '' );
 
 		// Get Latest Posts and Chain Promises
-		axios.get(ptam_globals.rest_url + `ptam/v1/get_images/${postType}/${order}/${orderBy}/${taxonomy}/${term}/${postsToShow}/${imageCrop}/${avatarSize}/regular/${value}/${linkColor}`).then( ( response ) => {
+		axios.post(ptam_globals.rest_url + `ptam/v2/get_images`, { post_type: postType, order: order, orderby: orderBy, taxonomy: taxonomy, term: term, posts_per_page: postsToShow, image_crop: imageCrop, avatar_size: avatarSize, image_type: 'regular', image_size: value, link_color: linkColor } ).then( ( response ) => {
 			latestPosts = response.data.posts;
 			imageSizes = response.data.image_sizes;
 			this.setState( {
@@ -334,7 +341,7 @@ class PTAM_Custom_Posts extends Component {
 			linkColor = linkColor.replace( '#', '' );
 
 			// Get Latest Posts and Chain Promises
-			axios.get(ptam_globals.rest_url + `ptam/v1/get_images/${postType}/${order}/${orderBy}/${taxonomy}/${term}/${postsToShow}/${imageCrop}/${value}/${imageType}/${imageTypeSize}/${linkColor}`).then( ( response ) => {
+			axios.post(ptam_globals.rest_url + `ptam/v2/get_images`, { post_type: postType, order: order, orderBy: orderBy, taxonomy: taxonomy, term: term, posts_per_page: postsToShow, image_type: imageCrop, avatar_size: value, image_type: imageType, image_size: imageTypeSize, link_color: linkColor } ).then( ( response ) => {
 				latestPosts = response.data.posts;
 				imageSizes = response.data.image_sizes;
 				classRef.setState( {
@@ -357,6 +364,9 @@ class PTAM_Custom_Posts extends Component {
 	onChangeTitleColor = ( value ) => {
 		this.props.setAttributes( { titleColor: value } );
 	}
+	onChangeCustomFieldsColor = ( value ) => {
+		this.props.setAttributes( { customFieldsColor: value } );
+	}
 	onChangeContentColor = ( value ) => {
 		this.props.setAttributes( { contentColor: value } );
 	}
@@ -372,7 +382,7 @@ class PTAM_Custom_Posts extends Component {
 	render() {
 		let htmlToReactParser = new HtmlToReactParser();
 		const { attributes, setAttributes } = this.props;
-		const { postType, term, taxonomy, displayPostDate, displayPostExcerpt, displayPostAuthor, displayPostImage,displayPostLink, align, postLayout, columns, order, pagination, orderBy, postsToShow, readMoreText, imageLocation, taxonomyLocation, imageType, imageTypeSize, avatarSize, changeCapitilization, displayTaxonomies, trimWords, titleAlignment, imageAlignment, metaAlignment, contentAlignment, padding, border, borderRounded, borderColor, backgroundColor, titleColor, linkColor, contentColor, continueReadingColor, titleFont, metaFont, contentFont, continueReadingFont, displayTitle } = attributes;
+		const { postType, term, taxonomy, displayPostDate, displayPostExcerpt, displayPostAuthor, displayPostImage,displayPostLink, align, postLayout, columns, order, pagination, orderBy, postsToShow, readMoreText, imageLocation, taxonomyLocation, imageType, imageTypeSize, avatarSize, changeCapitilization, displayTaxonomies, trimWords, titleAlignment, customFieldAlignment, imageAlignment, metaAlignment, contentAlignment, padding, border, borderRounded, borderColor, backgroundColor, titleColor, customFieldsColor, linkColor, contentColor, continueReadingColor, titleFont, customFieldsFont, metaFont, contentFont, continueReadingFont, displayTitle, displayCustomFields, customFields } = attributes;
 
 		let userTaxonomies = this.state.userTaxonomies;
 		let userTaxonomiesArray = [];
@@ -463,6 +473,23 @@ class PTAM_Custom_Posts extends Component {
 							onChange={ ( value ) => this.props.setAttributes( { columns: value } ) }
 							min={ 1 }
 							max={ ! hasPosts ? MAX_POSTS_COLUMNS : Math.min( MAX_POSTS_COLUMNS, latestPosts.length ) }
+						/>
+					}
+				</PanelBody>
+				<PanelBody title={ __( 'Custom Fields', 'post-type-archive-mapping' ) } initialOpen={false}>
+					<ToggleControl
+						label={ __( 'Display Custom Fields',  'post-type-archive-mapping' ) }
+						checked={ displayCustomFields }
+						onChange={ this.toggleDisplayCustomFields }
+					/>
+					{ displayCustomFields &&
+						<TextareaControl
+							label={ __( 'Enter Custom Field Markup', 'post-type-archive-mapping' ) }
+							help={ __( 'HTML allowed. Place custom fields inbetween {}: {custom_field_1}', 'post-type-archive-mapping' ) }
+							value={customFields}
+							onChange={ ( value ) => { 
+								this.props.setAttributes( { customFields: value } );
+							} }
 						/>
 					}
 				</PanelBody>
@@ -582,6 +609,12 @@ class PTAM_Custom_Posts extends Component {
 							onChange={ ( value ) => { this.props.setAttributes( { titleAlignment: value } ); } }
 						/>
 						<SelectControl
+							label={ __( 'Custom Fields Alignment', 'post-type-archive-mapping' ) }
+							options={ alignmentOptions }
+							value={ customFieldAlignment }
+							onChange={ ( value ) => { this.props.setAttributes( { customFieldAlignment: value } ); } }
+						/>
+						<SelectControl
 							label={ __( 'Image Alignment', 'post-type-archive-mapping' ) }
 							options={ alignmentOptions }
 							value={ imageAlignment }
@@ -659,6 +692,16 @@ class PTAM_Custom_Posts extends Component {
 						>
 					</PanelColorSettings>
 					<PanelColorSettings
+						title={ __( 'Custom Fields Color', 'post-type-archive-mapping' ) }
+						initialOpen={ true }
+						colorSettings={ [ {
+							value: customFieldsColor,
+							onChange: this.onChangeCustomFieldsColor,
+							label: __( 'Custom Fields Color', 'post-type-archive-mapping' ),
+						} ] }
+						>
+					</PanelColorSettings>
+					<PanelColorSettings
 						title={ __( 'Content Color', 'post-type-archive-mapping' ) }
 						initialOpen={ true }
 						colorSettings={ [ {
@@ -695,6 +738,12 @@ class PTAM_Custom_Posts extends Component {
 						options={ fontOptions }
 						value={ titleFont }
 						onChange={ ( value ) => { this.props.setAttributes( { titleFont: value } ); } }
+					/>
+					<SelectControl
+						label={ __( 'Custom Fields Font', 'post-type-archive-mapping' ) }
+						options={ fontOptions }
+						value={ customFieldsFont }
+						onChange={ ( value ) => { this.props.setAttributes( { customFieldsFont: value } ); } }
 					/>
 					<SelectControl
 						label={ __( 'Meta Font', 'post-type-archive-mapping' ) }
@@ -771,6 +820,11 @@ class PTAM_Custom_Posts extends Component {
 		// Styles
 		let titleStyles = postLayout === 'grid' ? { textAlign: titleAlignment } : {};
 		titleStyles.fontFamily = titleFont;
+		let customFieldsStyles = {
+			fontFamily: customFieldsFont,
+			color: customFieldsColor,
+			textAlign: customFieldAlignment,
+		};
 		const imageAlignmentStyles = postLayout === 'grid' ? { textAlign: imageAlignment } : {};
 		let metaStyles = postLayout === 'grid' ? { textAlign: metaAlignment, color: contentColor } : { color: contentColor };
 		metaStyles.fontFamily = metaFont;
@@ -849,6 +903,12 @@ class PTAM_Custom_Posts extends Component {
 										) : (
 											null
 										)
+									}
+
+									{ displayCustomFields && 
+										<div className="ptam-block-post-custom-fields" style={customFieldsStyles}>
+											{htmlToReactParser.parse(customFields)}
+										</div>
 									}
 
 									<div className={`ptam-block-post-grid-byline ${capitilization}`} style={metaStyles}>

@@ -113,7 +113,7 @@ function ptam_custom_posts( $attributes ) {
 		'paged'          => get_query_var( 'paged' ),
 	);
 	if ( isset( $attributes['taxonomy'] ) && isset( $attributes['term'] ) ) {
-		if ( 'all' !== $attributes['term'] && 0 !== $attributes['term'] && 'none' !== $attributes['taxonomy'] ) {
+		if ( 'all' !== $attributes['term'] && 0 !== absint( $attributes['term'] ) && 'none' !== $attributes['taxonomy'] ) {
 			$post_args['tax_query'] = array( // phpcs:ignore
 				array(
 					'taxonomy' => $attributes['taxonomy'],
@@ -123,6 +123,7 @@ function ptam_custom_posts( $attributes ) {
 		}
 	}
 	$attributes['displayTitle']        = isset( $attributes['displayTitle'] ) ? esc_html( $attributes['displayTitle'] ) : true;
+	$attributes['displayCustomFields'] = isset( $attributes['displayCustomFields'] ) ? esc_html( $attributes['displayCustomFields'] ) : true;
 	$attributes['titleFont']           = isset( $attributes['titleFont'] ) ? esc_attr( $attributes['titleFont'] ) : 'inherit';
 	$attributes['metaFont']            = isset( $attributes['metaFont'] ) ? esc_attr( $attributes['metaFont'] ) : 'inherit';
 	$attributes['contentFont']         = isset( $attributes['contentFont'] ) ? esc_attr( $attributes['contentFont'] ) : 'inherit';
@@ -190,6 +191,68 @@ function ptam_custom_posts( $attributes ) {
 				);
 			}
 
+			if ( $attributes['displayCustomFields'] ) {
+				$custom_fields_markup = isset( $attributes['customFields'] ) ? $attributes['customFields'] : '';
+				if ( ! empty( $custom_fields_markup ) ) {
+					$list_items_markup .= sprintf(
+						'<div class="ptam-block-post-custom-fields" style="color: %s; font-family: %s; text-align: %s;">',
+						isset( $attributes['customFieldsColor'] ) ? esc_attr( $attributes['customFieldsColor'] ) : 'inherit',
+						isset( $attributes['customFieldsFont'] ) ? esc_attr( $attributes['customFieldsFont'] ) : 'inherit',
+						isset( $attributes['customFieldAlignment'] ) ? esc_attr( $attributes['customFieldAlignment'] ) : 'inherit'
+					);
+					preg_match_all( '/{([-_a-zA-Z0-9]+)}/', $custom_fields_markup, $matches );
+					if ( isset( $matches[0] ) && is_array( $matches[0] ) ) {
+						foreach ( $matches[0] as $custom_field_match ) {
+							// Strip out the {}.
+							$maybe_custom_field = str_replace( '{', '', $custom_field_match );
+							$maybe_custom_field = str_replace( '}', '', $maybe_custom_field );
+
+							$custom_field_value = '';
+
+							// We may have a custom field. Try ACF first.
+							if ( function_exists( 'get_field' ) ) {
+								$custom_field_value = get_field( $maybe_custom_field, $post_id );
+								if ( $custom_field_value ) {
+									/**
+									 * Filter the custom field value.
+									 *
+									 * Filter the custom field value.
+									 *
+									 * @since 3.0.0
+									 *
+									 * @param mixed  $custom_field_value The custom field value.
+									 * @param string $maybe_custom_field The custom field name.
+									 * @param int    $post_id            The Post ID.
+									 */
+									$custom_field_value   = apply_filters( 'ptam_custom_field', $custom_field_value, $maybe_custom_field );
+									$custom_fields_markup = str_replace( $custom_field_match, $custom_field_value, $custom_fields_markup );
+								}
+							}
+							// ACF Failed. Let's try post meta.
+							if ( empty( $custom_field_value ) ) {
+								$custom_field_value = get_post_meta( $post_id, $maybe_custom_field, true );
+								if ( $custom_field_value ) {
+									/**
+									 * Filter the custom field value.
+									 *
+									 * Filter the custom field value.
+									 *
+									 * @since 3.0.0
+									 *
+									 * @param mixed  $custom_field_value The custom field value.
+									 * @param string $maybe_custom_field The custom field name.
+									 * @param int    $post_id            The Post ID.
+									 */
+									$custom_field_value   = apply_filters( 'ptam_custom_field', $custom_field_value, $maybe_custom_field, $post_id );
+									$custom_fields_markup = str_replace( $custom_field_match, $custom_field_value, $custom_fields_markup );
+								}
+							}
+						}
+					}
+					$list_items_markup .= wp_kses_post( $custom_fields_markup ); // wp_kses_post used to strip out harmful HTML.
+					$list_items_markup .= '</div>';
+				}
+			}
 			// Wrap the byline content.
 			$list_items_markup .= sprintf(
 				'<div class="ptam-block-post-grid-byline %s" %s>',
@@ -442,6 +505,10 @@ function ptam_register_custom_posts_block() {
 					'type'    => 'boolean',
 					'default' => true,
 				),
+				'displayCustomFields'  => array(
+					'type'    => 'boolean',
+					'default' => false,
+				),
 				'displayPostDate'      => array(
 					'type'    => 'boolean',
 					'default' => true,
@@ -502,6 +569,10 @@ function ptam_register_custom_posts_block() {
 					'type'    => 'string',
 					'default' => 'left',
 				),
+				'customFieldAlignment' => array(
+					'type'    => 'string',
+					'default' => 'left',
+				),
 				'imageAlignment'       => array(
 					'type'    => 'string',
 					'default' => 'left',
@@ -538,6 +609,10 @@ function ptam_register_custom_posts_block() {
 					'type'    => 'string',
 					'default' => 'inherit',
 				),
+				'customFieldsColor'    => array(
+					'type'    => 'string',
+					'default' => 'inherit',
+				),
 				'linkColor'            => array(
 					'type'    => 'string',
 					'default' => 'inherit',
@@ -554,6 +629,10 @@ function ptam_register_custom_posts_block() {
 					'type'    => 'string',
 					'default' => 'inherit',
 				),
+				'customFieldsFont'     => array(
+					'type'    => 'string',
+					'default' => 'inherit',
+				),
 				'metaFont'             => array(
 					'type'    => 'string',
 					'default' => 'inherit',
@@ -565,6 +644,10 @@ function ptam_register_custom_posts_block() {
 				'continueReadingFont'  => array(
 					'type'    => 'string',
 					'default' => 'inherit',
+				),
+				'customFields'         => array(
+					'type'    => 'string',
+					'default' => '',
 				),
 			),
 			'render_callback' => 'ptam_custom_posts',

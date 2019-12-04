@@ -114,15 +114,14 @@ function ptam_get_posts( $post_data ) {
 	$image_size     = $post_data['image_size'];
 	$avatar_size    = $post_data['avatar_size'];
 	$link_color     = $post_data['link_color'];
-
-	$post_args = array(
+	$post_args      = array(
 		'post_type'      => $post_type,
 		'post_status'    => 'publish',
 		'order'          => $order,
 		'orderby'        => $orderby,
 		'posts_per_page' => $posts_per_page,
 	);
-	if ( 'all' !== $term && '0' !== $term && 'none' !== $taxonomy ) {
+	if ( 'all' !== $term && 0 !== absint( $term ) && 'none' !== $taxonomy ) {
 		$post_args['tax_query'] = array( // phpcs:ignore
 			array(
 				'taxonomy' => $taxonomy,
@@ -216,7 +215,7 @@ function ptam_get_image( $post_data ) {
 		'orderby'        => $orderby,
 		'posts_per_page' => $posts_per_page,
 	);
-	if ( 'all' !== $term && '0' !== $term && 'none' !== $taxonomy ) {
+	if ( 'all' !== $term && 0 !== absint( $term ) && 'none' !== $taxonomy ) {
 		$post_args['tax_query'] = array( // phpcs:ignore
 			array(
 				'taxonomy' => $taxonomy,
@@ -350,36 +349,36 @@ function ptam_get_fonts() {
  */
 function ptam_register_route() {
 	register_rest_route(
-		'ptam/v1',
-		'/get_terms/(?P<taxonomy>[-_a-zA-Z]+)/(?P<post_type>[-_a-zA-Z]+)',
+		'ptam/v2',
+		'/get_terms',
 		array(
-			'methods'  => 'GET',
+			'methods'  => 'POST',
 			'callback' => 'ptam_get_all_terms',
 		)
 	);
 	register_rest_route(
-		'ptam/v1',
-		'/get_posts/(?P<post_type>[-_a-zA-Z]+)/(?P<order>[a-zA-Z]+)/(?P<orderby>[a-zA-Z]+)/(?P<taxonomy>[-_a-zA-Z]+)/(?P<term>\d+)/(?P<posts_per_page>\d+)/(?P<image_crop>[-a-zA-Z]+)/(?P<avatar_size>\d+)/(?P<image_type>[-_A-Za-z]+)/(?P<image_size>[_-a-zA-Z0-9]+)/(?P<link_color>[a-zA-Z0-9]+)',
+		'ptam/v2',
+		'/get_posts',
 		array(
-			'methods'  => 'GET',
+			'methods'  => 'POST',
 			'callback' => 'ptam_get_posts',
 		)
 	);
 
 	register_rest_route(
-		'ptam/v1',
-		'/get_taxonomies/(?P<post_type>[-_a-zA-Z]+)',
+		'ptam/v2',
+		'/get_taxonomies',
 		array(
-			'methods'  => 'GET',
+			'methods'  => 'POST',
 			'callback' => 'ptam_get_taxonomies',
 		)
 	);
 
 	register_rest_route(
-		'ptam/v1',
-		'/get_images/(?P<post_type>[-_a-zA-Z]+)/(?P<order>[a-zA-Z]+)/(?P<orderby>[a-zA-Z]+)/(?P<taxonomy>[-_a-zA-Z]+)/(?P<term>\d+)/(?P<posts_per_page>\d+)/(?P<image_crop>[-a-zA-Z]+)/(?P<avatar_size>\d+)/(?P<image_type>[-_A-Za-z]+)/(?P<image_size>[_-a-zA-Z0-9]+)/(?P<link_color>[a-zA-Z0-9]+)',
+		'ptam/v2',
+		'/get_images',
 		array(
-			'methods'  => 'GET',
+			'methods'  => 'POST',
 			'callback' => 'ptam_get_image',
 		)
 	);
