@@ -11,8 +11,6 @@ gulp.task( 'bundle', function() {
 		'!vendor/**/*',
 		'!composer.*',
 		'!release/**/*',
-		'!src/**/*',
-		'!src',
 		'!tests/**/*',
 		'!phpcs.xml'
 	] )
