@@ -52,7 +52,7 @@ https://www.youtube.com/watch?v=QT0QIdTBrdk?rel=0
 
 = Can I Add Custom Fields? =
 
-Unfortunately no.
+Yes! The plugin supports regular post meta and also Advanced Custom Fields.
 
 = I don't see the post types. What's wrong? =
 
