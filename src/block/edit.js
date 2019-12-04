@@ -98,7 +98,7 @@ class PTAM_Custom_Posts extends Component {
 		axios.post( ptam_globals.rest_url + `ptam/v2/get_terms`, { taxonomy: taxonomy, post_type: postType } ).then( ( response ) => {
 			if( Object.keys(response.data).length > 0 ) {
 				termsList.push( { 'value': 0, 'label': __('All',  'post-type-archive-mapping') } );
-				$.each( response.data, function( key, value ) {
+				jQuery.each( response.data, function( key, value ) {
 					termsList.push( { 'value': value.term_id, 'label': value.name } );
 				} );
 			}

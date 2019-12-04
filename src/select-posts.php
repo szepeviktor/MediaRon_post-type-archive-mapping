@@ -113,7 +113,7 @@ function ptam_custom_posts( $attributes ) {
 		'paged'          => get_query_var( 'paged' ),
 	);
 	if ( isset( $attributes['taxonomy'] ) && isset( $attributes['term'] ) ) {
-		if ( 'all' !== $attributes['term'] && 0 !== $attributes['term'] && 'none' !== $attributes['taxonomy'] ) {
+		if ( 'all' !== $attributes['term'] && 0 !== absint( $attributes['term'] ) && 'none' !== $attributes['taxonomy'] ) {
 			$post_args['tax_query'] = array( // phpcs:ignore
 				array(
 					'taxonomy' => $attributes['taxonomy'],
@@ -253,7 +253,6 @@ function ptam_custom_posts( $attributes ) {
 					$list_items_markup .= '</div>';
 				}
 			}
-
 			// Wrap the byline content.
 			$list_items_markup .= sprintf(
 				'<div class="ptam-block-post-grid-byline %s" %s>',
