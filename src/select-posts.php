@@ -649,6 +649,10 @@ function ptam_register_custom_posts_block() {
 					'type'    => 'string',
 					'default' => '',
 				),
+				'removeStyles'         => array(
+					'type'    => 'boolean',
+					'default' => false,
+				),
 			),
 			'render_callback' => 'ptam_custom_posts',
 			'editor_script'   => 'ptam-custom-posts-gutenberg',
