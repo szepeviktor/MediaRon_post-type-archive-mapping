@@ -213,7 +213,7 @@ function ptam_get_image( $post_data ) {
 		'orderby'        => $orderby,
 		'posts_per_page' => $posts_per_page,
 	);
-	if ( 'all' !== $term && '0' !== $term && 'none' !== $taxonomy ) {
+	if ( 'all' !== $term && 0 !== absint( $term ) && 'none' !== $taxonomy ) {
 		$post_args['tax_query'] = array( // phpcs:ignore
 			array(
 				'taxonomy' => $taxonomy,
