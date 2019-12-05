@@ -380,7 +380,22 @@
       .ptam-block-post-grid .is-list .ptam-block-post-grid-image {
         margin-bottom: 5%; } }
   @media only screen and (min-width: 600px) {
-    .ptam-block-post-grid .is-list .ptam-block-post-grid-title {
+    .ptam-block-post-grid .is-list h1.ptam-block-post-grid-title {
+      font-size: 38px; } }
+  @media only screen and (min-width: 600px) {
+    .ptam-block-post-grid .is-list h2.ptam-block-post-grid-title {
       font-size: 34px; } }
+  @media only screen and (min-width: 600px) {
+    .ptam-block-post-grid .is-list h3.ptam-block-post-grid-title {
+      font-size: 34px; } }
+  @media only screen and (min-width: 600px) {
+    .ptam-block-post-grid .is-list h4.ptam-block-post-grid-title {
+      font-size: 28px; } }
+  @media only screen and (min-width: 600px) {
+    .ptam-block-post-grid .is-list h5.ptam-block-post-grid-title {
+      font-size: 22px; } }
+  @media only screen and (min-width: 600px) {
+    .ptam-block-post-grid .is-list h6.ptam-block-post-grid-title {
+      font-size: 18px; } }
   .ptam-block-post-grid .is-list .no-thumb .ptam-block-post-grid-text {
     grid-column: span 1; }

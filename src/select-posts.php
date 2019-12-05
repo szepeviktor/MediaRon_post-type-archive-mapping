@@ -150,6 +150,7 @@ function ptam_custom_posts( $attributes ) {
 	$attributes['metaFont']            = isset( $attributes['metaFont'] ) ? esc_attr( $attributes['metaFont'] ) : 'inherit';
 	$attributes['contentFont']         = isset( $attributes['contentFont'] ) ? esc_attr( $attributes['contentFont'] ) : 'inherit';
 	$attributes['continueReadingFont'] = isset( $attributes['continueReadingFont'] ) ? esc_attr( $attributes['continueReadingFont'] ) : 'inherit';
+	$attributes['titleHeadingTag']     = isset( $attributes['titleHeadingTag'] ) ? esc_html( $attributes['titleHeadingTag'] ) : 'h2';
 
 	$image_placememt_options    = $attributes['imageLocation'];
 	$taxonomy_placement_options = $attributes['taxonomyLocation'];
@@ -205,7 +206,7 @@ function ptam_custom_posts( $attributes ) {
 			if ( $attributes['displayTitle'] ) {
 				if ( ! $attributes['removeStyles'] ) {
 					$list_items_markup .= sprintf(
-						'<h2 class="ptam-block-post-grid-title" %3$s><a href="%1$s" rel="bookmark" style="%4$s">%2$s</a></h2>',
+						'<%5$s class="ptam-block-post-grid-title" %3$s><a href="%1$s" rel="bookmark" style="%4$s">%2$s</a></%5$s>',
 						esc_url( get_permalink( $post_id ) ),
 						esc_html( $title ),
 						( 'grid' === $attributes['postLayout'] && ! $attributes['removeStyles'] ) ? "style='text-align: {$attributes['titleAlignment']}'" : '',
@@ -213,7 +214,8 @@ function ptam_custom_posts( $attributes ) {
 							'color: %1$s; font-family: %2$s; box-shadow: unset;',
 							esc_attr( $attributes['titleColor'] ),
 							esc_attr( $attributes['titleFont'] )
-						)
+						),
+						$attributes['titleHeadingTag']
 					);
 				} else {
 					$list_items_markup .= sprintf(

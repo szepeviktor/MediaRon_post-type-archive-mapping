@@ -244,10 +244,34 @@
 				margin-bottom: 5%;
 			}
 		}
-
-		.ptam-block-post-grid-title {
+		h1.ptam-block-post-grid-title {
+			@media only screen and (min-width: 600px) {
+				font-size: 38px;
+			}
+		}
+		h2.ptam-block-post-grid-title {
 			@media only screen and (min-width: 600px) {
 				font-size: 34px;
+			}
+		}
+		h3.ptam-block-post-grid-title {
+			@media only screen and (min-width: 600px) {
+				font-size: 34px;
+			}
+		}
+		h4.ptam-block-post-grid-title {
+			@media only screen and (min-width: 600px) {
+				font-size: 28px;
+			}
+		}
+		h5.ptam-block-post-grid-title {
+			@media only screen and (min-width: 600px) {
+				font-size: 22px;
+			}
+		}
+		h6.ptam-block-post-grid-title {
+			@media only screen and (min-width: 600px) {
+				font-size: 18px;
 			}
 		}
 
