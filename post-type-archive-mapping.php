@@ -4,7 +4,7 @@ Plugin Name: Custom Post Types Block
 Plugin URI: https://mediaron.com/portfolio/post-type-archive-mapping/
 Description: Map your post type archives to a page and use our Gutenberg block to show posts
 Author: Ronald Huereca
-Version: 3.0.5
+Version: 3.0.6
 Requires at least: 5.3
 Author URI: https://mediaron.com
 Contributors: ronalfy
@@ -13,7 +13,7 @@ Domain Path: /languages
 Credit: Forked from https://github.com/bigwing/post-type-archive-mapping
 Credit: Gutenberg block based on Atomic Blocks
 */
-define( 'PTAM_VERSION', '3.0.5' );
+define( 'PTAM_VERSION', '3.0.6' );
 
 /**
  * Main plugin class.
