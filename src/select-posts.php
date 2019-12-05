@@ -182,17 +182,25 @@ function ptam_custom_posts( $attributes ) {
 			}
 
 			if ( $attributes['displayTitle'] ) {
-				$list_items_markup .= sprintf(
-					'<h2 class="ptam-block-post-grid-title" %3$s><a href="%1$s" rel="bookmark" style="%4$s">%2$s</a></h2>',
-					esc_url( get_permalink( $post_id ) ),
-					esc_html( $title ),
-					( 'grid' === $attributes['postLayout'] && ! $attributes['removeStyles'] ) ? "style='text-align: {$attributes['titleAlignment']}'" : '',
-					sprintf(
-						'color: %1$s; font-family: %2$s; box-shadow: unset;',
-						esc_attr( $attributes['titleColor'] ),
-						esc_attr( $attributes['titleFont'] )
-					)
-				);
+				if ( ! $attributes['removeStyles'] ) {
+					$list_items_markup .= sprintf(
+						'<h2 class="ptam-block-post-grid-title" %3$s><a href="%1$s" rel="bookmark" style="%4$s">%2$s</a></h2>',
+						esc_url( get_permalink( $post_id ) ),
+						esc_html( $title ),
+						( 'grid' === $attributes['postLayout'] && ! $attributes['removeStyles'] ) ? "style='text-align: {$attributes['titleAlignment']}'" : '',
+						sprintf(
+							'color: %1$s; font-family: %2$s; box-shadow: unset;',
+							esc_attr( $attributes['titleColor'] ),
+							esc_attr( $attributes['titleFont'] )
+						)
+					);
+				} else {
+					$list_items_markup .= sprintf(
+						'<h2 class="ptam-block-post-grid-title" ><a href="%1$s" rel="bookmark">%2$s</a></h2>',
+						esc_url( get_permalink( $post_id ) ),
+						esc_html( $title )
+					);
+				}
 			}
 
 			if ( $attributes['displayCustomFields'] ) {
