@@ -37,19 +37,35 @@ function ptam_get_profile_image( $attributes, $post_thumb_id = 0, $post_author =
 		$post_thumb_size = $attributes['imageTypeSize'];
 		$image_type      = $attributes['imageType'];
 		if ( 'gravatar' === $image_type ) {
-			$list_item_markup .= sprintf(
-				'<div class="ptam-block-post-grid-image" %3$s><a href="%1$s" rel="bookmark">%2$s</a></div>',
-				esc_url( get_permalink( $post_id ) ),
-				get_avatar( $post_author, $attributes['avatarSize'] ),
-				'grid' === $attributes['postLayout'] ? "style='text-align: {$attributes['imageAlignment']}'" : ''
-			);
+			if ( ! $attributes['removeStyles'] ) {
+				$list_item_markup .= sprintf(
+					'<div class="ptam-block-post-grid-image" %3$s><a href="%1$s" rel="bookmark">%2$s</a></div>',
+					esc_url( get_permalink( $post_id ) ),
+					get_avatar( $post_author, $attributes['avatarSize'] ),
+					'grid' === $attributes['postLayout'] ? "style='text-align: {$attributes['imageAlignment']}'" : ''
+				);
+			} else {
+				$list_item_markup .= sprintf(
+					'<div class="ptam-block-post-grid-image"><a href="%1$s" rel="bookmark">%2$s</a></div>',
+					esc_url( get_permalink( $post_id ) ),
+					get_avatar( $post_author, $attributes['avatarSize'] )
+				);
+			}
 		} else {
-			$list_item_markup .= sprintf(
-				'<div class="ptam-block-post-grid-image" %3$s><a href="%1$s" rel="bookmark">%2$s</a></div>',
-				esc_url( get_permalink( $post_id ) ),
-				wp_get_attachment_image( $post_thumb_id, $post_thumb_size ),
-				'grid' === $attributes['postLayout'] ? "style='text-align: {$attributes['imageAlignment']}'" : ''
-			);
+			if ( ! $attributes['removeStyles'] ) {
+				$list_item_markup .= sprintf(
+					'<div class="ptam-block-post-grid-image" %3$s><a href="%1$s" rel="bookmark">%2$s</a></div>',
+					esc_url( get_permalink( $post_id ) ),
+					wp_get_attachment_image( $post_thumb_id, $post_thumb_size ),
+					'grid' === $attributes['postLayout'] ? "style='text-align: {$attributes['imageAlignment']}'" : ''
+				);
+			} else {
+				$list_item_markup .= sprintf(
+					'<div class="ptam-block-post-grid-image"><a href="%1$s" rel="bookmark">%2$s</a></div>',
+					esc_url( get_permalink( $post_id ) ),
+					wp_get_attachment_image( $post_thumb_id, $post_thumb_size )
+				);
+			}
 		}
 		echo $list_item_markup; // phpcs:ignore
 	}
@@ -352,10 +368,14 @@ function ptam_custom_posts( $attributes ) {
 			);
 
 			// Wrap the excerpt content.
-			$list_items_markup .= sprintf(
-				'<div class="ptam-block-post-grid-excerpt" %s>',
-				'grid' === $attributes['postLayout'] ? "style='text-align: {$attributes['contentAlignment']}; color: {$attributes['contentColor']}; font-family: {$attributes['contentFont']}'" : "style='color: {$attributes['contentColor']}; font-family: {$attributes['contentFont']}'"
-			);
+			if ( ! $attributes['removeStyles'] ) {
+				$list_items_markup .= sprintf(
+					'<div class="ptam-block-post-grid-excerpt" %s>',
+					'grid' === $attributes['postLayout'] ? "style='text-align: {$attributes['contentAlignment']}; color: {$attributes['contentColor']}; font-family: {$attributes['contentFont']}'" : "style='color: {$attributes['contentColor']}; font-family: {$attributes['contentFont']}'"
+				);
+			} else {
+				$list_items_markup .= '<div class="ptam-block-post-grid-excerpt">';
+			}
 
 			// Get the excerpt.
 			$excerpt = $post->post_excerpt;
@@ -375,13 +395,21 @@ function ptam_custom_posts( $attributes ) {
 			}
 
 			if ( isset( $attributes['displayPostLink'] ) && $attributes['displayPostLink'] ) {
-				$list_items_markup .= sprintf(
-					'<p><a class="ptam-block-post-grid-link ptam-text-link" href="%1$s" rel="bookmark" style="color: %3$s; font-family: %4$s">%2$s</a></p>',
-					esc_url( get_permalink( $post_id ) ),
-					esc_html( $attributes['readMoreText'] ),
-					esc_attr( $attributes['continueReadingColor'] ),
-					esc_attr( $attributes['continueReadingFont'] )
-				);
+				if ( ! $attributes['removeStyles'] ) {
+					$list_items_markup .= sprintf(
+						'<p><a class="ptam-block-post-grid-link ptam-text-link" href="%1$s" rel="bookmark" style="color: %3$s; font-family: %4$s">%2$s</a></p>',
+						esc_url( get_permalink( $post_id ) ),
+						esc_html( $attributes['readMoreText'] ),
+						esc_attr( $attributes['continueReadingColor'] ),
+						esc_attr( $attributes['continueReadingFont'] )
+					);
+				} else {
+					$list_items_markup .= sprintf(
+						'<p><a class="ptam-block-post-grid-link ptam-text-link" href="%1$s" rel="bookmark">%2$s</a></p>',
+						esc_url( get_permalink( $post_id ) ),
+						esc_html( $attributes['readMoreText'] )
+					);
+				}
 			}
 
 			// Get the featured image.
@@ -406,9 +434,15 @@ function ptam_custom_posts( $attributes ) {
 
 			// Get the taxonomies.
 			if ( isset( $attributes['displayTaxonomies'] ) && $attributes['displayTaxonomies'] && 'below_content' === $taxonomy_placement_options ) {
-				$list_items_markup .= sprintf( '<div %s>', 'grid' === $attributes['postLayout'] ? "style='text-align: {$attributes['metaAlignment']};color: {$attributes['contentColor']}; font-family: {$attributes['metaFont']}'" : "style='color: {$attributes['contentColor']}; font-family: {$attributes['metaFont']}'" );
-				$list_items_markup .= ptam_get_taxonomy_terms( $post, $attributes );
-				$list_items_markup .= '</div>';
+				if ( ! $attributes['removeStyles'] ) {
+					$list_items_markup .= sprintf( '<div %s>', 'grid' === $attributes['postLayout'] ? "style='text-align: {$attributes['metaAlignment']};color: {$attributes['contentColor']}; font-family: {$attributes['metaFont']}'" : "style='color: {$attributes['contentColor']}; font-family: {$attributes['metaFont']}'" );
+					$list_items_markup .= ptam_get_taxonomy_terms( $post, $attributes );
+					$list_items_markup .= '</div>';
+				} else {
+					$list_items_markup .= '<div>';
+					$list_items_markup .= ptam_get_taxonomy_terms( $post, $attributes );
+					$list_items_markup .= '</div>';
+				}
 			}
 
 			// Close the markup for the post.
