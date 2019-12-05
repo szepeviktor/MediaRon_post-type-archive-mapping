@@ -125,13 +125,17 @@ function ptam_get_taxonomy_terms( $post, $attributes = array() ) {
  * @return string HTML of the custom posts.
  */
 function ptam_custom_posts( $attributes ) {
+	$paged = 0;
+	if ( absint( get_query_var( 'page' ) > 1 ) ) {
+		$paged = absint( get_query_var( 'page' ) );
+	}
 	$post_args = array(
 		'post_type'      => $attributes['postType'],
 		'posts_per_page' => $attributes['postsToShow'],
 		'post_status'    => 'publish',
 		'order'          => $attributes['order'],
 		'orderby'        => $attributes['orderBy'],
-		'paged'          => get_query_var( 'paged' ),
+		'paged'          => $paged,
 	);
 	if ( isset( $attributes['taxonomy'] ) && isset( $attributes['term'] ) ) {
 		if ( 'all' !== $attributes['term'] && 0 !== absint( $attributes['term'] ) && 'none' !== $attributes['taxonomy'] ) {
@@ -155,7 +159,16 @@ function ptam_custom_posts( $attributes ) {
 	$image_placememt_options    = $attributes['imageLocation'];
 	$taxonomy_placement_options = $attributes['taxonomyLocation'];
 	$image_size                 = $attributes['imageTypeSize'];
-	$recent_posts               = new WP_Query( $post_args );
+
+	// Front page pagination fix.
+	global $wp_query;
+	$temp = $wp_query;
+	if ( is_front_page() ) {
+		$wp_query     = new WP_Query( $post_args ); // phpcs:ignore
+		$recent_posts = $wp_query;
+	} else {
+		$recent_posts = new WP_Query( $post_args );
+	}
 
 	$list_items_markup = '';
 
@@ -500,6 +513,8 @@ function ptam_custom_posts( $attributes ) {
 		$list_items_markup,
 		$pagination
 	);
+
+	$wp_query = $temp; // phpcs:ignore
 
 	return $block_content;
 }
