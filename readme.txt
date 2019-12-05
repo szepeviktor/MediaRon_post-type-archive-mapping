@@ -3,7 +3,7 @@ Contributors: ronalfy, chrislogan
 Tags: custom post types, archive, mapping, gutenberg, block, taxonomy, terms
 Requires at least: 5.3
 Tested up to: 5.3
-Stable tag: 3.0.6
+Stable tag: 3.0.7
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Donate link: https://mediaron.com/give/
@@ -73,6 +73,11 @@ Yes, just post in the support forums here and I'll do my best to address your is
 3. Settings->Reading option
 
 == Changelog ==
+
+= 3.0.7 =
+
+* Released 2019-12-05
+* Fixing pagination when a page with the Gutenberg block is set as the front page.
 
 = 3.0.6 =
 
@@ -164,6 +169,9 @@ Yes, just post in the support forums here and I'll do my best to address your is
 * Initial release.
 
 == Upgrade Notice ==
+
+= 3.0.7 =
+Sorry for all the updates! It's bug fixing day I guess :) - Fixing pagination when a page with the Gutenberg block is set as the front page.
 
 = 3.0.6 =
 Moving featured image to its own panel in Gutenberg settings. Moving title to its own panel in Gutenberg settings. Cleaning up editor styles for headings. Adding ability to change the heading HTML tag.
