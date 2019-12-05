@@ -3,7 +3,7 @@ Contributors: ronalfy, chrislogan
 Tags: custom post types, archive, mapping, gutenberg, block, taxonomy, terms
 Requires at least: 5.3
 Tested up to: 5.3
-Stable tag: 3.0.0
+Stable tag: 3.0.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Donate link: https://mediaron.com/give/
@@ -16,9 +16,9 @@ A WordPress plugin for displaying posts using a Gutenberg block. Works well with
 
 <h2>Gutenberg Block</h2>
 
-This 5-minute video covers how the Gutenberg block works.
+This 4-minute video covers how the Gutenberg block works.
 
-https://www.youtube.com/watch?v=Kozrc-1rSJY&rel=0
+https://www.youtube.com/watch?v=YmlHOj68MeU&rel=0
 
 <h2>Archive Mapping</h2>
 
@@ -73,6 +73,10 @@ Yes, just post in the support forums here and I'll do my best to address your is
 3. Settings->Reading option
 
 == Changelog ==
+
+= 3.0.5 =
+* Released 2019-12-05
+* Adding ability to remove styles so that you can style your own layout.
 
 = 3.0.0 =
 * Released 2019-12-03
@@ -152,6 +156,9 @@ Yes, just post in the support forums here and I'll do my best to address your is
 * Initial release.
 
 == Upgrade Notice ==
+
+= 3.0.5 =
+Adding ability to remove styles so that you can style your own layout.
 
 = 3.0.0 =
 Updating REST API for faster loading. Adding custom field support (a highly requested feature). You may need to clear your cache to see the posts properly. There may be some bugs as it's a major release. I will address them if you find any.
