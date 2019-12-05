@@ -47,6 +47,7 @@ class PTAM_Custom_Posts extends Component {
 		this.toggleDisplayPagination = this.toggleDisplayPagination.bind(this);
 		this.toggleDisplayCustomFields = this.toggleDisplayCustomFields.bind(this);
 		this.toggleDisplayTitle = this.toggleDisplayTitle.bind(this);
+		this.toggleRemoveStyles = this.toggleRemoveStyles.bind(this);
 		this.get_latest_data = this.get_latest_data.bind(this);
 		this.get_latest_posts = this.get_latest_posts.bind(this);
 		this.get_term_list = this.get_term_list.bind(this);
@@ -240,6 +241,12 @@ class PTAM_Custom_Posts extends Component {
 		setAttributes( { displayTaxonomies: ! displayTaxonomies } );
 	}
 
+	toggleRemoveStyles = () => {
+		const { removeStyles } = this.props.attributes;
+		const { setAttributes } = this.props;
+		setAttributes( { removeStyles: ! removeStyles } );
+	}
+
 	trimWords = ( value ) => {
 		const { setAttributes } = this.props;
 		setAttributes( { trimWords: value } );
@@ -382,7 +389,7 @@ class PTAM_Custom_Posts extends Component {
 	render() {
 		let htmlToReactParser = new HtmlToReactParser();
 		const { attributes, setAttributes } = this.props;
-		const { postType, term, taxonomy, displayPostDate, displayPostExcerpt, displayPostAuthor, displayPostImage,displayPostLink, align, postLayout, columns, order, pagination, orderBy, postsToShow, readMoreText, imageLocation, taxonomyLocation, imageType, imageTypeSize, avatarSize, changeCapitilization, displayTaxonomies, trimWords, titleAlignment, customFieldAlignment, imageAlignment, metaAlignment, contentAlignment, padding, border, borderRounded, borderColor, backgroundColor, titleColor, customFieldsColor, linkColor, contentColor, continueReadingColor, titleFont, customFieldsFont, metaFont, contentFont, continueReadingFont, displayTitle, displayCustomFields, customFields } = attributes;
+		const { postType, term, taxonomy, displayPostDate, displayPostExcerpt, displayPostAuthor, displayPostImage,displayPostLink, align, postLayout, columns, order, pagination, orderBy, postsToShow, readMoreText, imageLocation, taxonomyLocation, imageType, imageTypeSize, avatarSize, changeCapitilization, displayTaxonomies, trimWords, titleAlignment, customFieldAlignment, imageAlignment, metaAlignment, contentAlignment, padding, border, borderRounded, borderColor, backgroundColor, titleColor, customFieldsColor, linkColor, contentColor, continueReadingColor, titleFont, customFieldsFont, metaFont, contentFont, continueReadingFont, displayTitle, displayCustomFields, customFields, removeStyles } = attributes;
 
 		let userTaxonomies = this.state.userTaxonomies;
 		let userTaxonomiesArray = [];
@@ -599,6 +606,11 @@ class PTAM_Custom_Posts extends Component {
 						onChange={ ( value ) => this.props.setAttributes( { readMoreText: value } ) }
 					/>
 					}
+					<ToggleControl
+						label={ __( 'Remove Styles',  'post-type-archive-mapping' ) }
+						checked={ removeStyles }
+						onChange={ this.toggleRemoveStyles }
+					/>
 				</PanelBody>
 				{ postLayout === 'grid' &&
 					<PanelBody title={ __( 'Alignment', 'post-type-archive-mapping' ) } initialOpen={false}>
@@ -825,7 +837,7 @@ class PTAM_Custom_Posts extends Component {
 			color: customFieldsColor,
 			textAlign: customFieldAlignment,
 		};
-		const imageAlignmentStyles = postLayout === 'grid' ? { textAlign: imageAlignment } : {};
+		let imageAlignmentStyles = postLayout === 'grid' ? { textAlign: imageAlignment } : {};
 		let metaStyles = postLayout === 'grid' ? { textAlign: metaAlignment, color: contentColor } : { color: contentColor };
 		metaStyles.fontFamily = metaFont;
 		let contentStyles = postLayout === 'grid' ? { textAlign: contentAlignment, color: contentColor } : { color: contentColor };
@@ -836,8 +848,8 @@ class PTAM_Custom_Posts extends Component {
 		};
 
 		// Color Styles
-		const titleColorStyles = { color: titleColor };
-		const linkColorStyles = { color: linkColor };
+		let 	titleColorStyles = { color: titleColor };
+		let linkColorStyles = { color: linkColor };
 
 		return (
 			<Fragment>
@@ -876,11 +888,11 @@ class PTAM_Custom_Posts extends Component {
 								className={ classnames(
 									post.featured_image_src && displayPostImage ? 'has-thumb' : 'no-thumb'
 								) }
-								style={ borderPaddingStyles }
+								style={ ! removeStyles ? borderPaddingStyles : {} }
 							>
 								{
 										displayPostImage && post.featured_image_src !== undefined && post.featured_image_src  && 'regular' === this.state.imageLocation ? (
-											<div className="ptam-block-post-grid-image" style={imageAlignmentStyles}>
+											<div className="ptam-block-post-grid-image" style={ ! removeStyles ? imageAlignmentStyles : {} }>
 												<a href={ post.link } target="_blank" rel="bookmark">
 												{htmlToReactParser.parse(post.featured_image_src)}
 												</a>
@@ -892,10 +904,10 @@ class PTAM_Custom_Posts extends Component {
 
 								<div className="ptam-block-post-grid-text">
 									{ displayTitle &&
-										<h2 className="entry-title" style={titleStyles}><a href={ post.link } target="_blank" rel="bookmark" style={titleColorStyles}>{ decodeEntities( post.post_title.trim() ) || __( '(Untitled)', 'post-type-archive-mapping' ) }</a></h2>
+										<h2 className="entry-title" style={ ! removeStyles ? titleStyles : {} }><a href={ post.link } target="_blank" rel="bookmark" style={! removeStyles ?  titleColorStyles : {} }>{ decodeEntities( post.post_title.trim() ) || __( '(Untitled)', 'post-type-archive-mapping' ) }</a></h2>
 									}
 									{displayPostImage && post.featured_image_src !== undefined && post.featured_image_src  && 'below_title' === this.state.imageLocation ? (
-											<div className="ptam-block-post-grid-image" style={imageAlignmentStyles}>
+											<div className="ptam-block-post-grid-image" style={! removeStyles ? imageAlignmentStyles : {} }>
 												<a href={ post.link } target="_blank" rel="bookmark">
 												{htmlToReactParser.parse(post.featured_image_src)}
 												</a>
@@ -906,14 +918,14 @@ class PTAM_Custom_Posts extends Component {
 									}
 
 									{ displayCustomFields && 
-										<div className="ptam-block-post-custom-fields" style={customFieldsStyles}>
+										<div className="ptam-block-post-custom-fields" style={! removeStyles ? customFieldsStyles : {} }>
 											{htmlToReactParser.parse(customFields)}
 										</div>
 									}
 
-									<div className={`ptam-block-post-grid-byline ${capitilization}`} style={metaStyles}>
+									<div className={`ptam-block-post-grid-byline ${capitilization}`} style={! removeStyles ? metaStyles : {} }>
 										{ displayPostAuthor && post.author_info.display_name !== 'undefined' && post.author_info.display_name &&
-											<div className="ptam-block-post-grid-author"><a className="ptam-text-link" target="_blank" href={ post.author_info.author_link } style={linkColorStyles}>{ post.author_info.display_name }</a></div>
+											<div className="ptam-block-post-grid-author"><a className="ptam-text-link" target="_blank" href={ post.author_info.author_link } style={! removeStyles ? linkColorStyles : {} }>{ post.author_info.display_name }</a></div>
 										}
 
 										{ displayPostDate && post.post_date_gmt &&
@@ -932,7 +944,7 @@ class PTAM_Custom_Posts extends Component {
 										}
 										{
 										displayPostImage && post.featured_image_src !== undefined && post.featured_image_src  && 'below_title_and_meta' === this.state.imageLocation ? (
-											<div className="ptam-block-post-grid-image" style={imageAlignmentStyles}>
+											<div className="ptam-block-post-grid-image" style={! removeStyles ? imageAlignmentStyles : {} }>
 												<a href={ post.link } target="_blank" rel="bookmark">
 												{htmlToReactParser.parse(post.featured_image_src)}
 												</a>
@@ -943,7 +955,7 @@ class PTAM_Custom_Posts extends Component {
 										}
 									</div>
 
-									<div className="ptam-block-post-grid-excerpt" style={contentStyles}>
+									<div className="ptam-block-post-grid-excerpt" style={! removeStyles ? contentStyles : {} }>
 										{ displayPostExcerpt && '' !==  post.post_excerpt &&
 											<Fragment>
 												{this.excerptParse(post.post_excerpt)}
@@ -951,11 +963,11 @@ class PTAM_Custom_Posts extends Component {
 										}
 
 										{ displayPostLink &&
-											<p><a className="ptam-block-post-grid-link ptam-text-link" href={ post.link } target="_blank" rel="bookmark" style={continueReadingStyles}>{ readMoreText }</a></p>
+											<p><a className="ptam-block-post-grid-link ptam-text-link" href={ post.link } target="_blank" rel="bookmark" style={! removeStyles ? continueReadingStyles : {} }>{ readMoreText }</a></p>
 										}
 										{
 										displayPostImage && post.featured_image_src !== undefined && post.featured_image_src  && 'bottom' === this.state.imageLocation ? (
-												<div className="ptam-block-post-grid-image" style={imageAlignmentStyles}>
+												<div className="ptam-block-post-grid-image" style={! removeStyles ? imageAlignmentStyles : {} }>
 													<a href={ post.link } target="_blank" rel="bookmark">
 													{htmlToReactParser.parse(post.featured_image_src)}
 													</a>
@@ -969,7 +981,7 @@ class PTAM_Custom_Posts extends Component {
 											<div style={metaStyles}>
 												{userTaxonomiesArray.map((key) => {
 													if( post.terms[key.value] !== false ) {
-														return (<div className="ptam-terms"><span className="ptam-term-label">{key.label}: </span><span className="ptam-term-values" style={linkColorStyles}>{htmlToReactParser.parse(post.terms[key.value])}</span></div>);
+														return (<div className="ptam-terms"><span className="ptam-term-label">{key.label}: </span><span className="ptam-term-values" style={! removeStyles ? linkColorStyles : {} }>{htmlToReactParser.parse(post.terms[key.value])}</span></div>);
 													}
 												})}
 											</div>

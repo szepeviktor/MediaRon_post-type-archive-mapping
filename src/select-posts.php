@@ -37,19 +37,35 @@ function ptam_get_profile_image( $attributes, $post_thumb_id = 0, $post_author =
 		$post_thumb_size = $attributes['imageTypeSize'];
 		$image_type      = $attributes['imageType'];
 		if ( 'gravatar' === $image_type ) {
-			$list_item_markup .= sprintf(
-				'<div class="ptam-block-post-grid-image" %3$s><a href="%1$s" rel="bookmark">%2$s</a></div>',
-				esc_url( get_permalink( $post_id ) ),
-				get_avatar( $post_author, $attributes['avatarSize'] ),
-				'grid' === $attributes['postLayout'] ? "style='text-align: {$attributes['imageAlignment']}'" : ''
-			);
+			if ( ! $attributes['removeStyles'] ) {
+				$list_item_markup .= sprintf(
+					'<div class="ptam-block-post-grid-image" %3$s><a href="%1$s" rel="bookmark">%2$s</a></div>',
+					esc_url( get_permalink( $post_id ) ),
+					get_avatar( $post_author, $attributes['avatarSize'] ),
+					'grid' === $attributes['postLayout'] ? "style='text-align: {$attributes['imageAlignment']}'" : ''
+				);
+			} else {
+				$list_item_markup .= sprintf(
+					'<div class="ptam-block-post-grid-image"><a href="%1$s" rel="bookmark">%2$s</a></div>',
+					esc_url( get_permalink( $post_id ) ),
+					get_avatar( $post_author, $attributes['avatarSize'] )
+				);
+			}
 		} else {
-			$list_item_markup .= sprintf(
-				'<div class="ptam-block-post-grid-image" %3$s><a href="%1$s" rel="bookmark">%2$s</a></div>',
-				esc_url( get_permalink( $post_id ) ),
-				wp_get_attachment_image( $post_thumb_id, $post_thumb_size ),
-				'grid' === $attributes['postLayout'] ? "style='text-align: {$attributes['imageAlignment']}'" : ''
-			);
+			if ( ! $attributes['removeStyles'] ) {
+				$list_item_markup .= sprintf(
+					'<div class="ptam-block-post-grid-image" %3$s><a href="%1$s" rel="bookmark">%2$s</a></div>',
+					esc_url( get_permalink( $post_id ) ),
+					wp_get_attachment_image( $post_thumb_id, $post_thumb_size ),
+					'grid' === $attributes['postLayout'] ? "style='text-align: {$attributes['imageAlignment']}'" : ''
+				);
+			} else {
+				$list_item_markup .= sprintf(
+					'<div class="ptam-block-post-grid-image"><a href="%1$s" rel="bookmark">%2$s</a></div>',
+					esc_url( get_permalink( $post_id ) ),
+					wp_get_attachment_image( $post_thumb_id, $post_thumb_size )
+				);
+			}
 		}
 		echo $list_item_markup; // phpcs:ignore
 	}
@@ -76,8 +92,13 @@ function ptam_get_taxonomy_terms( $post, $attributes = array() ) {
 		$term_array = array();
 		if ( $term_list && ! empty( $term_list ) ) {
 			foreach ( $term_list as $term ) {
-				$term_permalink = get_term_link( $term, $key );
-				$term_array[]   = sprintf( '<a href="%s" style="color: %s; text-decoration: none; box-shadow: unset;">%s</a>', esc_url( $term_permalink ), esc_attr( $attributes['linkColor'] ), esc_html( $term->name ) );
+				if ( ! $attributes['removeStyles'] ) {
+					$term_permalink = get_term_link( $term, $key );
+					$term_array[]   = sprintf( '<a href="%s" style="color: %s; text-decoration: none; box-shadow: unset;">%s</a>', esc_url( $term_permalink ), esc_attr( $attributes['linkColor'] ), esc_html( $term->name ) );
+				} else {
+					$term_permalink = get_term_link( $term, $key );
+					$term_array[]   = sprintf( '<a href="%s">%s</a>', esc_url( $term_permalink ), esc_html( $term->name ) );
+				}
 			}
 			$terms[ $key ] = implode( ', ', $term_array );
 		} else {
@@ -123,6 +144,7 @@ function ptam_custom_posts( $attributes ) {
 		}
 	}
 	$attributes['displayTitle']        = isset( $attributes['displayTitle'] ) ? esc_html( $attributes['displayTitle'] ) : true;
+	$attributes['removeStyles']        = isset( $attributes['removeStyles'] ) ? esc_html( $attributes['removeStyles'] ) : false;
 	$attributes['displayCustomFields'] = isset( $attributes['displayCustomFields'] ) ? esc_html( $attributes['displayCustomFields'] ) : true;
 	$attributes['titleFont']           = isset( $attributes['titleFont'] ) ? esc_attr( $attributes['titleFont'] ) : 'inherit';
 	$attributes['metaFont']            = isset( $attributes['metaFont'] ) ? esc_attr( $attributes['metaFont'] ) : 'inherit';
@@ -162,7 +184,7 @@ function ptam_custom_posts( $attributes ) {
 			$list_items_markup .= sprintf(
 				'<article class="%1$s" style="%2$s">',
 				esc_attr( $post_thumb_class ),
-				$article_style
+				( ! $attributes['removeStyles'] ) ? $article_style : ''
 			);
 			if ( 'regular' === $image_placememt_options ) {
 				$list_items_markup .= ptam_get_profile_image( $attributes, $post_thumb_id, $post->post_author, $post->ID );
@@ -181,25 +203,41 @@ function ptam_custom_posts( $attributes ) {
 			}
 
 			if ( $attributes['displayTitle'] ) {
-				$list_items_markup .= sprintf(
-					'<h2 class="ptam-block-post-grid-title" %3$s><a href="%1$s" rel="bookmark" style="color: %4$s; font-family: %5$s; box-shadow: unset;">%2$s</a></h2>',
-					esc_url( get_permalink( $post_id ) ),
-					esc_html( $title ),
-					'grid' === $attributes['postLayout'] ? "style='text-align: {$attributes['titleAlignment']}'" : '',
-					esc_attr( $attributes['titleColor'] ),
-					esc_attr( $attributes['titleFont'] )
-				);
+				if ( ! $attributes['removeStyles'] ) {
+					$list_items_markup .= sprintf(
+						'<h2 class="ptam-block-post-grid-title" %3$s><a href="%1$s" rel="bookmark" style="%4$s">%2$s</a></h2>',
+						esc_url( get_permalink( $post_id ) ),
+						esc_html( $title ),
+						( 'grid' === $attributes['postLayout'] && ! $attributes['removeStyles'] ) ? "style='text-align: {$attributes['titleAlignment']}'" : '',
+						sprintf(
+							'color: %1$s; font-family: %2$s; box-shadow: unset;',
+							esc_attr( $attributes['titleColor'] ),
+							esc_attr( $attributes['titleFont'] )
+						)
+					);
+				} else {
+					$list_items_markup .= sprintf(
+						'<h2 class="ptam-block-post-grid-title" ><a href="%1$s" rel="bookmark">%2$s</a></h2>',
+						esc_url( get_permalink( $post_id ) ),
+						esc_html( $title )
+					);
+				}
 			}
 
 			if ( $attributes['displayCustomFields'] ) {
 				$custom_fields_markup = isset( $attributes['customFields'] ) ? $attributes['customFields'] : '';
 				if ( ! empty( $custom_fields_markup ) ) {
-					$list_items_markup .= sprintf(
-						'<div class="ptam-block-post-custom-fields" style="color: %s; font-family: %s; text-align: %s;">',
-						isset( $attributes['customFieldsColor'] ) ? esc_attr( $attributes['customFieldsColor'] ) : 'inherit',
-						isset( $attributes['customFieldsFont'] ) ? esc_attr( $attributes['customFieldsFont'] ) : 'inherit',
-						isset( $attributes['customFieldAlignment'] ) ? esc_attr( $attributes['customFieldAlignment'] ) : 'inherit'
-					);
+					if ( ! $attributes['removeStyles'] ) {
+						$list_items_markup .= sprintf(
+							'<div class="ptam-block-post-custom-fields" style="color: %s; font-family: %s; text-align: %s;">',
+							isset( $attributes['customFieldsColor'] ) ? esc_attr( $attributes['customFieldsColor'] ) : 'inherit',
+							isset( $attributes['customFieldsFont'] ) ? esc_attr( $attributes['customFieldsFont'] ) : 'inherit',
+							isset( $attributes['customFieldAlignment'] ) ? esc_attr( $attributes['customFieldAlignment'] ) : 'inherit'
+						);
+					} else {
+						$list_items_markup .= '<div class="ptam-block-post-custom-fields">';
+					}
+
 					preg_match_all( '/{([-_a-zA-Z0-9]+)}/', $custom_fields_markup, $matches );
 					if ( isset( $matches[0] ) && is_array( $matches[0] ) ) {
 						foreach ( $matches[0] as $custom_field_match ) {
@@ -254,31 +292,53 @@ function ptam_custom_posts( $attributes ) {
 				}
 			}
 			// Wrap the byline content.
-			$list_items_markup .= sprintf(
-				'<div class="ptam-block-post-grid-byline %s" %s>',
-				isset( $attributes['changeCapitilization'] ) && $attributes['changeCapitilization'] ? 'ptam-text-lower-case' : '',
-				'grid' === $attributes['postLayout'] ? "style='text-align: {$attributes['metaAlignment']}; color: {$attributes['contentColor']}; font-family: {$attributes['metaFont']}'" : "style='color: {$attributes['contentColor']}; font-family: {$attributes['metaFont']}'"
-			);
+			if ( ! $attributes['removeStyles'] ) {
+				$list_items_markup .= sprintf(
+					'<div class="ptam-block-post-grid-byline %s" %s>',
+					isset( $attributes['changeCapitilization'] ) && $attributes['changeCapitilization'] ? 'ptam-text-lower-case' : '',
+					'grid' === $attributes['postLayout'] ? "style='text-align: {$attributes['metaAlignment']}; color: {$attributes['contentColor']}; font-family: {$attributes['metaFont']}'" : "style='color: {$attributes['contentColor']}; font-family: {$attributes['metaFont']}'"
+				);
+			} else {
+				$list_items_markup .= sprintf(
+					'<div class="ptam-block-post-grid-byline %s">',
+					isset( $attributes['changeCapitilization'] ) && $attributes['changeCapitilization'] ? 'ptam-text-lower-case' : ''
+				);
+			}
 
 			// Get the featured image.
 			if ( isset( $attributes['displayPostImage'] ) && $attributes['displayPostImage'] && $post_thumb_id && 'below_title' === $attributes['imageLocation'] ) {
-
-				$list_items_markup .= sprintf(
-					'<div class="ptam-block-post-grid-image" %3$s><a href="%1$s" rel="bookmark">%2$s</a></div>',
-					esc_url( get_permalink( $post_id ) ),
-					ptam_get_profile_image( $attributes, $post_thumb_id, $post->post_author, $post->ID ),
-					'grid' === $attributes['postLayout'] ? "style='text-align: {$attributes['imageAlignment']}" : ''
-				);
+				if ( ! $attributes['removeStyles'] ) {
+					$list_items_markup .= sprintf(
+						'<div class="ptam-block-post-grid-image" %3$s><a href="%1$s" rel="bookmark">%2$s</a></div>',
+						esc_url( get_permalink( $post_id ) ),
+						ptam_get_profile_image( $attributes, $post_thumb_id, $post->post_author, $post->ID ),
+						'grid' === $attributes['postLayout'] ? "style='text-align: {$attributes['imageAlignment']}" : ''
+					);
+				} else {
+					$list_items_markup .= sprintf(
+						'<div class="ptam-block-post-grid-image"><a href="%1$s" rel="bookmark">%2$s</a></div>',
+						esc_url( get_permalink( $post_id ) ),
+						ptam_get_profile_image( $attributes, $post_thumb_id, $post->post_author, $post->ID )
+					);
+				}
 			}
 
 			// Get the post author.
 			if ( isset( $attributes['displayPostAuthor'] ) && $attributes['displayPostAuthor'] ) {
-				$list_items_markup .= sprintf(
-					'<div class="ptam-block-post-grid-author"><a class="ptam-text-link" href="%2$s" style="color: %3$s">%1$s</a></div>',
-					esc_html( get_the_author_meta( 'display_name', $post->post_author ) ),
-					esc_html( get_author_posts_url( $post->post_author ) ),
-					esc_attr( $attributes['linkColor'] )
-				);
+				if ( ! $attributes['removeStyles'] ) {
+					$list_items_markup .= sprintf(
+						'<div class="ptam-block-post-grid-author"><a class="ptam-text-link" href="%2$s" style="color: %3$s">%1$s</a></div>',
+						esc_html( get_the_author_meta( 'display_name', $post->post_author ) ),
+						esc_html( get_author_posts_url( $post->post_author ) ),
+						esc_attr( $attributes['linkColor'] )
+					);
+				} else {
+					$list_items_markup .= sprintf(
+						'<div class="ptam-block-post-grid-author"><a class="ptam-text-link" href="%2$s">%1$s</a></div>',
+						esc_html( get_the_author_meta( 'display_name', $post->post_author ) ),
+						esc_html( get_author_posts_url( $post->post_author ) )
+					);
+				}
 			}
 
 			// Get the post date.
@@ -308,10 +368,14 @@ function ptam_custom_posts( $attributes ) {
 			);
 
 			// Wrap the excerpt content.
-			$list_items_markup .= sprintf(
-				'<div class="ptam-block-post-grid-excerpt" %s>',
-				'grid' === $attributes['postLayout'] ? "style='text-align: {$attributes['contentAlignment']}; color: {$attributes['contentColor']}; font-family: {$attributes['contentFont']}'" : "style='color: {$attributes['contentColor']}; font-family: {$attributes['contentFont']}'"
-			);
+			if ( ! $attributes['removeStyles'] ) {
+				$list_items_markup .= sprintf(
+					'<div class="ptam-block-post-grid-excerpt" %s>',
+					'grid' === $attributes['postLayout'] ? "style='text-align: {$attributes['contentAlignment']}; color: {$attributes['contentColor']}; font-family: {$attributes['contentFont']}'" : "style='color: {$attributes['contentColor']}; font-family: {$attributes['contentFont']}'"
+				);
+			} else {
+				$list_items_markup .= '<div class="ptam-block-post-grid-excerpt">';
+			}
 
 			// Get the excerpt.
 			$excerpt = $post->post_excerpt;
@@ -331,13 +395,21 @@ function ptam_custom_posts( $attributes ) {
 			}
 
 			if ( isset( $attributes['displayPostLink'] ) && $attributes['displayPostLink'] ) {
-				$list_items_markup .= sprintf(
-					'<p><a class="ptam-block-post-grid-link ptam-text-link" href="%1$s" rel="bookmark" style="color: %3$s; font-family: %4$s">%2$s</a></p>',
-					esc_url( get_permalink( $post_id ) ),
-					esc_html( $attributes['readMoreText'] ),
-					esc_attr( $attributes['continueReadingColor'] ),
-					esc_attr( $attributes['continueReadingFont'] )
-				);
+				if ( ! $attributes['removeStyles'] ) {
+					$list_items_markup .= sprintf(
+						'<p><a class="ptam-block-post-grid-link ptam-text-link" href="%1$s" rel="bookmark" style="color: %3$s; font-family: %4$s">%2$s</a></p>',
+						esc_url( get_permalink( $post_id ) ),
+						esc_html( $attributes['readMoreText'] ),
+						esc_attr( $attributes['continueReadingColor'] ),
+						esc_attr( $attributes['continueReadingFont'] )
+					);
+				} else {
+					$list_items_markup .= sprintf(
+						'<p><a class="ptam-block-post-grid-link ptam-text-link" href="%1$s" rel="bookmark">%2$s</a></p>',
+						esc_url( get_permalink( $post_id ) ),
+						esc_html( $attributes['readMoreText'] )
+					);
+				}
 			}
 
 			// Get the featured image.
@@ -362,9 +434,15 @@ function ptam_custom_posts( $attributes ) {
 
 			// Get the taxonomies.
 			if ( isset( $attributes['displayTaxonomies'] ) && $attributes['displayTaxonomies'] && 'below_content' === $taxonomy_placement_options ) {
-				$list_items_markup .= sprintf( '<div %s>', 'grid' === $attributes['postLayout'] ? "style='text-align: {$attributes['metaAlignment']};color: {$attributes['contentColor']}; font-family: {$attributes['metaFont']}'" : "style='color: {$attributes['contentColor']}; font-family: {$attributes['metaFont']}'" );
-				$list_items_markup .= ptam_get_taxonomy_terms( $post, $attributes );
-				$list_items_markup .= '</div>';
+				if ( ! $attributes['removeStyles'] ) {
+					$list_items_markup .= sprintf( '<div %s>', 'grid' === $attributes['postLayout'] ? "style='text-align: {$attributes['metaAlignment']};color: {$attributes['contentColor']}; font-family: {$attributes['metaFont']}'" : "style='color: {$attributes['contentColor']}; font-family: {$attributes['metaFont']}'" );
+					$list_items_markup .= ptam_get_taxonomy_terms( $post, $attributes );
+					$list_items_markup .= '</div>';
+				} else {
+					$list_items_markup .= '<div>';
+					$list_items_markup .= ptam_get_taxonomy_terms( $post, $attributes );
+					$list_items_markup .= '</div>';
+				}
 			}
 
 			// Close the markup for the post.
@@ -648,6 +726,10 @@ function ptam_register_custom_posts_block() {
 				'customFields'         => array(
 					'type'    => 'string',
 					'default' => '',
+				),
+				'removeStyles'         => array(
+					'type'    => 'boolean',
+					'default' => false,
 				),
 			),
 			'render_callback' => 'ptam_custom_posts',
