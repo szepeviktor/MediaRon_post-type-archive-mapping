@@ -731,6 +731,10 @@ function ptam_register_custom_posts_block() {
 					'type'    => 'boolean',
 					'default' => false,
 				),
+				'titleHeadingTag'      => array(
+					'type'    => 'string',
+					'default' => 'h2',
+				),
 			),
 			'render_callback' => 'ptam_custom_posts',
 			'editor_script'   => 'ptam-custom-posts-gutenberg',

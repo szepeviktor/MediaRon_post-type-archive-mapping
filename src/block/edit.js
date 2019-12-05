@@ -389,7 +389,7 @@ class PTAM_Custom_Posts extends Component {
 	render() {
 		let htmlToReactParser = new HtmlToReactParser();
 		const { attributes, setAttributes } = this.props;
-		const { postType, term, taxonomy, displayPostDate, displayPostExcerpt, displayPostAuthor, displayPostImage,displayPostLink, align, postLayout, columns, order, pagination, orderBy, postsToShow, readMoreText, imageLocation, taxonomyLocation, imageType, imageTypeSize, avatarSize, changeCapitilization, displayTaxonomies, trimWords, titleAlignment, customFieldAlignment, imageAlignment, metaAlignment, contentAlignment, padding, border, borderRounded, borderColor, backgroundColor, titleColor, customFieldsColor, linkColor, contentColor, continueReadingColor, titleFont, customFieldsFont, metaFont, contentFont, continueReadingFont, displayTitle, displayCustomFields, customFields, removeStyles } = attributes;
+		const { postType, term, taxonomy, displayPostDate, displayPostExcerpt, displayPostAuthor, displayPostImage,displayPostLink, align, postLayout, columns, order, pagination, orderBy, postsToShow, readMoreText, imageLocation, taxonomyLocation, imageType, imageTypeSize, avatarSize, changeCapitilization, displayTaxonomies, trimWords, titleAlignment, customFieldAlignment, imageAlignment, metaAlignment, contentAlignment, padding, border, borderRounded, borderColor, backgroundColor, titleColor, customFieldsColor, linkColor, contentColor, continueReadingColor, titleFont, customFieldsFont, metaFont, contentFont, continueReadingFont, displayTitle, displayCustomFields, customFields, removeStyles, titleHeadingTag } = attributes;
 
 		let userTaxonomies = this.state.userTaxonomies;
 		let userTaxonomiesArray = [];
@@ -410,6 +410,16 @@ class PTAM_Custom_Posts extends Component {
 		for ( var key in imageSizes ) {
 			imageSizeOptions.push( { value: key, label: key })
 		}
+
+		// Title Heading Options
+		const titleHeadingOptions = [
+			{ value: 'h1', label: __('H1', 'post-type-archive-mapping' ) },
+			{ value: 'h2', label: __('H2', 'post-type-archive-mapping' ) },
+			{ value: 'h3', label: __('H3', 'post-type-archive-mapping' ) },
+			{ value: 'h4', label: __('H4', 'post-type-archive-mapping' ) },
+			{ value: 'h5', label: __('H5', 'post-type-archive-mapping' ) },
+			{ value: 'H6', label: __('H6', 'post-type-archive-mapping' ) },
+		];
 
 		// Fonts
 		let fontOptions = [];
@@ -483,6 +493,19 @@ class PTAM_Custom_Posts extends Component {
 						/>
 					}
 				</PanelBody>
+				<PanelBody title={ __( 'Title', 'post-type-archive-mapping' ) } initialOpen={false}>
+					<ToggleControl
+						label={ __( 'Display Title',  'post-type-archive-mapping' ) }
+						checked={ displayTitle }
+						onChange={ this.toggleDisplayTitle }
+					/>
+					<SelectControl
+						label={ __( 'Title Heading Tag',  'post-type-archive-mapping' ) }
+						options={ titleHeadingOptions }
+						value={ titleHeadingTag }
+						onChange={ ( value ) => { this.props.setAttributes( { titleHeadingTag: value } ); }}
+					/>
+				</PanelBody>
 				<PanelBody title={ __( 'Custom Fields', 'post-type-archive-mapping' ) } initialOpen={false}>
 					<ToggleControl
 						label={ __( 'Display Custom Fields',  'post-type-archive-mapping' ) }
@@ -542,11 +565,6 @@ class PTAM_Custom_Posts extends Component {
 							/>
 						</Fragment>
 					}
-					<ToggleControl
-						label={ __( 'Display Title',  'post-type-archive-mapping' ) }
-						checked={ displayTitle }
-						onChange={ this.toggleDisplayTitle }
-					/>
 					<ToggleControl
 						label={ __( 'Display Taxonomies',  'post-type-archive-mapping' ) }
 						checked={ displayTaxonomies }
@@ -851,6 +869,9 @@ class PTAM_Custom_Posts extends Component {
 		let 	titleColorStyles = { color: titleColor };
 		let linkColorStyles = { color: linkColor };
 
+		// Title tag
+		const Titletag = titleHeadingTag;
+
 		return (
 			<Fragment>
 				{ inspectorControls }
@@ -904,7 +925,7 @@ class PTAM_Custom_Posts extends Component {
 
 								<div className="ptam-block-post-grid-text">
 									{ displayTitle &&
-										<h2 className="entry-title" style={ ! removeStyles ? titleStyles : {} }><a href={ post.link } target="_blank" rel="bookmark" style={! removeStyles ?  titleColorStyles : {} }>{ decodeEntities( post.post_title.trim() ) || __( '(Untitled)', 'post-type-archive-mapping' ) }</a></h2>
+										<Titletag className="entry-title" style={ ! removeStyles ? titleStyles : {} }><a href={ post.link } target="_blank" rel="bookmark" style={! removeStyles ?  titleColorStyles : {} }>{ decodeEntities( post.post_title.trim() ) || __( '(Untitled)', 'post-type-archive-mapping' ) }</a></Titletag>
 									}
 									{displayPostImage && post.featured_image_src !== undefined && post.featured_image_src  && 'below_title' === this.state.imageLocation ? (
 											<div className="ptam-block-post-grid-image" style={! removeStyles ? imageAlignmentStyles : {} }>
