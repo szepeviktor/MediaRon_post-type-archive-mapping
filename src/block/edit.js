@@ -523,7 +523,7 @@ class PTAM_Custom_Posts extends Component {
 						/>
 					}
 				</PanelBody>
-				<PanelBody title={ __( 'Options', 'post-type-archive-mapping' ) }>
+				<PanelBody title={ __( 'Featured Image', 'post-type-archive-mapping' ) }>
 					<ToggleControl
 						label={ __( 'Display Featured Image',  'post-type-archive-mapping' ) }
 						checked={ displayPostImage }
@@ -565,6 +565,8 @@ class PTAM_Custom_Posts extends Component {
 							/>
 						</Fragment>
 					}
+				</PanelBody>
+				<PanelBody title={ __( 'Options', 'post-type-archive-mapping' ) }>
 					<ToggleControl
 						label={ __( 'Display Taxonomies',  'post-type-archive-mapping' ) }
 						checked={ displayTaxonomies }
@@ -925,7 +927,7 @@ class PTAM_Custom_Posts extends Component {
 
 								<div className="ptam-block-post-grid-text">
 									{ displayTitle &&
-										<Titletag className="entry-title" style={ ! removeStyles ? titleStyles : {} }><a href={ post.link } target="_blank" rel="bookmark" style={! removeStyles ?  titleColorStyles : {} }>{ decodeEntities( post.post_title.trim() ) || __( '(Untitled)', 'post-type-archive-mapping' ) }</a></Titletag>
+										<Titletag className="ptam-block-post-grid-title" style={ ! removeStyles ? titleStyles : {} }><a href={ post.link } target="_blank" rel="bookmark" style={! removeStyles ?  titleColorStyles : {} }>{ decodeEntities( post.post_title.trim() ) || __( '(Untitled)', 'post-type-archive-mapping' ) }</a></Titletag>
 									}
 									{displayPostImage && post.featured_image_src !== undefined && post.featured_image_src  && 'below_title' === this.state.imageLocation ? (
 											<div className="ptam-block-post-grid-image" style={! removeStyles ? imageAlignmentStyles : {} }>
