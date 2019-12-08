@@ -185,6 +185,9 @@ function ptam_custom_posts( $attributes ) {
 				$post_thumb_id = 1;
 			} else {
 				$post_thumb_id = get_post_thumbnail_id( $post_id );
+				if ( empty( $post_thumb_id ) && isset( $attributes['fallbackImg']['id'] ) ) {
+					$post_thumb_id = absint( $attributes['fallbackImg']['id'] );
+				}
 			}
 
 			if ( $post_thumb_id && isset( $attributes['displayPostImage'] ) && $attributes['displayPostImage'] ) {
@@ -751,6 +754,10 @@ function ptam_register_custom_posts_block() {
 				'titleHeadingTag'      => array(
 					'type'    => 'string',
 					'default' => 'h2',
+				),
+				'fallbackImg'          => array(
+					'type'    => 'object',
+					'default' => '',
 				),
 			),
 			'render_callback' => 'ptam_custom_posts',
