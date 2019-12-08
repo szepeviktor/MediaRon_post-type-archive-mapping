@@ -560,7 +560,7 @@ class PTAM_Custom_Posts extends Component {
 										value={ fallbackImg.url }
 										render={ ( { open } ) => (
 											<Fragment>
-												<button className="components-button is-button" onClick={ open }>
+												<button className="components-button is-button secondary" onClick={ open }>
 													{ __( 'Fallback Featured Image', 'post-type-archive-mapping' ) }
 												</button>
 												{ fallbackImg &&
@@ -570,7 +570,7 @@ class PTAM_Custom_Posts extends Component {
 															<img src={ fallbackImg.url } alt={ __( 'Featured Image', 'post-type-archive-mapping' ) } width="250" height="250" />
 														</div>
 														<div>
-															<button className="components-button is-button" onClick={ ( event ) => {
+															<button className="components-button is-button secondary" onClick={ ( event ) => {
 																this.props.setAttributes( { fallbackImg: '' } ); this.props.attributes.fallbackImg = ''; this.setState( { fallbackImg: '' } );
 															} }>
 																{ __( 'Reset Image', 'post-type-archive-mapping' ) }
