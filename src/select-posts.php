@@ -185,6 +185,9 @@ function ptam_custom_posts( $attributes ) {
 				$post_thumb_id = 1;
 			} else {
 				$post_thumb_id = get_post_thumbnail_id( $post_id );
+				if ( empty( $post_thumb_id ) && isset( $attributes['fallbackImg']['id'] ) ) {
+					$post_thumb_id = absint( $attributes['fallbackImg']['id'] );
+				}
 			}
 
 			if ( $post_thumb_id && isset( $attributes['displayPostImage'] ) && $attributes['displayPostImage'] ) {
