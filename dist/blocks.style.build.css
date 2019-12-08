@@ -399,3 +399,9 @@
       font-size: 18px; } }
   .ptam-block-post-grid .is-list .no-thumb .ptam-block-post-grid-text {
     grid-column: span 1; }
+
+button.ptam-media-alt-upload.components-button {
+  margin-bottom: 20px; }
+
+button.ptam-media-alt-reset.components-button {
+  margin: 15px 0; }

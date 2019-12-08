@@ -127,3 +127,9 @@
 @media only screen and (min-width: 600px) {
   .ptam-block-post-grid h6.ptam-block-post-grid-title {
     font-size: 18px; } }
+
+button.ptam-media-alt-upload.components-button {
+  margin-bottom: 20px; }
+
+button.ptam-media-alt-reset.components-button {
+  margin: 20px 0; }
