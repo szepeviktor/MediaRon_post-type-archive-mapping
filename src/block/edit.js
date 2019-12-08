@@ -78,9 +78,9 @@ class PTAM_Custom_Posts extends Component {
 	get_latest_posts ( object = {} ) {
 		this.setState( { 'loading': true } );
 		const props = jQuery.extend({}, this.props.attributes, object);
-		let { postType, order, orderBy, taxonomy, avatarSize, imageType, imageTypeSize,term, postsToShow, imageCrop, linkColor } = props;
+		let { postType, order, orderBy, taxonomy, avatarSize, imageType, imageTypeSize,term, postsToShow, imageCrop, linkColor, fallbackImg } = props;
 		linkColor = linkColor.replace( '#', '' );
-		axios.post(ptam_globals.rest_url + `ptam/v2/get_posts`, { post_type: postType, order: order, orderby: orderBy, taxonomy: taxonomy, term: term, posts_per_page: postsToShow, image_size: imageCrop, avatar_size: avatarSize, image_type: imageType, image_size: imageTypeSize, link_color: linkColor } ).then( ( response ) => {
+		axios.post(ptam_globals.rest_url + `ptam/v2/get_posts`, { post_type: postType, order: order, orderby: orderBy, taxonomy: taxonomy, term: term, posts_per_page: postsToShow, image_size: imageCrop, avatar_size: avatarSize, image_type: imageType, image_size: imageTypeSize, link_color: linkColor, default_image: fallbackImg } ).then( ( response ) => {
 			// Now Set State
 			this.setState( {
 				loading: false,
@@ -122,12 +122,12 @@ class PTAM_Custom_Posts extends Component {
 		let userTerms = [];
 		let fonts = [];
 		const props = jQuery.extend({}, this.props.attributes, object);
-		let { postType, order, orderBy, avatarSize,imageType,imageTypeSize,taxonomy, term, postsToShow, imageCrop, linkColor } = props;
+		let { postType, order, orderBy, avatarSize,imageType,imageTypeSize,taxonomy, term, postsToShow, imageCrop, linkColor, fallbackImg } = props;
 
 		linkColor = linkColor.replace( '#', '' );
 
 		// Get Latest Posts and Chain Promises
-		axios.post(ptam_globals.rest_url + `ptam/v2/get_posts`, { post_type: postType, order: order, orderby: orderBy, taxonomy: taxonomy, term: term, posts_per_page: postsToShow, image_size: imageCrop, avatar_size: avatarSize, image_type: imageType, image_size: imageTypeSize, link_color: linkColor } ).then( ( response ) => {
+		axios.post(ptam_globals.rest_url + `ptam/v2/get_posts`, { post_type: postType, order: order, orderby: orderBy, taxonomy: taxonomy, term: term, posts_per_page: postsToShow, image_size: imageCrop, avatar_size: avatarSize, image_type: imageType, image_size: imageTypeSize, link_color: linkColor, default_image: fallbackImg } ).then( ( response ) => {
 				latestPosts = response.data.posts;
 				imageSizes = response.data.image_sizes;
 				userTaxonomies = response.data.taxonomies;
@@ -280,12 +280,12 @@ class PTAM_Custom_Posts extends Component {
 		let latestPosts = [];
 		let imageSizes = [];
 
-		let { postType, order, orderBy, taxonomy, term, terms, imageTypeSize, avatarSize,postsToShow, imageCrop, linkColor } = this.props.attributes;
+		let { postType, order, orderBy, taxonomy, term, terms, imageTypeSize, avatarSize,postsToShow, imageCrop, linkColor, fallbackImg } = this.props.attributes;
 
 		linkColor = linkColor.replace( '#', '' );
 
 		// Get Latest Posts and Chain Promises
-		axios.post(ptam_globals.rest_url + `ptam/v2/get_images`, { post_type: postType, order: order, orderby: orderBy, taxonomy: taxonomy, term: term, posts_per_page: postsToShow, image_type: imageCrop, avatar_size: avatarSize, image_type: imageType, image_size: imageTypeSize, link_color: linkColor } ).then( ( response ) => {
+		axios.post(ptam_globals.rest_url + `ptam/v2/get_images`, { post_type: postType, order: order, orderby: orderBy, taxonomy: taxonomy, term: term, posts_per_page: postsToShow, image_type: imageCrop, avatar_size: avatarSize, image_type: imageType, image_size: imageTypeSize, link_color: linkColor, default_image: fallbackImg } ).then( ( response ) => {
 				latestPosts = response.data.posts;
 				imageSizes = response.data.image_sizes;
 				this.setState( {
@@ -306,12 +306,12 @@ class PTAM_Custom_Posts extends Component {
 		let latestPosts = [];
 		let imageSizes = [];
 
-		let { postType, order, orderBy, taxonomy, term, avatarSize,postsToShow, imageCrop, linkColor } = this.props.attributes;
+		let { postType, order, orderBy, taxonomy, term, avatarSize,postsToShow, imageCrop, linkColor, fallbackImg } = this.props.attributes;
 
 		linkColor = linkColor.replace( '#', '' );
 
 		// Get Latest Posts and Chain Promises
-		axios.post(ptam_globals.rest_url + `ptam/v2/get_images`, { post_type: postType, order: order, orderby: orderBy, taxonomy: taxonomy, term: term, posts_per_page: postsToShow, image_crop: imageCrop, avatar_size: avatarSize, image_type: 'regular', image_size: value, link_color: linkColor } ).then( ( response ) => {
+		axios.post(ptam_globals.rest_url + `ptam/v2/get_images`, { post_type: postType, order: order, orderby: orderBy, taxonomy: taxonomy, term: term, posts_per_page: postsToShow, image_crop: imageCrop, avatar_size: avatarSize, image_type: 'regular', image_size: value, link_color: linkColor, default_image: fallbackImg } ).then( ( response ) => {
 			latestPosts = response.data.posts;
 			imageSizes = response.data.image_sizes;
 			this.setState( {
@@ -344,12 +344,41 @@ class PTAM_Custom_Posts extends Component {
 			let latestPosts = [];
 			let imageSizes = [];
 
-			let { postType, order, orderBy, taxonomy, term, postsToShow, imageCrop, imageTypeSize, imageType, linkColor } = classRef.props.attributes;
+			let { postType, order, orderBy, taxonomy, term, postsToShow, imageCrop, imageTypeSize, imageType, linkColor, fallbackImg } = classRef.props.attributes;
 
 			linkColor = linkColor.replace( '#', '' );
 
 			// Get Latest Posts and Chain Promises
-			axios.post(ptam_globals.rest_url + `ptam/v2/get_images`, { post_type: postType, order: order, orderBy: orderBy, taxonomy: taxonomy, term: term, posts_per_page: postsToShow, image_type: imageCrop, avatar_size: value, image_type: imageType, image_size: imageTypeSize, link_color: linkColor } ).then( ( response ) => {
+			axios.post(ptam_globals.rest_url + `ptam/v2/get_images`, { post_type: postType, order: order, orderBy: orderBy, taxonomy: taxonomy, term: term, posts_per_page: postsToShow, image_type: imageCrop, avatar_size: value, image_type: imageType, image_size: imageTypeSize, link_color: linkColor, default_image: fallbackImg } ).then( ( response ) => {
+				latestPosts = response.data.posts;
+				imageSizes = response.data.image_sizes;
+				classRef.setState( {
+					loading: false,
+					latestPosts: latestPosts,
+					imageSizes: imageSizes,
+				} );
+
+			} );
+		}, 3000);
+	}
+
+	onFallbackImgChange = ( imgObject ) => {
+		let classRef = this;
+		this.setState( {
+			loading: true,
+		} );
+
+		this.props.setAttributes( { fallbackImg: imgObject } );
+		setTimeout(function(){
+			let latestPosts = [];
+			let imageSizes = [];
+
+			let { postType, avatarSize, order, orderBy, taxonomy, term, postsToShow, imageCrop, imageTypeSize, imageType, linkColor, fallbackImg } = classRef.props.attributes;
+
+			linkColor = linkColor.replace( '#', '' );
+
+			// Get Latest Posts and Chain Promises
+			axios.post(ptam_globals.rest_url + `ptam/v2/get_images`, { post_type: postType, order: order, orderBy: orderBy, taxonomy: taxonomy, term: term, posts_per_page: postsToShow, image_type: imageCrop, avatar_size: avatarSize, image_type: imageType, image_size: imageTypeSize, link_color: linkColor, default_image: fallbackImg } ).then( ( response ) => {
 				latestPosts = response.data.posts;
 				imageSizes = response.data.image_sizes;
 				classRef.setState( {
@@ -555,6 +584,7 @@ class PTAM_Custom_Posts extends Component {
 									<MediaUpload
 										onSelect={ ( imageObject ) => {
 											this.props.setAttributes( { fallbackImg: imageObject } ); this.props.attributes.fallbackImg = imageObject;
+											this.onFallbackImgChange( imageObject );
 										} }
 										type="image"
 										value={ fallbackImg.url }
@@ -571,7 +601,8 @@ class PTAM_Custom_Posts extends Component {
 														</div>
 														<div>
 															<button className="ptam-media-alt-reset components-button is-button secondary" onClick={ ( event ) => {
-																this.props.setAttributes( { fallbackImg: '' } ); this.props.attributes.fallbackImg = ''; this.setState( { fallbackImg: '' } );
+																this.props.setAttributes( { fallbackImg: '' } ); this.props.attributes.fallbackImg = ''; 
+																this.onFallbackImgChange( 0 );
 															} }>
 																{ __( 'Reset Image', 'post-type-archive-mapping' ) }
 															</button>

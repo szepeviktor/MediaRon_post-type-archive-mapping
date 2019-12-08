@@ -114,7 +114,9 @@ function ptam_get_posts( $post_data ) {
 	$image_size     = $post_data['image_size'];
 	$avatar_size    = $post_data['avatar_size'];
 	$link_color     = $post_data['link_color'];
-	$post_args      = array(
+	$default_image  = isset( $post_data['default_image']['id'] ) ? absint( $post_data['default_image']['id'] ) : 0;
+
+	$post_args = array(
 		'post_type'      => $post_type,
 		'post_status'    => 'publish',
 		'order'          => $order,
@@ -137,6 +139,9 @@ function ptam_get_posts( $post_data ) {
 			$thumbnail = get_avatar( $post->post_author, $avatar_size );
 		} else {
 			$thumbnail = get_the_post_thumbnail( $post->ID, $image_size );
+			if ( empty( $thumbnail ) ) {
+				$thumbnail = wp_get_attachment_image( $default_image, $image_size );
+			}
 		}
 		$post->featured_image_src = $thumbnail;
 
@@ -207,6 +212,7 @@ function ptam_get_image( $post_data ) {
 	$image_type     = $post_data['image_type'];
 	$image_size     = $post_data['image_size'];
 	$link_color     = $post_data['link_color'];
+	$default_image  = isset( $post_data['default_image']['id'] ) ? absint( $post_data['default_image']['id'] ) : 0;
 
 	$post_args = array(
 		'post_type'      => $post_type,
@@ -230,6 +236,9 @@ function ptam_get_image( $post_data ) {
 			$thumbnail = get_avatar( $post->post_author, $avatar_size );
 		} else {
 			$thumbnail = get_the_post_thumbnail( $post->ID, $image_size );
+			if ( empty( $thumbnail ) ) {
+				$thumbnail = wp_get_attachment_image( $default_image, $image_size );
+			}
 		}
 		$post->featured_image_src = $thumbnail;
 
