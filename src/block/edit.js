@@ -26,6 +26,7 @@ const {
 } = wp.components;
 
 const {
+	MediaUpload,
 	InspectorControls,
 	BlockAlignmentToolbar,
 	BlockControls,
@@ -389,7 +390,7 @@ class PTAM_Custom_Posts extends Component {
 	render() {
 		let htmlToReactParser = new HtmlToReactParser();
 		const { attributes, setAttributes } = this.props;
-		const { postType, term, taxonomy, displayPostDate, displayPostExcerpt, displayPostAuthor, displayPostImage,displayPostLink, align, postLayout, columns, order, pagination, orderBy, postsToShow, readMoreText, imageLocation, taxonomyLocation, imageType, imageTypeSize, avatarSize, changeCapitilization, displayTaxonomies, trimWords, titleAlignment, customFieldAlignment, imageAlignment, metaAlignment, contentAlignment, padding, border, borderRounded, borderColor, backgroundColor, titleColor, customFieldsColor, linkColor, contentColor, continueReadingColor, titleFont, customFieldsFont, metaFont, contentFont, continueReadingFont, displayTitle, displayCustomFields, customFields, removeStyles, titleHeadingTag } = attributes;
+		const { postType, term, taxonomy, displayPostDate, displayPostExcerpt, displayPostAuthor, displayPostImage,displayPostLink, align, postLayout, columns, order, pagination, orderBy, postsToShow, readMoreText, imageLocation, taxonomyLocation, imageType, imageTypeSize, avatarSize, changeCapitilization, displayTaxonomies, trimWords, titleAlignment, customFieldAlignment, imageAlignment, metaAlignment, contentAlignment, padding, border, borderRounded, borderColor, backgroundColor, titleColor, customFieldsColor, linkColor, contentColor, continueReadingColor, titleFont, customFieldsFont, metaFont, contentFont, continueReadingFont, displayTitle, displayCustomFields, customFields, removeStyles, titleHeadingTag, fallbackImg } = attributes;
 
 		let userTaxonomies = this.state.userTaxonomies;
 		let userTaxonomiesArray = [];
@@ -549,13 +550,44 @@ class PTAM_Custom_Posts extends Component {
 								</div>
 								: ''
 							}
-							{ 'regular' === imageType ?
-								<SelectControl
-									label={ __( 'Featured Image Size',  'post-type-archive-mapping' ) }
-									options={ imageSizeOptions }
-									value={ imageTypeSize }
-									onChange={ ( value ) => { this.props.setAttributes( { imageTypeSize: value } ); this.onImageSizeChange( value ); }}/>
-								: ''
+							{ 'gravatar' !== imageType &&
+								<Fragment>
+									<MediaUpload
+										onSelect={ ( imageObject ) => {
+											this.props.setAttributes( { fallbackImg: imageObject } ); this.props.attributes.fallbackImg = imageObject;
+										} }
+										type="image"
+										value={ fallbackImg.url }
+										render={ ( { open } ) => (
+											<Fragment>
+												<button className="components-button is-button" onClick={ open }>
+													{ __( 'Fallback Featured Image', 'post-type-archive-mapping' ) }
+												</button>
+												{ fallbackImg &&
+
+													<Fragment>
+														<div>
+															<img src={ fallbackImg.url } alt={ __( 'Featured Image', 'post-type-archive-mapping' ) } width="250" height="250" />
+														</div>
+														<div>
+															<button className="components-button is-button" onClick={ ( event ) => {
+																this.props.setAttributes( { fallbackImg: '' } ); this.props.attributes.fallbackImg = ''; this.setState( { fallbackImg: '' } );
+															} }>
+																{ __( 'Reset Image', 'post-type-archive-mapping' ) }
+															</button>
+														</div>
+													</Fragment>
+												}
+											</Fragment>
+										) }
+									/>
+									<SelectControl
+										label={ __( 'Featured Image Size',  'post-type-archive-mapping' ) }
+										options={ imageSizeOptions }
+										value={ imageTypeSize }
+										onChange={ ( value ) => { this.props.setAttributes( { imageTypeSize: value } ); this.onImageSizeChange( value ); }}
+									/>
+								</Fragment>
 							}
 							<SelectControl
 								label={ __( 'Image Location',  'post-type-archive-mapping' ) }

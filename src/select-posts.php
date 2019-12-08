@@ -752,6 +752,10 @@ function ptam_register_custom_posts_block() {
 					'type'    => 'string',
 					'default' => 'h2',
 				),
+				'fallbackImg'          => array(
+					'type'    => 'object',
+					'default' => '',
+				),
 			),
 			'render_callback' => 'ptam_custom_posts',
 			'editor_script'   => 'ptam-custom-posts-gutenberg',
