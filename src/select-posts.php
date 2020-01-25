@@ -301,6 +301,20 @@ function ptam_custom_posts( $attributes ) {
 									 */
 									$custom_field_value   = apply_filters( 'ptam_custom_field', $custom_field_value, $maybe_custom_field, $post_id );
 									$custom_fields_markup = str_replace( $custom_field_match, $custom_field_value, $custom_fields_markup );
+								} else {
+									/**
+									 * Filter the custom field value.
+									 *
+									 * Filter the custom field value.
+									 *
+									 * @since 3.0.0
+									 *
+									 * @param mixed  $custom_field_value The custom field value.
+									 * @param string $maybe_custom_field The custom field name.
+									 * @param int    $post_id            The Post ID.
+									 */
+									$custom_field_value   = apply_filters( 'ptam_custom_field', '', $maybe_custom_field, $post_id );
+									$custom_fields_markup = str_replace( $custom_field_match, $custom_field_value, $custom_fields_markup );
 								}
 							}
 						}
