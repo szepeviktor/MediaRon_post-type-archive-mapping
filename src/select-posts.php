@@ -179,7 +179,7 @@ function ptam_custom_posts( $attributes ) {
 
 			// Get the post ID.
 			$post_id          = $post->ID;
-			$post_type_object = get_post_type_object( get_post_type( $post) );
+			$post_type_object = get_post_type_object( get_post_type( $post ) );
 
 			// Get the post thumbnail.
 			if ( 'gravatar' === $attributes['imageType'] ) {
@@ -429,11 +429,11 @@ function ptam_custom_posts( $attributes ) {
 			// Wrap the excerpt content.
 			if ( ! $attributes['removeStyles'] ) {
 				$list_items_markup .= sprintf(
-					'<div class="ptam-block-post-grid-excerpt" %s>',
+					'<p class="ptam-block-post-grid-excerpt" %s>',
 					'grid' === $attributes['postLayout'] ? "style='text-align: {$attributes['contentAlignment']}; color: {$attributes['contentColor']}; font-family: {$attributes['contentFont']}'" : "style='color: {$attributes['contentColor']}; font-family: {$attributes['contentFont']}'"
 				);
 			} else {
-				$list_items_markup .= '<div class="ptam-block-post-grid-excerpt">';
+				$list_items_markup .= '<p class="ptam-block-post-grid-excerpt">';
 			}
 
 			// Get the excerpt.
@@ -489,7 +489,7 @@ function ptam_custom_posts( $attributes ) {
 
 			// Close the excerpt content.
 			$list_items_markup .= sprintf(
-				'</div>'
+				'</p>'
 			);
 
 			// Get the taxonomies.
