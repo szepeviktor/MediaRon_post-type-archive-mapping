@@ -328,7 +328,7 @@ function ptam_get_all_image_sizes() {
  * @return array $fonts Fonts to Use
  */
 function ptam_get_fonts() {
-	$fonts = apply_filters(
+	$fonts     = apply_filters(
 		'ptam_fonts',
 		array(
 			'inherit'         => 'Default',
@@ -348,6 +348,17 @@ function ptam_get_fonts() {
 			'impact'          => 'Impact',
 		)
 	);
+	$pro_fonts = array();
+	// Add Typekit Fonts.
+	if ( defined( 'CUSTOM_TYPEKIT_FONTS_FILE' ) ) {
+		$adobe_fonts = get_option( 'custom-typekit-fonts', array() );
+		if ( isset( $adobe_fonts['custom-typekit-font-details'] ) ) {
+			foreach ( $adobe_fonts['custom-typekit-font-details'] as $font_name => $font_details ) {
+				$pro_fonts[ $font_details['slug'] ] = $font_details['family'];
+			}
+		}
+	}
+	$fonts = array_merge( $fonts, $pro_fonts );
 	return $fonts;
 }
 

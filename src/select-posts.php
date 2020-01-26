@@ -239,8 +239,8 @@ function ptam_custom_posts( $attributes ) {
 						$list_items_markup .= sprintf(
 							'<%3$s class="ptam-block-post-grid-title" %2$s>%1$s</%3$s>',
 							esc_html( $title ),
-							( 'grid' === $attributes['postLayout'] && ! $attributes['removeStyles'] ) ? "style='text-align: {$attributes['titleAlignment']}'" : '',
-							$attributes['titleHeadingTag']
+							( 'grid' === $attributes['postLayout'] && ! $attributes['removeStyles'] ) ? "style='text-align: {$attributes['titleAlignment']}; color: {$attributes['titleColor']}; font-family: {$attributes['titleFont']}'" : '',
+							wp_kses_post( $attributes['titleHeadingTag'] )
 						);
 					}
 				} else {
@@ -342,7 +342,7 @@ function ptam_custom_posts( $attributes ) {
 			}
 
 			$show_meta = false;
-			if ( $attributes['displayCustomField'] || ( isset( $attributes['displayPostAuthor'] ) && $attributes['displayPostAuthor'] ) || ( isset( $attributes['displayTaxonomies'] ) && $attributes['displayTaxonomies'] ) || ( isset( $attributes['displayPostDate'] ) && $attributes['displayPostDate'] ) ) {
+			if ( $attributes['displayCustomFields'] || ( isset( $attributes['displayPostAuthor'] ) && $attributes['displayPostAuthor'] ) || ( isset( $attributes['displayTaxonomies'] ) && $attributes['displayTaxonomies'] ) || ( isset( $attributes['displayPostDate'] ) && $attributes['displayPostDate'] ) ) {
 				$show_meta = true;
 			}
 

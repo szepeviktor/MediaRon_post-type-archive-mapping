@@ -3,7 +3,7 @@ Contributors: ronalfy, chrislogan
 Tags: custom post types, archive, mapping, gutenberg, block, taxonomy, terms
 Requires at least: 5.3
 Tested up to: 5.3
-Stable tag: 3.0.9
+Stable tag: 3.1.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Donate link: https://mediaron.com/give/
@@ -73,6 +73,16 @@ Yes, just post in the support forums here and I'll do my best to address your is
 3. Settings->Reading option
 
 == Changelog ==
+
+= 3.1.0 =
+* Released 2020-01-26
+* Removing custom field placeholder if a custom field isn't present.
+* Removing continue reading link and post link if custom post type isn't publicly queryable.
+* Wrapping excerpt in paragraph tag.
+* Add class to readmore paragraph tag for styling.
+* Hiding styles options if override styles is present.
+* Changing verbiage of remove styles to Override styles.
+* Added support for Adobe fonts through https://wordpress.org/plugins/custom-typekit-fonts/
 
 = 3.0.9 =
 
@@ -174,6 +184,9 @@ Yes, just post in the support forums here and I'll do my best to address your is
 * Initial release.
 
 == Upgrade Notice ==
+
+= 3.1.0 =
+Numerous tweaks. Please see the changelog for changes.
 
 = 3.0.9 =
 Added the ability to set a fallback image for the featured image.
