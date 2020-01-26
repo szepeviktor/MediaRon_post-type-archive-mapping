@@ -4,6 +4,27 @@
  */
  @import '../common';
 
+ .entry-content {
+	 .ptam-block-post-grid-title {
+		margin-top: 0;
+		margin-bottom: 15px;
+		font-size: 28px;
+		line-height: 1.2;
+		clear: none;
+		&:before {
+			display: none;
+		}
+		&:after {
+			display: none;
+		}
+
+		a {
+			color: #000;
+			box-shadow: none;
+			transition: .3s ease;
+		}
+	}
+ }
  .ptam-block-post-grid {
 	margin: 0 0 1.2em 0;
 	position: relative;
@@ -105,8 +126,7 @@
 	}
 
 	.ptam-block-post-grid-image {
-		margin-bottom: 1.2em;
-		margin-top: 1.2em;
+		margin: 10px 0;
 		img {
 			display: inline-block;
 		}
@@ -124,8 +144,8 @@
 		width: inherit;
 		border-radius: 0;
 	}
-
-	h2 {
+	
+	.ptam-block-post-grid-title {
 		margin-top: 0;
 		margin-bottom: 15px;
 		font-size: 28px;
@@ -248,31 +268,37 @@
 			@media only screen and (min-width: 600px) {
 				font-size: 38px;
 			}
+			margin-top: 10px 0;
 		}
 		h2.ptam-block-post-grid-title {
 			@media only screen and (min-width: 600px) {
 				font-size: 34px;
 			}
+			margin-top: 10px 0;
 		}
 		h3.ptam-block-post-grid-title {
 			@media only screen and (min-width: 600px) {
 				font-size: 34px;
 			}
+			margin-top: 10px 0;
 		}
 		h4.ptam-block-post-grid-title {
 			@media only screen and (min-width: 600px) {
 				font-size: 28px;
 			}
+			margin-top: 10px 0;
 		}
 		h5.ptam-block-post-grid-title {
 			@media only screen and (min-width: 600px) {
 				font-size: 22px;
 			}
+			margin-top: 10px 0;
 		}
 		h6.ptam-block-post-grid-title {
 			@media only screen and (min-width: 600px) {
 				font-size: 18px;
 			}
+			margin-top: 10px 0;
 		}
 
 		.no-thumb .ptam-block-post-grid-text {
