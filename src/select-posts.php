@@ -456,7 +456,7 @@ function ptam_custom_posts( $attributes ) {
 				if ( isset( $attributes['displayPostLink'] ) && $attributes['displayPostLink'] ) {
 					if ( ! $attributes['removeStyles'] ) {
 						$list_items_markup .= sprintf(
-							'<p><a class="ptam-block-post-grid-link ptam-text-link" href="%1$s" rel="bookmark" style="color: %3$s; font-family: %4$s">%2$s</a></p>',
+							'<p class="ptam-block-post-grid-link-wrapper"><a class="ptam-block-post-grid-link ptam-text-link" href="%1$s" rel="bookmark" style="color: %3$s; font-family: %4$s">%2$s</a></p>',
 							esc_url( get_permalink( $post_id ) ),
 							esc_html( $attributes['readMoreText'] ),
 							esc_attr( $attributes['continueReadingColor'] ),
@@ -464,7 +464,7 @@ function ptam_custom_posts( $attributes ) {
 						);
 					} else {
 						$list_items_markup .= sprintf(
-							'<p><a class="ptam-block-post-grid-link ptam-text-link" href="%1$s" rel="bookmark">%2$s</a></p>',
+							'<p class="ptam-block-post-grid-link-wrapper"><a class="ptam-block-post-grid-link ptam-text-link" href="%1$s" rel="bookmark">%2$s</a></p>',
 							esc_url( get_permalink( $post_id ) ),
 							esc_html( $attributes['readMoreText'] )
 						);
