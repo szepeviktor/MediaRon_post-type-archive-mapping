@@ -178,7 +178,8 @@ function ptam_custom_posts( $attributes ) {
 			$recent_posts->the_post();
 
 			// Get the post ID.
-			$post_id = $post->ID;
+			$post_id          = $post->ID;
+			$post_type_object = get_post_type_object( get_post_type( $post) );
 
 			// Get the post thumbnail.
 			if ( 'gravatar' === $attributes['imageType'] ) {
@@ -221,24 +222,40 @@ function ptam_custom_posts( $attributes ) {
 
 			if ( $attributes['displayTitle'] ) {
 				if ( ! $attributes['removeStyles'] ) {
-					$list_items_markup .= sprintf(
-						'<%5$s class="ptam-block-post-grid-title" %3$s><a href="%1$s" rel="bookmark" style="%4$s">%2$s</a></%5$s>',
-						esc_url( get_permalink( $post_id ) ),
-						esc_html( $title ),
-						( 'grid' === $attributes['postLayout'] && ! $attributes['removeStyles'] ) ? "style='text-align: {$attributes['titleAlignment']}'" : '',
-						sprintf(
-							'color: %1$s; font-family: %2$s; box-shadow: unset;',
-							esc_attr( $attributes['titleColor'] ),
-							esc_attr( $attributes['titleFont'] )
-						),
-						$attributes['titleHeadingTag']
-					);
+					if ( $post_type_object->publicly_queryable ) {
+						$list_items_markup .= sprintf(
+							'<%5$s class="ptam-block-post-grid-title" %3$s><a href="%1$s" rel="bookmark" style="%4$s">%2$s</a></%5$s>',
+							esc_url( get_permalink( $post_id ) ),
+							esc_html( $title ),
+							( 'grid' === $attributes['postLayout'] && ! $attributes['removeStyles'] ) ? "style='text-align: {$attributes['titleAlignment']}'" : '',
+							sprintf(
+								'color: %1$s; font-family: %2$s; box-shadow: unset;',
+								esc_attr( $attributes['titleColor'] ),
+								esc_attr( $attributes['titleFont'] )
+							),
+							$attributes['titleHeadingTag']
+						);
+					} else {
+						$list_items_markup .= sprintf(
+							'<%3$s class="ptam-block-post-grid-title" %2$s>%1$s</%3$s>',
+							esc_html( $title ),
+							( 'grid' === $attributes['postLayout'] && ! $attributes['removeStyles'] ) ? "style='text-align: {$attributes['titleAlignment']}'" : '',
+							$attributes['titleHeadingTag']
+						);
+					}
 				} else {
-					$list_items_markup .= sprintf(
-						'<h2 class="ptam-block-post-grid-title" ><a href="%1$s" rel="bookmark">%2$s</a></h2>',
-						esc_url( get_permalink( $post_id ) ),
-						esc_html( $title )
-					);
+					if ( $post_type_object->publicly_queryable ) {
+						$list_items_markup .= sprintf(
+							'<h2 class="ptam-block-post-grid-title"><a href="%1$s" rel="bookmark">%2$s</a></h2>',
+							esc_url( get_permalink( $post_id ) ),
+							esc_html( $title )
+						);
+					} else {
+						$list_items_markup .= sprintf(
+							'<h2 class="ptam-block-post-grid-title">%1$s</h2>',
+							esc_html( $title )
+						);
+					}
 				}
 			}
 
@@ -425,22 +442,23 @@ function ptam_custom_posts( $attributes ) {
 			if ( isset( $attributes['displayPostExcerpt'] ) && $attributes['displayPostExcerpt'] ) {
 				$list_items_markup .= wp_kses_post( $excerpt );
 			}
-
-			if ( isset( $attributes['displayPostLink'] ) && $attributes['displayPostLink'] ) {
-				if ( ! $attributes['removeStyles'] ) {
-					$list_items_markup .= sprintf(
-						'<p><a class="ptam-block-post-grid-link ptam-text-link" href="%1$s" rel="bookmark" style="color: %3$s; font-family: %4$s">%2$s</a></p>',
-						esc_url( get_permalink( $post_id ) ),
-						esc_html( $attributes['readMoreText'] ),
-						esc_attr( $attributes['continueReadingColor'] ),
-						esc_attr( $attributes['continueReadingFont'] )
-					);
-				} else {
-					$list_items_markup .= sprintf(
-						'<p><a class="ptam-block-post-grid-link ptam-text-link" href="%1$s" rel="bookmark">%2$s</a></p>',
-						esc_url( get_permalink( $post_id ) ),
-						esc_html( $attributes['readMoreText'] )
-					);
+			if ( $post_type_object->publicly_queryable ) {
+				if ( isset( $attributes['displayPostLink'] ) && $attributes['displayPostLink'] ) {
+					if ( ! $attributes['removeStyles'] ) {
+						$list_items_markup .= sprintf(
+							'<p><a class="ptam-block-post-grid-link ptam-text-link" href="%1$s" rel="bookmark" style="color: %3$s; font-family: %4$s">%2$s</a></p>',
+							esc_url( get_permalink( $post_id ) ),
+							esc_html( $attributes['readMoreText'] ),
+							esc_attr( $attributes['continueReadingColor'] ),
+							esc_attr( $attributes['continueReadingFont'] )
+						);
+					} else {
+						$list_items_markup .= sprintf(
+							'<p><a class="ptam-block-post-grid-link ptam-text-link" href="%1$s" rel="bookmark">%2$s</a></p>',
+							esc_url( get_permalink( $post_id ) ),
+							esc_html( $attributes['readMoreText'] )
+						);
+					}
 				}
 			}
 
