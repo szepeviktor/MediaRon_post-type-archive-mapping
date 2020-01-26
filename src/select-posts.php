@@ -340,18 +340,26 @@ function ptam_custom_posts( $attributes ) {
 					$list_items_markup .= '</div>';
 				}
 			}
-			// Wrap the byline content.
-			if ( ! $attributes['removeStyles'] ) {
-				$list_items_markup .= sprintf(
-					'<div class="ptam-block-post-grid-byline %s" %s>',
-					isset( $attributes['changeCapitilization'] ) && $attributes['changeCapitilization'] ? 'ptam-text-lower-case' : '',
-					'grid' === $attributes['postLayout'] ? "style='text-align: {$attributes['metaAlignment']}; color: {$attributes['contentColor']}; font-family: {$attributes['metaFont']}'" : "style='color: {$attributes['contentColor']}; font-family: {$attributes['metaFont']}'"
-				);
-			} else {
-				$list_items_markup .= sprintf(
-					'<div class="ptam-block-post-grid-byline %s">',
-					isset( $attributes['changeCapitilization'] ) && $attributes['changeCapitilization'] ? 'ptam-text-lower-case' : ''
-				);
+
+			$show_meta = false;
+			if ( $attributes['displayCustomField'] || ( isset( $attributes['displayPostAuthor'] ) && $attributes['displayPostAuthor'] ) || ( isset( $attributes['displayTaxonomies'] ) && $attributes['displayTaxonomies'] ) || ( isset( $attributes['displayPostDate'] ) && $attributes['displayPostDate'] ) ) {
+				$show_meta = true;
+			}
+
+			if ( $show_meta ) {
+				// Wrap the byline content.
+				if ( ! $attributes['removeStyles'] ) {
+					$list_items_markup .= sprintf(
+						'<div class="ptam-block-post-grid-byline %s" %s>',
+						isset( $attributes['changeCapitilization'] ) && $attributes['changeCapitilization'] ? 'ptam-text-lower-case' : '',
+						'grid' === $attributes['postLayout'] ? "style='text-align: {$attributes['metaAlignment']}; color: {$attributes['contentColor']}; font-family: {$attributes['metaFont']}'" : "style='color: {$attributes['contentColor']}; font-family: {$attributes['metaFont']}'"
+					);
+				} else {
+					$list_items_markup .= sprintf(
+						'<div class="ptam-block-post-grid-byline %s">',
+						isset( $attributes['changeCapitilization'] ) && $attributes['changeCapitilization'] ? 'ptam-text-lower-case' : ''
+					);
+				}
 			}
 
 			// Get the featured image.
@@ -412,9 +420,11 @@ function ptam_custom_posts( $attributes ) {
 			}
 
 			// Close the byline content.
-			$list_items_markup .= sprintf(
-				'</div>'
-			);
+			if ( $show_meta ) {
+				$list_items_markup .= sprintf(
+					'</div>'
+				);
+			}
 
 			// Wrap the excerpt content.
 			if ( ! $attributes['removeStyles'] ) {
