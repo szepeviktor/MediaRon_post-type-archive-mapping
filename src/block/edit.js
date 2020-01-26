@@ -690,12 +690,12 @@ class PTAM_Custom_Posts extends Component {
 					/>
 					}
 					<ToggleControl
-						label={ __( 'Remove Styles',  'post-type-archive-mapping' ) }
+						label={ __( 'Overwrite styles',  'post-type-archive-mapping' ) }
 						checked={ removeStyles }
 						onChange={ this.toggleRemoveStyles }
 					/>
 				</PanelBody>
-				{ postLayout === 'grid' &&
+				{ postLayout === 'grid' && ! removeStyles &&
 					<PanelBody title={ __( 'Alignment', 'post-type-archive-mapping' ) } initialOpen={false}>
 						<SelectControl
 							label={ __( 'Title Alignment', 'post-type-archive-mapping' ) }
@@ -729,136 +729,140 @@ class PTAM_Custom_Posts extends Component {
 						/>
 					</PanelBody>
 				}
-				<PanelBody title={ __( 'Borders and Padding', 'post-type-archive-mapping' ) } initialOpen={false}>
-					<RangeControl
-						label={ __( 'Padding', 'post-type-archive-mapping' ) }
-						value={ padding }
-						onChange={ ( value ) => this.props.setAttributes( { padding: value } ) }
-						min={ 0 }
-						max={ 60 }
-						step={ 1 }
-					/>
-					<RangeControl
-						label={ __( 'Border', 'post-type-archive-mapping' ) }
-						value={ border }
-						onChange={ ( value ) => this.props.setAttributes( { border: value } ) }
-						min={ 0 }
-						max={ 10 }
-						step={ 1 }
-					/>
-					<PanelColorSettings
-						title={ __( 'Border Color', 'post-type-archive-mapping' ) }
-						initialOpen={ true }
-						colorSettings={ [ {
-							value: borderColor,
-							onChange: this.onChangeBorderColor,
-							label: __( 'Border Color', 'post-type-archive-mapping' ),
-						} ] }
-						>
-					</PanelColorSettings>
-					<RangeControl
-						label={ __( 'Border Rounded', 'post-type-archive-mapping' ) }
-						value={ borderRounded }
-						onChange={ ( value ) => this.props.setAttributes( { borderRounded: value } ) }
-						min={ 0 }
-						max={ 10 }
-						step={ 1 }
-					/>
-				</PanelBody>
-				<PanelBody title={ __( 'Background and Colors', 'post-type-archive-mapping' ) } initialOpen={false}>
-					<PanelColorSettings
-						title={ __( 'Background Color', 'post-type-archive-mapping' ) }
-						initialOpen={ true }
-						colorSettings={ [ {
-							value: backgroundColor,
-							onChange: this.onChangeBackgroundColor,
-							label: __( 'Background Color', 'post-type-archive-mapping' ),
-						} ] }
-						>
-					</PanelColorSettings>
-					<PanelColorSettings
-						title={ __( 'Title Color', 'post-type-archive-mapping' ) }
-						initialOpen={ true }
-						colorSettings={ [ {
-							value: titleColor,
-							onChange: this.onChangeTitleColor,
-							label: __( 'Title Color', 'post-type-archive-mapping' ),
-						} ] }
-						>
-					</PanelColorSettings>
-					<PanelColorSettings
-						title={ __( 'Custom Fields Color', 'post-type-archive-mapping' ) }
-						initialOpen={ true }
-						colorSettings={ [ {
-							value: customFieldsColor,
-							onChange: this.onChangeCustomFieldsColor,
-							label: __( 'Custom Fields Color', 'post-type-archive-mapping' ),
-						} ] }
-						>
-					</PanelColorSettings>
-					<PanelColorSettings
-						title={ __( 'Content Color', 'post-type-archive-mapping' ) }
-						initialOpen={ true }
-						colorSettings={ [ {
-							value: contentColor,
-							onChange: this.onChangeContentColor,
-							label: __( 'Content Color', 'post-type-archive-mapping' ),
-						} ] }
-						>
-					</PanelColorSettings>
-					<PanelColorSettings
-						title={ __( 'Link Color', 'post-type-archive-mapping' ) }
-						initialOpen={ true }
-						colorSettings={ [ {
-							value: linkColor,
-							onChange: this.onChangeLinkColor,
-							label: __( 'Link Color', 'post-type-archive-mapping' ),
-						} ] }
-						>
-					</PanelColorSettings>
-					<PanelColorSettings
-						title={ __( 'Continue Reading Color', 'post-type-archive-mapping' ) }
-						initialOpen={ true }
-						colorSettings={ [ {
-							value: continueReadingColor,
-							onChange: this.onChangeContinueReadingColor,
-							label: __( 'Continue Reading Color', 'post-type-archive-mapping' ),
-						} ] }
-						>
-					</PanelColorSettings>
-				</PanelBody>
-				<PanelBody title={ __( 'Fonts', 'post-type-archive-mapping' ) } initialOpen={false}>
-					<SelectControl
-						label={ __( 'Title Font', 'post-type-archive-mapping' ) }
-						options={ fontOptions }
-						value={ titleFont }
-						onChange={ ( value ) => { this.props.setAttributes( { titleFont: value } ); } }
-					/>
-					<SelectControl
-						label={ __( 'Custom Fields Font', 'post-type-archive-mapping' ) }
-						options={ fontOptions }
-						value={ customFieldsFont }
-						onChange={ ( value ) => { this.props.setAttributes( { customFieldsFont: value } ); } }
-					/>
-					<SelectControl
-						label={ __( 'Meta Font', 'post-type-archive-mapping' ) }
-						options={ fontOptions }
-						value={ metaFont }
-						onChange={ ( value ) => { this.props.setAttributes( { metaFont: value } ); } }
-					/>
-					<SelectControl
-						label={ __( 'Content Font', 'post-type-archive-mapping' ) }
-						options={ fontOptions }
-						value={ contentFont }
-						onChange={ ( value ) => { this.props.setAttributes( { contentFont: value } ); } }
-					/>
-					<SelectControl
-						label={ __( 'Continue Reading Font', 'post-type-archive-mapping' ) }
-						options={ fontOptions }
-						value={ continueReadingFont }
-						onChange={ ( value ) => { this.props.setAttributes( { continueReadingFont: value } ); } }
-					/>
-				</PanelBody>
+				{ ! removeStyles &&
+					<Fragment>
+						<PanelBody title={ __( 'Borders and Padding', 'post-type-archive-mapping' ) } initialOpen={false}>
+							<RangeControl
+								label={ __( 'Padding', 'post-type-archive-mapping' ) }
+								value={ padding }
+								onChange={ ( value ) => this.props.setAttributes( { padding: value } ) }
+								min={ 0 }
+								max={ 60 }
+								step={ 1 }
+							/>
+							<RangeControl
+								label={ __( 'Border', 'post-type-archive-mapping' ) }
+								value={ border }
+								onChange={ ( value ) => this.props.setAttributes( { border: value } ) }
+								min={ 0 }
+								max={ 10 }
+								step={ 1 }
+							/>
+							<PanelColorSettings
+								title={ __( 'Border Color', 'post-type-archive-mapping' ) }
+								initialOpen={ true }
+								colorSettings={ [ {
+									value: borderColor,
+									onChange: this.onChangeBorderColor,
+									label: __( 'Border Color', 'post-type-archive-mapping' ),
+								} ] }
+								>
+							</PanelColorSettings>
+							<RangeControl
+								label={ __( 'Border Rounded', 'post-type-archive-mapping' ) }
+								value={ borderRounded }
+								onChange={ ( value ) => this.props.setAttributes( { borderRounded: value } ) }
+								min={ 0 }
+								max={ 10 }
+								step={ 1 }
+							/>
+						</PanelBody>
+						<PanelBody title={ __( 'Background and Colors', 'post-type-archive-mapping' ) } initialOpen={false}>
+							<PanelColorSettings
+								title={ __( 'Background Color', 'post-type-archive-mapping' ) }
+								initialOpen={ true }
+								colorSettings={ [ {
+									value: backgroundColor,
+									onChange: this.onChangeBackgroundColor,
+									label: __( 'Background Color', 'post-type-archive-mapping' ),
+								} ] }
+								>
+							</PanelColorSettings>
+							<PanelColorSettings
+								title={ __( 'Title Color', 'post-type-archive-mapping' ) }
+								initialOpen={ true }
+								colorSettings={ [ {
+									value: titleColor,
+									onChange: this.onChangeTitleColor,
+									label: __( 'Title Color', 'post-type-archive-mapping' ),
+								} ] }
+								>
+							</PanelColorSettings>
+							<PanelColorSettings
+								title={ __( 'Custom Fields Color', 'post-type-archive-mapping' ) }
+								initialOpen={ true }
+								colorSettings={ [ {
+									value: customFieldsColor,
+									onChange: this.onChangeCustomFieldsColor,
+									label: __( 'Custom Fields Color', 'post-type-archive-mapping' ),
+								} ] }
+								>
+							</PanelColorSettings>
+							<PanelColorSettings
+								title={ __( 'Content Color', 'post-type-archive-mapping' ) }
+								initialOpen={ true }
+								colorSettings={ [ {
+									value: contentColor,
+									onChange: this.onChangeContentColor,
+									label: __( 'Content Color', 'post-type-archive-mapping' ),
+								} ] }
+								>
+							</PanelColorSettings>
+							<PanelColorSettings
+								title={ __( 'Link Color', 'post-type-archive-mapping' ) }
+								initialOpen={ true }
+								colorSettings={ [ {
+									value: linkColor,
+									onChange: this.onChangeLinkColor,
+									label: __( 'Link Color', 'post-type-archive-mapping' ),
+								} ] }
+								>
+							</PanelColorSettings>
+							<PanelColorSettings
+								title={ __( 'Continue Reading Color', 'post-type-archive-mapping' ) }
+								initialOpen={ true }
+								colorSettings={ [ {
+									value: continueReadingColor,
+									onChange: this.onChangeContinueReadingColor,
+									label: __( 'Continue Reading Color', 'post-type-archive-mapping' ),
+								} ] }
+								>
+							</PanelColorSettings>
+						</PanelBody>
+						<PanelBody title={ __( 'Fonts', 'post-type-archive-mapping' ) } initialOpen={false}>
+							<SelectControl
+								label={ __( 'Title Font', 'post-type-archive-mapping' ) }
+								options={ fontOptions }
+								value={ titleFont }
+								onChange={ ( value ) => { this.props.setAttributes( { titleFont: value } ); } }
+							/>
+							<SelectControl
+								label={ __( 'Custom Fields Font', 'post-type-archive-mapping' ) }
+								options={ fontOptions }
+								value={ customFieldsFont }
+								onChange={ ( value ) => { this.props.setAttributes( { customFieldsFont: value } ); } }
+							/>
+							<SelectControl
+								label={ __( 'Meta Font', 'post-type-archive-mapping' ) }
+								options={ fontOptions }
+								value={ metaFont }
+								onChange={ ( value ) => { this.props.setAttributes( { metaFont: value } ); } }
+							/>
+							<SelectControl
+								label={ __( 'Content Font', 'post-type-archive-mapping' ) }
+								options={ fontOptions }
+								value={ contentFont }
+								onChange={ ( value ) => { this.props.setAttributes( { contentFont: value } ); } }
+							/>
+							<SelectControl
+								label={ __( 'Continue Reading Font', 'post-type-archive-mapping' ) }
+								options={ fontOptions }
+								value={ continueReadingFont }
+								onChange={ ( value ) => { this.props.setAttributes( { continueReadingFont: value } ); } }
+							/>
+						</PanelBody>
+					</Fragment>
+				}
 			</InspectorControls>
 		);
 		if( this.state.loading ) {
