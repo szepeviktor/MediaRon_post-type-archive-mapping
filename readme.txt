@@ -3,7 +3,7 @@ Contributors: ronalfy, chrislogan
 Tags: custom post types, archive, mapping, gutenberg, block, taxonomy, terms
 Requires at least: 5.3
 Tested up to: 5.3
-Stable tag: 3.1.0
+Stable tag: 3.1.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Donate link: https://mediaron.com/give/
@@ -73,6 +73,10 @@ Yes, just post in the support forums here and I'll do my best to address your is
 3. Settings->Reading option
 
 == Changelog ==
+
+= 3.1.1 =
+* Released 2020-02-01
+* Added several order and orderby parameters.
 
 = 3.1.0 =
 * Released 2020-01-26
@@ -184,6 +188,9 @@ Yes, just post in the support forums here and I'll do my best to address your is
 * Initial release.
 
 == Upgrade Notice ==
+
+= 3.1.1 =
+Added several order and orderby parameters.
 
 = 3.1.0 =
 Numerous tweaks. Please see the changelog for changes.
