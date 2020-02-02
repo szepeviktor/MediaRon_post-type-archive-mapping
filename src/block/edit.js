@@ -475,6 +475,22 @@ class PTAM_Custom_Posts extends Component {
 			{ value: 'right', label: __('Right', 'post-type-archive-mapping' ) },
 		];
 
+		const orderOptions = [
+			{ value: 'ASC', label: __('ASC', 'post-type-archive-mapping' ) },
+			{ value: 'DESC', label: __('DESC', 'post-type-archive-mapping' ) },
+		];
+
+		const orderByOptions = [
+			{ value: 'ID', label: __('ID', 'post-type-archive-mapping' ) },
+			{ value: 'menu_order', label: __('Menu Order', 'post-type-archive-mapping' ) },
+			{ value: 'author', label: __('Post Author', 'post-type-archive-mapping' ) },
+			{ value: 'date', label: __('Date', 'post-type-archive-mapping' ) },
+			{ value: 'modified', label: __('Date Modified', 'post-type-archive-mapping' ) },
+			{ value: 'name', label: __('Post Slug', 'post-type-archive-mapping' ) },
+			{ value: 'title', label: __('Title', 'post-type-archive-mapping' ) },
+			{ value: 'rand', label: __('Random', 'post-type-archive-mapping' ) },
+		];
+
 		const borderPaddingStyles = {
 			padding: padding + 'px',
 			border: border + 'px solid ' + borderColor,
@@ -506,12 +522,24 @@ class PTAM_Custom_Posts extends Component {
 							value={ term }
 							onChange={ ( value ) => { this.props.setAttributes( { term: value } ); this.get_latest_posts({ term: value }); } }
 					/>
-					<QueryControls
-						{ ...{ order, orderBy } }
-						numberOfItems={ postsToShow }
-						onOrderChange={ ( value ) => { this.props.setAttributes( { order: value } ); this.get_latest_posts({order: value }); } }
-						onOrderByChange={ ( value ) => { this.props.setAttributes( { orderBy: value } ); this.get_latest_posts({orderBy: value }); } }
-						onNumberOfItemsChange={ ( value ) => { this.props.setAttributes( { postsToShow: value } ); this.get_latest_posts({ postsToShow: value } ); } }
+					<SelectControl
+						label={ __( 'Order', 'post-type-archive-mapping' ) }
+						options={ orderOptions }
+						value={ order }
+						onChange={ ( value ) => { this.props.setAttributes( { order: value } ); this.get_latest_posts({order: value }); } }
+					/>
+					<SelectControl
+						label={ __( 'Order By', 'post-type-archive-mapping' ) }
+						options={ orderByOptions }
+						value={ orderBy }
+						onChange={ ( value ) => { this.props.setAttributes( { orderBy: value } ); this.get_latest_posts({orderBy: value }); } }
+					/>
+					<RangeControl
+						label={ __( 'Number of Items',  'post-type-archive-mapping' ) }
+						value={ postsToShow }
+						onChange={ ( value ) => { this.props.setAttributes( { postsToShow: value } ); this.get_latest_posts({ postsToShow: value } ); } }
+						min={ 1 }
+						max={ 100 }
 					/>
 					{ postLayout === 'grid' &&
 						<RangeControl
