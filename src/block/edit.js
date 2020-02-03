@@ -898,10 +898,10 @@ class PTAM_Custom_Posts extends Component {
 				<Fragment>
 					{ inspectorControls }
 					<Placeholder>
-						<div>
-							<img src={ptam_globals.img_url} alt="MediaRon Custom Post Types Block" />
+						<div className="ptam-loading">
+							<h1>{__( 'Custom Posts', 'post-type-archive-mapping' )}</h1>
+							<h2>{__( 'Finding items...', 'post-type-archive-mapping' )} <Spinner /></h2>
 						</div>
-						<Spinner />
 					</Placeholder>
 				</Fragment>
 			)
