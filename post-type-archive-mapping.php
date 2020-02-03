@@ -159,9 +159,9 @@ class PostTypeArchiveMapping {
 				$query->is_singular          = true;
 				$query->is_post_type_archive = false;
 				$query->queried_object_id    = $post_id;
-				
+
 				$query->queried_object = get_post( $post_id, OBJECT );
-				$this->paged_reset           = true;
+				$this->paged_reset     = true;
 			}
 		}
 	}
@@ -222,7 +222,7 @@ class PostTypeArchiveMapping {
 	 */
 	public function init_admin_settings() {
 
-		// Get taxonomies
+		// Get taxonomies.
 		$taxonomies = get_taxonomies(
 			array(
 				'public' => true,
@@ -298,6 +298,12 @@ class PostTypeArchiveMapping {
 		<?php
 	}
 
+	/**
+	 * Map Term Archives to Posts Options.
+	 *
+	 * @param object $tag The term object.
+	 * @param string $taxonomy The taxonomy.
+	 */
 	public function map_term_interface( $tag, $taxonomy = '' ) {
 		$posts   = get_posts(
 			array(
@@ -323,9 +329,16 @@ class PostTypeArchiveMapping {
 		<?php
 	}
 
+	/**
+	 * Map a saved term to a term ID.
+	 *
+	 * @param int $term_id The term ID to map.
+	 */
 	public function save_mapped_term( $term_id ) {
 		$maybe_post_id = filter_input( INPUT_POST, 'term_post_type' );
-		update_term_meta( $term_id, '_term_archive_mapping', $maybe_post_id );
+		if ( $maybe_post_id ) {
+			update_term_meta( $term_id, '_term_archive_mapping', $maybe_post_id );
+		}
 	}
 
 	/**
