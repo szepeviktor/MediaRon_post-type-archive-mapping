@@ -2,8 +2,9 @@
 Contributors: ronalfy, chrislogan
 Tags: custom post types, archive, mapping, gutenberg, block, taxonomy, terms
 Requires at least: 5.3
+Requires PHP: 5.6
 Tested up to: 5.3
-Stable tag: 3.1.1
+Stable tag: 3.2.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Donate link: https://mediaron.com/give/
@@ -14,17 +15,21 @@ A WordPress plugin for displaying posts using a Gutenberg block. Works well with
 
 A WordPress plugin for displaying posts using a Gutenberg block. Works well with posts, pages, custom post types, taxonomies, and terms.
 
-<h2>Gutenberg Block</h2>
+You can also map a post type archive to page, as well as map term archives to a page.
+
+=== Gutenberg Block ===
 
 This 4-minute video covers how the Gutenberg block works.
 
 https://www.youtube.com/watch?v=YmlHOj68MeU&rel=0
 
-<h2>Archive Mapping</h2>
+=== Post Type Archive Mapping ===
 
 This plugin also allows you to map your custom post type archive pages. Just create a page and go to Settings->Reading to set the page for your archive.
 
 Ensure your post types have <code>has_archive</code> set to true.
+
+You can also map term archives to pages by editing a term in the admin area.
 
 The plugin has a new Gutenberg block based on Atomic Blocks that will allow you to select which posts to display on your archive page. It even supports pagination.
 
@@ -39,14 +44,35 @@ https://www.youtube.com/watch?v=QT0QIdTBrdk?rel=0
 <li>Custom Gutenberg block for showing your posts.</li>
 </ul>
 
+=== Term Archive Mapping ===
+
+This plugin also allows you to map your term archives to a page. Just create a page and go to edit your term to set the archive page.
+
+<ul>
+<li>Create a public page to use as your term archive.</li>
+<li>Visit the edit term page and select the page.</li>
+<li>View the term and you will see your selected page.</li>
+<li>Use Gutenberg on your public page to customize the archive.</li>
+</ul>
+
 == Installation ==
 
 1. Just unzip and upload the "post-type-archive-mapping" folder to your '/wp-content/plugins/' directory
 2. Activate the plugin through the 'Plugins' menu in WordPress
-3. Create a custom post type that has an archive
-4. Create a page with a custom template. Use the Gutenberg block to show off posts in that Custom Post Type.
-5. Go to Settings->Reading and assign the page to the custom post type archive
-6. Go to the post type archive and observe the page content is now the archive
+
+Post Type Archive Mapping
+
+1. Create a custom post type that has an archive
+2. Create a page with a custom template. Use the Gutenberg block to show off posts in that Custom Post Type.
+3. Go to Settings->Reading and assign the page to the custom post type archive
+4. Go to the post type archive and observe the page content is now the archive
+
+Term Archive Mapping
+
+1. Create a public page to use as your term archive.
+2. Visit the edit term page and select the page.
+3. View the term and you will see your selected page.
+4. Use Gutenberg on your public page to customize the archive.
 
 == Frequently Asked Questions ==
 
@@ -62,6 +88,10 @@ Make sure your post type has <code>has_archive</code> set to true and <code>show
 
 This plugin should work for any post type.
 
+= Does this plugin work with term (e.g., category) archives? =
+
+Yes. Edit a term and you can map it to any page.
+
 = I need help. Can you help me? =
 
 Yes, just post in the support forums here and I'll do my best to address your issue. For priority support, you can <a href="https://mediaron.com/support/">visit my support form</a>.
@@ -71,8 +101,13 @@ Yes, just post in the support forums here and I'll do my best to address your is
 1. Editing a page using Gutenberg
 2. The resulting archive page
 3. Settings->Reading option
+4. Term archive option.
 
 == Changelog ==
+
+= 3.2.0 =
+* Released 2020-02-03
+* Added ability to map term archives to pages.
 
 = 3.1.1 =
 * Released 2020-02-01
@@ -188,6 +223,9 @@ Yes, just post in the support forums here and I'll do my best to address your is
 * Initial release.
 
 == Upgrade Notice ==
+
+= 3.2.0 =
+Added ability to map term archives to pages.
 
 = 3.1.1 =
 Added several order and orderby parameters.
