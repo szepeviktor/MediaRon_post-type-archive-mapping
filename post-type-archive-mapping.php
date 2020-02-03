@@ -335,9 +335,12 @@ class PostTypeArchiveMapping {
 	 * @param int $term_id The term ID to map.
 	 */
 	public function save_mapped_term( $term_id ) {
-		$maybe_post_id = filter_input( INPUT_POST, 'term_post_type' );
-		if ( $maybe_post_id ) {
-			update_term_meta( $term_id, '_term_archive_mapping', $maybe_post_id );
+		check_admin_referer( 'update-tag_' . $term_id );
+		if ( current_user_can( 'edit_term', $term_id ) ) {
+			$maybe_post_id = filter_input( INPUT_POST, 'term_post_type' );
+			if ( $maybe_post_id ) {
+				update_term_meta( $term_id, '_term_archive_mapping', $maybe_post_id );
+			}
 		}
 	}
 
