@@ -56,6 +56,7 @@ function ptam_blocks_editor_assets() {
 			'rest_url' => esc_url( rest_url() ),
 		)
 	);
+	wp_set_script_translations( 'ptam-custom-posts-gutenberg', 'post-type-archive-mapping' );
 }
 add_action( 'enqueue_block_editor_assets', 'ptam_blocks_editor_assets' );
 
