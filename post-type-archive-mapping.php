@@ -4,7 +4,7 @@ Plugin Name: Custom Post Types Block
 Plugin URI: https://mediaron.com/portfolio/post-type-archive-mapping/
 Description: Map your post type archives to a page and use our Gutenberg block to show posts
 Author: Ronald Huereca
-Version: 3.1.1
+Version: 3.2.0
 Requires at least: 5.3
 Author URI: https://mediaron.com
 Contributors: ronalfy
@@ -13,7 +13,7 @@ Domain Path: /languages
 Credit: Forked from https://github.com/bigwing/post-type-archive-mapping
 Credit: Gutenberg block based on Atomic Blocks
 */
-define( 'PTAM_VERSION', '3.1.1' );
+define( 'PTAM_VERSION', '3.2.0' );
 
 /**
  * Main plugin class.
@@ -121,7 +121,7 @@ class PostTypeArchiveMapping {
 		}
 
 		$post_types = get_option( 'post-type-archive-mapping', array() );
-		if ( empty( $post_types ) || is_admin() ) {
+		if ( empty( $post_types ) && is_admin() && ! is_tax() ) {
 			return;
 		}
 
@@ -129,7 +129,6 @@ class PostTypeArchiveMapping {
 		if ( is_null( $this->paged ) ) {
 			$this->paged = get_query_var( 'paged' );
 		}
-
 		foreach ( $post_types as $post_type => $post_id ) {
 			if ( is_post_type_archive( $post_type ) && 'default' !== $post_id && $query->is_main_query() ) {
 				$post_id = absint( $post_id );
@@ -142,6 +141,27 @@ class PostTypeArchiveMapping {
 				$query->is_post_type_archive = false;
 
 				$this->paged_reset = true;
+			}
+		}
+		if ( is_tax() || $query->is_category || $query->is_tag ) {
+			$post_id = get_term_meta( get_queried_object_id(), '_term_archive_mapping', true );
+			if ( $post_id && 'default' !== $post_id ) {
+				$post_id = absint( $post_id );
+				$query->set( 'post_type', 'page' );
+				$query->set( 'page_id', $post_id );
+				$query->set( 'paged', $this->paged );
+				$query->is_page              = true;
+				$query->is_archive           = false;
+				$query->is_category          = false;
+				$query->is_tag               = false;
+				$query->is_tax               = false;
+				$query->is_single            = true;
+				$query->is_singular          = true;
+				$query->is_post_type_archive = false;
+				$query->queried_object_id    = $post_id;
+
+				$query->queried_object = get_post( $post_id, OBJECT );
+				$this->paged_reset     = true;
 			}
 		}
 	}
@@ -201,6 +221,20 @@ class PostTypeArchiveMapping {
 	 * @see init
 	 */
 	public function init_admin_settings() {
+
+		// Get taxonomies.
+		$taxonomies = get_taxonomies(
+			array(
+				'public' => true,
+			),
+			'objects'
+		);
+		foreach ( $taxonomies as $taxonomy ) {
+			add_action( "{$taxonomy->name}_edit_form", array( $this, 'map_term_interface' ) );
+		}
+		add_action( 'edit_term', array( $this, 'save_mapped_term' ) );
+
+		// Register post type mapping settings.
 		register_setting(
 			'reading',
 			'post-type-archive-mapping',
@@ -262,6 +296,52 @@ class PostTypeArchiveMapping {
 		}
 		?>
 		<?php
+	}
+
+	/**
+	 * Map Term Archives to Posts Options.
+	 *
+	 * @param object $tag The term object.
+	 * @param string $taxonomy The taxonomy.
+	 */
+	public function map_term_interface( $tag, $taxonomy = '' ) {
+		$posts   = get_posts(
+			array(
+				'post_status'    => array( 'publish' ),
+				'posts_per_page' => 200, // phpcs:ignore
+				'post_type'      => 'page',
+				'orderby'        => 'name',
+				'order'          => 'ASC',
+			)
+		);
+		$post_id = get_term_meta( $tag->term_id, '_term_archive_mapping', true );
+		?>
+		<h2><?php esc_html_e( 'Archive Mapping', 'post-type-archive-mapping' ); ?></h2>
+		<select name="term_post_type">
+			<option value="default"><?php esc_html_e( 'Default', 'post-type-archive-mapping' ); ?></option>
+			<?php
+			foreach ( $posts as $post ) {
+				printf( '<option value="%d" %s>%s</option>', absint( $post->ID ), selected( $post_id, $post->ID, false ), esc_html( $post->post_title ) );
+			}
+			?>
+		</select>
+		<p class="description"><?php esc_html_e( 'Map a term archive to a page.', 'post-type-archive-mapping' ); ?></p>
+		<?php
+	}
+
+	/**
+	 * Map a saved term to a term ID.
+	 *
+	 * @param int $term_id The term ID to map.
+	 */
+	public function save_mapped_term( $term_id ) {
+		check_admin_referer( 'update-tag_' . $term_id );
+		if ( current_user_can( 'edit_term', $term_id ) ) {
+			$maybe_post_id = filter_input( INPUT_POST, 'term_post_type' );
+			if ( $maybe_post_id ) {
+				update_term_meta( $term_id, '_term_archive_mapping', $maybe_post_id );
+			}
+		}
 	}
 
 	/**
