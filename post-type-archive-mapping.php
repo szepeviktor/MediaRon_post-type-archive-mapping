@@ -159,6 +159,8 @@ class PostTypeArchiveMapping {
 				$query->is_singular          = true;
 				$query->is_post_type_archive = false;
 				$query->queried_object_id    = $post_id;
+				
+				$query->queried_object = get_post( $post_id, OBJECT );
 				$this->paged_reset           = true;
 			}
 		}
