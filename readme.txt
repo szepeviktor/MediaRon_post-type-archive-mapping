@@ -4,7 +4,7 @@ Tags: custom post types, archive, mapping, gutenberg, block, taxonomy, terms
 Requires at least: 5.3
 Requires PHP: 5.6
 Tested up to: 5.3
-Stable tag: 3.2.1
+Stable tag: 3.2.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Donate link: https://mediaron.com/give/
@@ -104,6 +104,10 @@ Yes, just post in the support forums here and I'll do my best to address your is
 4. Term archive option.
 
 == Changelog ==
+
+= 3.2.2 =
+* Released 2020-02-10
+* Plugin was having conflicts with other admin screens when saving terms, resulting in a 403 error.
 
 = 3.2.1 =
 * Released 2020-02-03
@@ -228,6 +232,9 @@ Yes, just post in the support forums here and I'll do my best to address your is
 * Initial release.
 
 == Upgrade Notice ==
+
+= 3.2.2 =
+Plugin was having conflicts with other admin screens when saving terms, resulting in a 403 error.
 
 = 3.2.1 =
 Added ability to map term archives to pages. Added support for translations. Revised loading screen to make it easier on translators. Spanish transators: THANK YOU. There are a few strings left to translate.
