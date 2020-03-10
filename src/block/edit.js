@@ -15,7 +15,6 @@ const { decodeEntities } = wp.htmlEntities;
 const {
 	PanelBody,
 	Placeholder,
-	QueryControls,
 	RangeControl,
 	SelectControl,
 	Spinner,
@@ -1044,27 +1043,26 @@ class PTAM_Custom_Posts extends Component {
 						checked={displayPostDate}
 						onChange={this.toggleDisplayPostDate}
 					/>
-					<ToggleControl
-						label={__("Display Full Content", "post-type-archive-mapping")}
-						checked={displayPostContent}
-						onChange={this.toggleFullPostContent}
-					/>
-					<ToggleControl
-						label={__("Display Post Excerpt", "post-type-archive-mapping")}
-						checked={displayPostExcerpt}
-						onChange={this.toggleDisplayPostExcerpt}
-					/>
-					{displayPostExcerpt && (
-						<TextControl
-							label={__(
-								"Maximum Word Length of Excerpt",
-								"post-type-archive-mapping"
+					{ 'full_content' !== postLayout &&
+						<Fragment>
+							<ToggleControl
+								label={__("Display Post Excerpt", "post-type-archive-mapping")}
+								checked={displayPostExcerpt}
+								onChange={this.toggleDisplayPostExcerpt}
+							/>
+							{displayPostExcerpt && (
+								<TextControl
+									label={__(
+										"Maximum Word Length of Excerpt",
+										"post-type-archive-mapping"
+									)}
+									type="number"
+									value={trimWords}
+									onChange={value => this.trimWords(value)}
+								/>
 							)}
-							type="number"
-							value={trimWords}
-							onChange={value => this.trimWords(value)}
-						/>
-					)}
+						</Fragment>
+					}
 					<ToggleControl
 						label={__("Display Pagination", "post-type-archive-mapping")}
 						checked={pagination}
@@ -1378,14 +1376,20 @@ class PTAM_Custom_Posts extends Component {
 			{
 				icon: "grid-view",
 				title: __("Grid View", "post-type-archive-mapping"),
-				onClick: () => setAttributes({ postLayout: "grid" }),
+				onClick: () => setAttributes({ postLayout: "grid", displayPostContent: false }),
 				isActive: postLayout === "grid"
 			},
 			{
 				icon: "list-view",
 				title: __("List View", "post-type-archive-mapping"),
-				onClick: () => setAttributes({ postLayout: "list" }),
+				onClick: () => setAttributes({ postLayout: "list", displayPostContent: false }),
 				isActive: postLayout === "list"
+			},
+			{
+				icon: "admin-page",
+				title: __("Full Content View", "post-type-archive-mapping"),
+				onClick: () => setAttributes({ postLayout: "full_content", displayPostContent: true }),
+				isActive: postLayout === "full_content"
 			}
 		];
 
@@ -1585,12 +1589,12 @@ class PTAM_Custom_Posts extends Component {
 										className="ptam-block-post-grid-excerpt"
 										style={!removeStyles ? contentStyles : {}}
 									>
-										{displayPostExcerpt && "" !== post.post_excerpt && (
+										{displayPostExcerpt && "" !== post.post_excerpt && 'full_content' !== postLayout && (
 											<Fragment>
 												{this.excerptParse(post.post_excerpt)}
 											</Fragment>
 										)}
-										{displayPostContent && !displayPostExcerpt &&
+										{displayPostContent && 'full_content' === postLayout &&
 											<Fragment>
 												{htmlToReactParser.parse(post.post_content)}
 											</Fragment>
