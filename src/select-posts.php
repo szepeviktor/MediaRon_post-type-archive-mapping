@@ -436,21 +436,25 @@ function ptam_custom_posts( $attributes ) {
 				$list_items_markup .= '<p class="ptam-block-post-grid-excerpt">';
 			}
 
-			// Get the excerpt.
-			$excerpt = $post->post_excerpt;
-
-			if ( empty( $excerpt ) ) {
-				$excerpt = wp_strip_all_tags( strip_shortcodes( $post->post_content ) );
-			}
-
-			if ( ! $excerpt ) {
-				$excerpt = null;
+			if ( isset( $attributes['postLayout'] ) && 'full_content' === $attributes['postLayout'] ) {
+				$list_items_markup .= apply_filters( 'the_content', $post->post_content );
 			} else {
-				$excerpt = wp_trim_words( apply_filters( 'the_excerpt', $excerpt ), isset( $attributes['trimWords'] ) ? $attributes['trimWords'] : 55 );
-			}
+				// Get the excerpt.
+				$excerpt = $post->post_excerpt;
 
-			if ( isset( $attributes['displayPostExcerpt'] ) && $attributes['displayPostExcerpt'] ) {
-				$list_items_markup .= wp_kses_post( $excerpt );
+				if ( empty( $excerpt ) ) {
+					$excerpt = wp_strip_all_tags( strip_shortcodes( $post->post_content ) );
+				}
+
+				if ( ! $excerpt ) {
+					$excerpt = null;
+				} else {
+					$excerpt = wp_trim_words( apply_filters( 'the_excerpt', $excerpt ), isset( $attributes['trimWords'] ) ? $attributes['trimWords'] : 55 );
+				}
+
+				if ( isset( $attributes['displayPostExcerpt'] ) && $attributes['displayPostExcerpt'] ) {
+					$list_items_markup .= wp_kses_post( $excerpt );
+				}
 			}
 			if ( $post_type_object->publicly_queryable ) {
 				if ( isset( $attributes['displayPostLink'] ) && $attributes['displayPostLink'] ) {
@@ -521,8 +525,10 @@ function ptam_custom_posts( $attributes ) {
 
 	if ( isset( $attributes['postLayout'] ) && 'list' === $attributes['postLayout'] ) {
 		$grid_class .= ' is-list';
-	} else {
+	} elseif ( isset( $attributes['postLayout'] ) && 'grid' === $attributes['postLayout'] ) {
 		$grid_class .= ' is-grid';
+	} else {
+		$grid_class .= ' full-content';
 	}
 
 	if ( isset( $attributes['columns'] ) && 'grid' === $attributes['postLayout'] ) {
@@ -645,7 +651,7 @@ function ptam_register_custom_posts_block() {
 					'type'    => 'boolean',
 					'default' => true,
 				),
-				'displayTitleLink'         => array(
+				'displayTitleLink'     => array(
 					'type'    => 'boolean',
 					'default' => true,
 				),
