@@ -364,3 +364,12 @@ add_action(
 		PostTypeArchiveMapping::get_instance();
 	}
 );
+
+global $wp_embed;
+add_filter( 'ptam_the_content', array( $wp_embed, 'run_shortcode' ), 8 );
+add_filter( 'ptam_the_content', array( $wp_embed, 'autoembed' ), 8 );
+add_filter( 'ptam_the_content', 'wptexturize' );
+add_filter( 'ptam_the_content', 'convert_chars' );
+add_filter( 'ptam_the_content', 'wpautop' );
+add_filter( 'ptam_the_content', 'shortcode_unautop' );
+add_filter( 'ptam_the_content', 'do_shortcode' );

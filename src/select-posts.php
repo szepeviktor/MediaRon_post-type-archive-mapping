@@ -645,6 +645,10 @@ function ptam_register_custom_posts_block() {
 					'type'    => 'boolean',
 					'default' => true,
 				),
+				'displayTitleLink'         => array(
+					'type'    => 'boolean',
+					'default' => true,
+				),
 				'displayCustomFields'  => array(
 					'type'    => 'boolean',
 					'default' => false,
@@ -652,6 +656,10 @@ function ptam_register_custom_posts_block() {
 				'displayPostDate'      => array(
 					'type'    => 'boolean',
 					'default' => true,
+				),
+				'displayPostContent'   => array(
+					'type'    => 'boolean',
+					'default' => false,
 				),
 				'displayPostExcerpt'   => array(
 					'type'    => 'boolean',
