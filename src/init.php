@@ -187,6 +187,7 @@ function ptam_get_posts( $post_data ) {
 		}
 
 		$post->post_excerpt = wp_kses_post( $post->post_excerpt );
+		$post->post_content = apply_filters( 'ptam_the_content', $post->post_content );
 	}
 	$return = array(
 		'posts'       => $posts,
