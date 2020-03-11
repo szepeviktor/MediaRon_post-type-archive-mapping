@@ -262,6 +262,11 @@ class PTAM_Custom_Posts extends Component {
 		const { setAttributes } = this.props;
 		setAttributes({ displayTitle: !displayTitle });
 	}
+	toggleDisplayTitleLink = () => {
+		const { displayTitleLink } = this.props.attributes;
+		const { setAttributes } = this.props;
+		setAttributes({ displayTitleLink: !displayTitleLink });
+	}
 	toggleDisplayCustomFields() {
 		const { displayCustomFields } = this.props.attributes;
 		const { setAttributes } = this.props;
@@ -870,6 +875,11 @@ class PTAM_Custom_Posts extends Component {
 						label={__("Display Title", "post-type-archive-mapping")}
 						checked={displayTitle}
 						onChange={this.toggleDisplayTitle}
+					/>
+					<ToggleControl
+						label={__("Enable Title Link", "post-type-archive-mapping")}
+						checked={displayTitleLink}
+						onChange={this.toggleDisplayTitleLink}
 					/>
 					<SelectControl
 						label={__("Title Heading Tag", "post-type-archive-mapping")}
@@ -1484,15 +1494,23 @@ class PTAM_Custom_Posts extends Component {
 											className="ptam-block-post-grid-title"
 											style={!removeStyles ? titleStyles : {}}
 										>
-											<a
-												href={post.link}
-												target="_blank"
-												rel="bookmark"
-												style={!removeStyles ? titleColorStyles : {}}
-											>
-												{decodeEntities(post.post_title.trim()) ||
+											{displayTitleLink &&
+												<a
+													href={post.link}
+													target="_blank"
+													rel="bookmark"
+													style={!removeStyles ? titleColorStyles : {}}
+												>
+													{decodeEntities(post.post_title.trim()) ||
 													__("(Untitled)", "post-type-archive-mapping")}
-											</a>
+												</a>
+											}
+											{false === displayTitleLink &&
+												<Fragment>
+												{decodeEntities(post.post_title.trim()) ||
+												__("(Untitled)", "post-type-archive-mapping")}
+												</Fragment>
+											}
 										</Titletag>
 									)}
 									{displayPostImage &&
