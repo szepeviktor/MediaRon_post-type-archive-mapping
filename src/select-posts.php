@@ -220,9 +220,11 @@ function ptam_custom_posts( $attributes ) {
 				$title = __( 'Untitled' );
 			}
 
+			$display_post_anchor_link = isset( $attributes['displayTitleLink'] ) ? $attributes['displayTitleLink'] : true;
+
 			if ( $attributes['displayTitle'] ) {
 				if ( ! $attributes['removeStyles'] ) {
-					if ( $post_type_object->publicly_queryable ) {
+					if ( $post_type_object->publicly_queryable && $display_post_anchor_link ) {
 						$list_items_markup .= sprintf(
 							'<%5$s class="ptam-block-post-grid-title" %3$s><a href="%1$s" rel="bookmark" style="%4$s">%2$s</a></%5$s>',
 							esc_url( get_permalink( $post_id ) ),
@@ -244,7 +246,7 @@ function ptam_custom_posts( $attributes ) {
 						);
 					}
 				} else {
-					if ( $post_type_object->publicly_queryable ) {
+					if ( $post_type_object->publicly_queryable && $display_post_anchor_link ) {
 						$list_items_markup .= sprintf(
 							'<h2 class="ptam-block-post-grid-title"><a href="%1$s" rel="bookmark">%2$s</a></h2>',
 							esc_url( get_permalink( $post_id ) ),
