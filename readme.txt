@@ -4,7 +4,7 @@ Tags: custom post types, archive, mapping, gutenberg, block, taxonomy, terms
 Requires at least: 5.3
 Requires PHP: 5.6
 Tested up to: 5.3
-Stable tag: 3.2.2
+Stable tag: 3.3.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Donate link: https://mediaron.com/give/
@@ -104,6 +104,12 @@ Yes, just post in the support forums here and I'll do my best to address your is
 4. Term archive option.
 
 == Changelog ==
+
+= 3.3.0 =
+
+* Released 2020-03-11
+* New full post mode for showing off the full post.
+* Option to remove the link from the title.
 
 = 3.2.2 =
 * Released 2020-02-10
@@ -232,6 +238,9 @@ Yes, just post in the support forums here and I'll do my best to address your is
 * Initial release.
 
 == Upgrade Notice ==
+
+= 3.3.0 =
+New full post mode for showing off the full post. Option to remove the link from the title.
 
 = 3.2.2 =
 Plugin was having conflicts with other admin screens when saving terms, resulting in a 403 error.
