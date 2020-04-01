@@ -3,8 +3,8 @@ Contributors: ronalfy, chrislogan
 Tags: custom post types, archive, mapping, gutenberg, block, taxonomy, terms
 Requires at least: 5.3
 Requires PHP: 5.6
-Tested up to: 5.3
-Stable tag: 3.3.0
+Tested up to: 5.4
+Stable tag: 3.3.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Donate link: https://mediaron.com/give/
@@ -16,6 +16,8 @@ A WordPress plugin for displaying posts using a Gutenberg block. Works well with
 A WordPress plugin for displaying posts using a Gutenberg block. Works well with posts, pages, custom post types, taxonomies, and terms.
 
 You can also map a post type archive to page, as well as map term archives to a page.
+
+<a href="https://mediaron.com/custom-post-types-block/">View Documentation and Overview</a>
 
 === Gutenberg Block ===
 
@@ -98,12 +100,16 @@ Yes, just post in the support forums here and I'll do my best to address your is
 
 == Screenshots ==
 
-1. Editing a page using Gutenberg
-2. The resulting archive page
-3. Settings->Reading option
+1. Setting up the custom post types block.
+2. Styling the block.
+3. Settings->Reading option.
 4. Term archive option.
 
 == Changelog ==
+
+= 3.3.1 =
+* Released 2020-04-01
+* Fixing PHP notice saying invalid argument for foreach statement.
 
 = 3.3.0 =
 
@@ -238,6 +244,9 @@ Yes, just post in the support forums here and I'll do my best to address your is
 * Initial release.
 
 == Upgrade Notice ==
+
+= 3.3.1 =
+Fixing PHP notice saying invalid argument for foreach statement.
 
 = 3.3.0 =
 New full post mode for showing off the full post. Option to remove the link from the title.

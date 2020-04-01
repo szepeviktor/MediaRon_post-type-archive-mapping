@@ -4,7 +4,7 @@ Plugin Name: Custom Post Types Block
 Plugin URI: https://mediaron.com/portfolio/post-type-archive-mapping/
 Description: Map your post type archives to a page and use our Gutenberg block to show posts
 Author: Ronald Huereca
-Version: 3.3.0
+Version: 3.3.1
 Requires at least: 5.3
 Author URI: https://mediaron.com
 Contributors: ronalfy
@@ -13,7 +13,7 @@ Domain Path: /languages
 Credit: Forked from https://github.com/bigwing/post-type-archive-mapping
 Credit: Gutenberg block based on Atomic Blocks
 */
-define( 'PTAM_VERSION', '3.3.0' );
+define( 'PTAM_VERSION', '3.3.1' );
 
 /**
  * Main plugin class.
@@ -129,18 +129,19 @@ class PostTypeArchiveMapping {
 		if ( is_null( $this->paged ) ) {
 			$this->paged = get_query_var( 'paged' );
 		}
-		foreach ( $post_types as $post_type => $post_id ) {
-			if ( is_post_type_archive( $post_type ) && 'default' !== $post_id && $query->is_main_query() ) {
-				$post_id = absint( $post_id );
-				$query->set( 'post_type', 'page' );
-				$query->set( 'page_id', $post_id );
-				$query->set( 'paged', $this->paged );
-				$query->is_archive           = false;
-				$query->is_single            = true;
-				$query->is_singular          = true;
-				$query->is_post_type_archive = false;
-
-				$this->paged_reset = true;
+		if ( is_array( $post_types ) && ! empty( $post_types ) ) {
+			foreach ( $post_types as $post_type => $post_id ) {
+				if ( is_post_type_archive( $post_type ) && 'default' !== $post_id && $query->is_main_query() ) {
+					$post_id = absint( $post_id );
+					$query->set( 'post_type', 'page' );
+					$query->set( 'page_id', $post_id );
+					$query->set( 'paged', $this->paged );
+					$query->is_archive           = false;
+					$query->is_single            = true;
+					$query->is_singular          = true;
+					$query->is_post_type_archive = false;
+					$this->paged_reset           = true;
+				}
 			}
 		}
 		if ( is_tax() || $query->is_category || $query->is_tag ) {
