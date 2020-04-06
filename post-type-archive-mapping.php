@@ -328,8 +328,13 @@ class PostTypeArchiveMapping {
 			if ( isset( $output[ $post_type ] ) ) {
 				$selection = $output[ $post_type ];
 			}
+			$post_type_label = $post_type;
+			$post_type_data  = get_post_type_object( $post_type );
+			if ( isset( $post_type_data->label ) && ! empty( $post_type_data->label ) ) {
+				$post_type_label = $post_type_data->label;
+			}
 			?>
-			<p><strong><?php echo esc_html( $post_type ); ?></strong></p>
+			<p><strong><?php echo esc_html( $post_type_label ); ?></strong></p>
 			<select name="post-type-archive-mapping[<?php echo esc_html( $post_type ); ?>]">
 				<option value="default"><?php esc_html_e( 'Default', 'post-type-archive-mapping' ); ?></option>
 				<?php
