@@ -84,7 +84,7 @@ class PTAM_Term_Grid extends Component {
 		const { attributes, setAttributes } = this.props;
 		const {
 			postType,
-			term,
+			terms,
 			taxonomy,
 			displayPostDate,
 			displayPostExcerpt,
@@ -178,10 +178,9 @@ class PTAM_Term_Grid extends Component {
 					/>
 					<SearchListControl
 						list={this.state.terms}
-						selected={[]}
+						selected={terms}
 						onChange={value => {
-							console.log( value );
-							//this.props.setAttributes({ term: value });
+							this.props.setAttributes({ terms: value });
 						}}
 					/>
 					<SelectControl
