@@ -112,7 +112,6 @@ Yes, just post in the support forums here and I'll do my best to address your is
 * Updated plugin architecture.
 * Show mapped pages and its own column.
 * Mapped term pages now redirect to the correct term.
-* Added compatibility with Yoast SEO for mapped pages.
 * Added new contributor: <a href="https://www.easywebdesigntutorials.com/">Paal Joachim</a>.
 
 = 3.3.1 =
@@ -254,4 +253,4 @@ Yes, just post in the support forums here and I'll do my best to address your is
 == Upgrade Notice ==
 
 = 3.3.5 =
-Show mapped pages and its own column. Mapped term pages now redirect to the correct term. Added new contributor: Paal Joachim. Compatibility with Yoast SEO added.
+Show mapped pages and its own column. Mapped term pages now redirect to the correct term. Added new contributor: Paal Joachim.
