@@ -1,10 +1,10 @@
 === Custom Post Types Block ===
-Contributors: ronalfy, chrislogan
+Contributors: ronalfy, chrislogan, paaljoachim
 Tags: custom post types, archive, mapping, gutenberg, block, taxonomy, terms
 Requires at least: 5.3
 Requires PHP: 5.6
 Tested up to: 5.4
-Stable tag: 3.3.1
+Stable tag: 3.3.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Donate link: https://mediaron.com/give/
@@ -106,6 +106,14 @@ Yes, just post in the support forums here and I'll do my best to address your is
 4. Term archive option.
 
 == Changelog ==
+
+= 3.3.5 =
+* Released 2020-04-07
+* Updated plugin architecture.
+* Show mapped pages and its own column.
+* Mapped term pages now redirect to the correct term.
+* Added compatibility with Yoast SEO for mapped pages.
+* Added new contributor: <a href="https://www.easywebdesigntutorials.com/">Paal Joachim</a>.
 
 = 3.3.1 =
 * Released 2020-04-01
@@ -245,26 +253,5 @@ Yes, just post in the support forums here and I'll do my best to address your is
 
 == Upgrade Notice ==
 
-= 3.3.1 =
-Fixing PHP notice saying invalid argument for foreach statement.
-
-= 3.3.0 =
-New full post mode for showing off the full post. Option to remove the link from the title.
-
-= 3.2.2 =
-Plugin was having conflicts with other admin screens when saving terms, resulting in a 403 error.
-
-= 3.2.1 =
-Added ability to map term archives to pages. Added support for translations. Revised loading screen to make it easier on translators. Spanish transators: THANK YOU. There are a few strings left to translate.
-
-= 3.2.0 =
-Added ability to map term archives to pages.
-
-= 3.1.1 =
-Added several order and orderby parameters.
-
-= 3.1.0 =
-Numerous tweaks. Please see the changelog for changes.
-
-= 3.0.9 =
-Added the ability to set a fallback image for the featured image.
+= 3.3.5 =
+Show mapped pages and its own column. Mapped term pages now redirect to the correct term. Added new contributor: Paal Joachim. Compatibility with Yoast SEO added.
