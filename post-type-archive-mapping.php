@@ -14,6 +14,7 @@ Credit: Forked from https://github.com/bigwing/post-type-archive-mapping
 Credit: Gutenberg block based on Atomic Blocks
 */
 define( 'PTAM_VERSION', '3.3.1' );
+require_once 'autoloader.php';
 
 /**
  * Main plugin class.
@@ -68,7 +69,18 @@ class PostTypeArchiveMapping {
 	private function __construct() {
 		add_action( 'init', array( $this, 'init' ), 9 );
 		load_plugin_textdomain( 'post-type-archive-mapping', false, basename( dirname( __FILE__ ) ) . '/languages' );
-		include 'src/select-posts.php';
+
+		// Register scripts/styles for the plugin.
+		$this->enqueue = new PTAM\Includes\Enqueue();
+		$this->enqueue->run();
+
+		// Register REST for the plugin.
+		$this->rest = new PTAM\Includes\Rest\Rest();
+		$this->rest->run();
+
+		// Register Custom Post Type Block.
+		$this->cpt_block_one = new PTAM\Includes\Blocks\Custom_Post_Types\Custom_Post_Types();
+		$this->cpt_block_one->run();
 	} //end constructor
 
 	/**
