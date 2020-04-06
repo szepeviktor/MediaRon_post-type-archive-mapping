@@ -132,10 +132,18 @@ class PostTypeArchiveMapping {
 		// Maybe Redirect.
 		if ( is_page() ) {
 			$object_id = get_queried_object_id();
-			$meta      = get_post_meta( $object_id, '_post_type_mapped', true );
-			if ( $meta ) {
-				wp_safe_redirect( get_post_type_archive_link( $meta ) );
-				exit();
+			$post_meta = get_post_meta( $object_id, '_post_type_mapped', true );
+			$term_meta = get_post_meta( $object_id, '_term_mapped', true );
+			if ( $post_meta || $term_meta ) {
+				if ( $post_meta && $term_meta ) { // phpcs:ignore
+					// Fail silently as this will cause a redirect loop.
+				} elseif ( $post_meta && ! get_query_var( 'redirected' ) ) {
+					wp_safe_redirect( get_post_type_archive_link( $post_meta ) );
+					exit;
+				} elseif ( $term_meta && ! get_query_var( 'redirected' ) ) {
+					wp_safe_redirect( get_term_link( absint( $term_meta ) ) );
+					exit;
+				}
 			} else {
 				if ( get_query_var( 'paged' ) ) {
 					$query->set( 'paged', get_query_var( 'paged' ) );
@@ -167,6 +175,7 @@ class PostTypeArchiveMapping {
 					$post_id = absint( $post_id );
 					$query->set( 'post_type', 'page' );
 					$query->set( 'page_id', $post_id );
+					$query->set( 'redirected', true );
 					$query->set( 'paged', $this->paged );
 					$query->is_archive           = false;
 					$query->is_single            = true;
@@ -182,6 +191,7 @@ class PostTypeArchiveMapping {
 				$post_id = absint( $post_id );
 				$query->set( 'post_type', 'page' );
 				$query->set( 'page_id', $post_id );
+				$query->set( 'redirected', true );
 				$query->set( 'paged', $this->paged );
 				$query->is_page              = true;
 				$query->is_archive           = false;
