@@ -56,6 +56,14 @@ class Rest {
 				'callback' => array( $this, 'get_image' ),
 			)
 		);
+		register_rest_route(
+			'ptam/v2',
+			'/get_tax_terms',
+			array(
+				'methods'  => 'POST',
+				'callback' => array( $this, 'get_tax_terms' ),
+			)
+		);
 	}
 
 	/**
@@ -77,6 +85,28 @@ class Rest {
 			)
 		);
 		remove_filter( 'terms_clauses', array( $this, 'terms_clauses' ), 10, 3 );
+		if ( is_wp_error( $terms ) ) {
+			die( wp_json_encode( array() ) );
+		} else {
+			die( wp_json_encode( $terms ) );
+		}
+	}
+
+	/**
+	 * Return terms for taxonomy.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param WP_REST_Request $tax_data The tax data.
+	 */
+	public function get_tax_terms( $tax_data ) {
+		$taxonomy = $tax_data['taxonomy'];
+		$terms    = get_terms(
+			array(
+				'taxonomy'   => $taxonomy,
+				'hide_empty' => true,
+			)
+		);
 		if ( is_wp_error( $terms ) ) {
 			die( wp_json_encode( array() ) );
 		} else {

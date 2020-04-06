@@ -4,6 +4,7 @@
 import dayjs from "dayjs";
 import classnames from "classnames";
 import axios from "axios";
+import { SearchListControl } from '@woocommerce/components';
 var HtmlToReactParser = require("html-to-react").Parser;
 
 const { Component, Fragment } = wp.element;
@@ -40,9 +41,42 @@ class PTAM_Term_Grid extends Component {
 
 		this.state = {
 			loading: true,
+			fonts: [],
+			taxonomy: 'category',
 		};
 
 		//this.get_latest_data();
+	}
+
+	getLatestData = ( object = {} ) => {
+		const props = jQuery.extend({}, this.props.attributes, object);
+		let termsList = [];
+		let {
+			taxonomy,
+		} = props;
+		axios
+			.post(ptam_globals.rest_url + `ptam/v2/get_tax_terms`, {
+				taxonomy: taxonomy,
+			})
+			.then(response => {
+				if (Object.keys(response.data).length > 0) {
+					termsList.push({
+						id: 0,
+						name: __("All", "post-type-archive-mapping")
+					});
+					jQuery.each(response.data, function(key, value) {
+						termsList.push({ id: value.term_id, name: value.name });
+					});
+				}
+				this.setState({
+					loading: false,
+					terms: termsList,
+				});
+			});
+	}
+
+	componentDidMount = () => {
+		this.getLatestData( this.state );
 	}
 
 	render() {
@@ -105,16 +139,67 @@ class PTAM_Term_Grid extends Component {
 
 		// Fonts
 		let fontOptions = [];
-		let fonts = this.state.fonts;
-		for (var key in fonts) {
-			fontOptions.push({ value: key, label: fonts[key] });
+		for (var key in ptam_globals.fonts) {
+			fontOptions.push({ value: key, label: ptam_globals.fonts[key] });
 		}
+
+		// Taxonomies.
+		let taxOptions = [];
+		for (var key in ptam_globals.taxonomies) {
+			taxOptions.push({ value: key, label: ptam_globals.taxonomies[key] });
+		}
+
+		// Order Params.
+		const orderOptions = [
+			{ value: "ASC", label: __("ASC", "post-type-archive-mapping") },
+			{ value: "DESC", label: __("DESC", "post-type-archive-mapping") }
+		];
+
+		const orderByOptions = [
+			{ value: "name", label: __("Term Name", "post-type-archive-mapping") },
+			{ value: "slug", label: __("Term Slug", "post-type-archive-mapping") },
+			{ value: "order", label: __("Term Order", "post-type-archive-mapping") },
+		];
 
 		const inspectorControls = (
 			<InspectorControls>
 				<PanelBody
 					title={__("Query", "post-type-archive-mapping")}
 				>
+					<SelectControl
+						label={__("Taxonomies", "post-type-archive-mapping")}
+						options={taxOptions}
+						value={taxonomy}
+						onChange={value => {
+							this.props.setAttributes({
+								taxonomy: value,
+							});
+						}}
+					/>
+					<SearchListControl
+						list={this.state.terms}
+						selected={[]}
+						onChange={value => {
+							console.log( value );
+							//this.props.setAttributes({ term: value });
+						}}
+					/>
+					<SelectControl
+						label={__("Order", "post-type-archive-mapping")}
+						options={orderOptions}
+						value={order}
+						onChange={value => {
+							this.props.setAttributes({ order: value });
+						}}
+					/>
+					<SelectControl
+						label={__("Order By", "post-type-archive-mapping")}
+						options={orderByOptions}
+						value={orderBy}
+						onChange={value => {
+							this.props.setAttributes({ orderBy: value });
+						}}
+					/>
 				</PanelBody>
 			</InspectorControls>
 		);
@@ -142,6 +227,14 @@ class PTAM_Term_Grid extends Component {
 							</h2>
 						</div>
 					</Placeholder>
+				</Fragment>
+			);
+		}
+		if ( ! this.state.loading ) {
+			return (
+				<Fragment>
+					{inspectorControls}
+					Hi
 				</Fragment>
 			);
 		}
