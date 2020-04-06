@@ -113,7 +113,7 @@ class PTAM_Term_Grid extends Component {
 		const inspectorControls = (
 			<InspectorControls>
 				<PanelBody
-					title={__("Term Grid Settings", "post-type-archive-mapping")}
+					title={__("Query", "post-type-archive-mapping")}
 				>
 				</PanelBody>
 			</InspectorControls>
