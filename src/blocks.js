@@ -9,4 +9,5 @@
  * Webpack is compiling as the input file.
  */
 
-import './block/block.js';
+import './block/block.js'; // Import main block.
+import './block/term-grid/block.js'; // Import term grid block.
