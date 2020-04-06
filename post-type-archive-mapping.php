@@ -1,10 +1,10 @@
 <?php // phpcs:ignore
 /*
 Plugin Name: Custom Post Types Block
-Plugin URI: https://mediaron.com/portfolio/post-type-archive-mapping/
+Plugin URI: https://mediaron.com/custom-post-types-block/
 Description: Map your post type archives to a page and use our Gutenberg block to show posts
 Author: Ronald Huereca
-Version: 3.3.1
+Version: 3.3.5
 Requires at least: 5.3
 Author URI: https://mediaron.com
 Contributors: ronalfy
@@ -13,7 +13,7 @@ Domain Path: /languages
 Credit: Forked from https://github.com/bigwing/post-type-archive-mapping
 Credit: Gutenberg block based on Atomic Blocks
 */
-define( 'PTAM_VERSION', '3.3.1' );
+define( 'PTAM_VERSION', '3.3.5' );
 require_once 'autoloader.php';
 
 /**
@@ -81,6 +81,10 @@ class PostTypeArchiveMapping {
 		// Register Custom Post Type Block.
 		$this->cpt_block_one = new PTAM\Includes\Blocks\Custom_Post_Types\Custom_Post_Types();
 		$this->cpt_block_one->run();
+
+		// Page columns.
+		$this->page_columns = new PTAM\Includes\Admin\Page_Columns();
+		$this->page_columns->run();
 	} //end constructor
 
 	/**
@@ -97,7 +101,23 @@ class PostTypeArchiveMapping {
 		// Admin Settings.
 		add_action( 'admin_init', array( $this, 'init_admin_settings' ) );
 		add_action( 'pre_get_posts', array( $this, 'maybe_override_archive' ) );
+
+		add_action( 'admin_notices', array( $this, 'admin_notices' ) );
 	} //end init
+
+	/**
+	 * Add admin notices when things go wrong.
+	 */
+	public function admin_notices() {
+		// Check for any term errors.
+		if ( get_option( 'ptam_error_message', '' ) ) {
+			printf(
+				'<div class="notice error"><strong><p>%s</p></strong></div>',
+				esc_html( get_option( 'ptam_error_message', '' ) )
+			);
+			delete_option( 'ptam_error_message' );
+		}
+	}
 
 	/**
 	 * Override an archive page based on passed query arguments.
@@ -218,7 +238,20 @@ class PostTypeArchiveMapping {
 		$query = "delete from {$wpdb->postmeta} where meta_key = '_post_type_mapped'";
 		$wpdb->query( $query ); // phpcs:ignore
 		foreach ( $args as $post_type => $page_id ) {
-			update_post_meta( $page_id, '_post_type_mapped', $post_type );
+			$maybe_mapped = get_post_meta( $page_id, '_term_mapped', true );
+			if ( $maybe_mapped ) {
+				update_option(
+					'ptam_error_message',
+					sprintf(
+						/* Translators: %s is the page title */
+						__( 'The page %s to map to a post type archive is already mapped to a term.', 'post-type-archive-mapping' ),
+						esc_html( get_the_title( $page_id ) )
+					)
+				);
+				unset( $args[ $post_type ] );
+			} else {
+				update_post_meta( $page_id, '_post_type_mapped', $post_type );
+			}
 		}
 		return $args;
 	}
@@ -351,7 +384,14 @@ class PostTypeArchiveMapping {
 		if ( current_user_can( 'edit_term', $term_id ) ) {
 			$maybe_post_id = filter_input( INPUT_POST, 'term_post_type' );
 			if ( $maybe_post_id ) {
-				update_term_meta( $term_id, '_term_archive_mapping', $maybe_post_id );
+				// Check if post is already mapped.
+				$maybe_mapped = get_post_meta( $maybe_post_id, '_post_type_mapped', true );
+				if ( $maybe_mapped ) {
+					update_option( 'ptam_error_message', __( 'The page you selected to map to a term is already mapped.', 'post-type-archive-mapping' ) );
+				} else {
+					update_post_meta( $maybe_post_id, '_term_mapped', $term_id );
+					update_term_meta( $term_id, '_term_archive_mapping', $maybe_post_id );
+				}
 			}
 		}
 	}
