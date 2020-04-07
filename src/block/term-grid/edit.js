@@ -9,7 +9,7 @@ var HtmlToReactParser = require("html-to-react").Parser;
 
 const { Component, Fragment } = wp.element;
 
-const { __ } = wp.i18n;
+const { __, _n } = wp.i18n;
 
 const { decodeEntities } = wp.htmlEntities;
 
@@ -41,19 +41,25 @@ class PTAM_Term_Grid extends Component {
 
 		this.state = {
 			loading: true,
+			termLoading: false,
 			fonts: [],
 			taxonomy: 'category',
+			termsToDisplay: {},
+			terms: [],
 		};
 
 		//this.get_latest_data();
 	}
 
-	getLatestData = ( object = {} ) => {
+	getTerms = ( object = {} ) => {
 		const props = jQuery.extend({}, this.props.attributes, object);
 		let termsList = [];
 		let {
 			taxonomy,
 		} = props;
+		this.setState( {
+			loading: true,
+		} );
 		axios
 			.post(ptam_globals.rest_url + `ptam/v2/get_tax_terms`, {
 				taxonomy: taxonomy,
@@ -74,67 +80,49 @@ class PTAM_Term_Grid extends Component {
 				});
 			});
 	}
+	displayTerms = ( terms = [] ) => {
+		const { order, orderBy, taxonomy } = this.props.attributes;
+		let termsToRetrieve = [];
+		terms.value.forEach( function( termObject ) {
+			termsToRetrieve.push( termObject.id );
+		} );
+		this.setState( {
+			termLoading: true,
+		} );
+		axios
+			.post(ptam_globals.rest_url + `ptam/v2/get_tax_term_data`, {
+				terms: termsToRetrieve,
+				order: order,
+				orderBy: orderBy,
+				taxonomy: taxonomy,
+			})
+			.then(response => {
+				if (Object.keys(response.data).length > 0) {
+					this.setState( {
+						termData: response.data.term_data,
+					} );
+				}
+				this.setState( {
+					termLoading: false,
+				} );
+			});
+	}
+	
 
 	componentDidMount = () => {
-		this.getLatestData( this.state );
+		this.getTerms( this.state );
 	}
 
 	render() {
 		let htmlToReactParser = new HtmlToReactParser();
 		const { attributes, setAttributes } = this.props;
 		const {
-			postType,
 			terms,
 			taxonomy,
-			displayPostDate,
-			displayPostExcerpt,
-			displayPostContent,
-			displayPostAuthor,
-			displayPostImage,
-			displayPostLink,
-			displayTitleLink,
 			align,
 			postLayout,
-			columns,
 			order,
-			pagination,
 			orderBy,
-			postsToShow,
-			readMoreText,
-			imageLocation,
-			taxonomyLocation,
-			imageType,
-			imageTypeSize,
-			avatarSize,
-			changeCapitilization,
-			displayTaxonomies,
-			trimWords,
-			titleAlignment,
-			customFieldAlignment,
-			imageAlignment,
-			metaAlignment,
-			contentAlignment,
-			padding,
-			border,
-			borderRounded,
-			borderColor,
-			backgroundColor,
-			titleColor,
-			customFieldsColor,
-			linkColor,
-			contentColor,
-			continueReadingColor,
-			titleFont,
-			customFieldsFont,
-			metaFont,
-			contentFont,
-			continueReadingFont,
-			displayTitle,
-			displayCustomFields,
-			customFields,
-			removeStyles,
-			titleHeadingTag,
-			fallbackImg
 		} = attributes;
 
 		// Fonts
@@ -161,6 +149,34 @@ class PTAM_Term_Grid extends Component {
 			{ value: "order", label: __("Term Order", "post-type-archive-mapping") },
 		];
 
+		// Term select messages.
+		const termMessages = {
+			clear: __( 'Clear all terms', 'post-type-archive-mapping' ),
+			list: __( 'Terms', 'post-type-archive-mapping' ),
+			noItems: __(
+				"There are no terms to select.",
+				'post-type-archive-mapping'
+			),
+			search: __(
+				'Search for terms to display',
+				'post-type-archive-mapping'
+			),
+			selected: ( n ) =>
+				sprintf(
+					_n(
+						'%d term selected',
+						'%d terms selected',
+						n,
+						'post-type-archive-mapping'
+					),
+					n
+				),
+			updated: __(
+				'Term search results updated.',
+				'post-type-archive-mapping'
+			),
+		};
+
 		const inspectorControls = (
 			<InspectorControls>
 				<PanelBody
@@ -174,14 +190,18 @@ class PTAM_Term_Grid extends Component {
 							this.props.setAttributes({
 								taxonomy: value,
 							});
+							this.getTerms({ taxonomy: value });
 						}}
 					/>
 					<SearchListControl
+						className="ptam-term-select"
 						list={this.state.terms}
 						selected={terms}
 						onChange={value => {
 							this.props.setAttributes({ terms: value });
+							this.displayTerms( { value } );
 						}}
+						messages={termMessages}
 					/>
 					<SelectControl
 						label={__("Order", "post-type-archive-mapping")}
@@ -203,6 +223,32 @@ class PTAM_Term_Grid extends Component {
 			</InspectorControls>
 		);
 		if (this.state.loading) {
+			return (
+				<Fragment>
+					<Placeholder>
+						<div className="ptam-loading">
+							<h1>
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									width="24"
+									height="24"
+									viewBox="0 0 24 24"
+								>
+									<path d="M4 14h4v-4H4v4zm0 5h4v-4H4v4zM4 9h4V5H4v4zm5 5h12v-4H9v4zm0 5h12v-4H9v4zM9 5v4h12V5H9z" />
+									<path d="M0 0h24v24H0z" fill="none" />
+								</svg>{" "}
+								{__("Term Grid", "post-type-archive-mapping")}
+							</h1>
+							<h2>
+								{__("Finding items...", "post-type-archive-mapping")}{" "}
+								<Spinner />
+							</h2>
+						</div>
+					</Placeholder>
+				</Fragment>
+			);
+		}
+		if ( this.state.termLoading ) {
 			return (
 				<Fragment>
 					{inspectorControls}
@@ -229,29 +275,14 @@ class PTAM_Term_Grid extends Component {
 				</Fragment>
 			);
 		}
-		if ( ! this.state.loading ) {
+		if ( ! this.state.loading && ! this.state.termLoading ) {
 			return (
 				<Fragment>
 					{inspectorControls}
-					Hi
+					test
 				</Fragment>
 			);
 		}
-
-		const layoutControls = [
-			{
-				icon: "grid-view",
-				title: __("Grid View", "post-type-archive-mapping"),
-				onClick: () => setAttributes({ postLayout: "grid", displayPostContent: false }),
-				isActive: postLayout === "grid"
-			},
-			{
-				icon: "list-view",
-				title: __("List View", "post-type-archive-mapping"),
-				onClick: () => setAttributes({ postLayout: "list", displayPostContent: false }),
-				isActive: postLayout === "list"
-			},
-		];
 
 		return (
 			<Fragment>

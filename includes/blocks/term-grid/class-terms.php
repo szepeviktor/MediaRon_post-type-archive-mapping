@@ -60,6 +60,10 @@ class Terms {
 						'type'    => 'string',
 						'default' => 'name',
 					),
+					'align'                  => array(
+						'type'    => 'string',
+						'default' => 'full',
+					),
 				),
 				'render_callback' => array( $this, 'term_grid' ),
 				'editor_script'   => 'ptam-custom-posts-gutenberg',

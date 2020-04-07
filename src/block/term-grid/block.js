@@ -18,7 +18,7 @@ import edit from './edit';
 const { Component } = wp.element;
 
 // Register alignments
-const validAlignments = [ 'center', 'wide' ];
+const validAlignments = [ 'full' ];
 
 export const name = 'ptam/term-grid';
 

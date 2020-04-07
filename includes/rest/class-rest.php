@@ -64,6 +64,14 @@ class Rest {
 				'callback' => array( $this, 'get_tax_terms' ),
 			)
 		);
+		register_rest_route(
+			'ptam/v2',
+			'/get_tax_term_data',
+			array(
+				'methods'  => 'POST',
+				'callback' => array( $this, 'get_tax_term_data' ),
+			)
+		);
 	}
 
 	/**
@@ -111,6 +119,85 @@ class Rest {
 			die( wp_json_encode( array() ) );
 		} else {
 			die( wp_json_encode( $terms ) );
+		}
+	}
+
+	/**
+	 * Return term data for passed terms.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param WP_REST_Request $term_data The term data.
+	 */
+	public function get_tax_term_data( $term_data ) {
+		$terms = $term_data['terms'];
+		$order = $term_data['order'];
+		$order_by = $term_data['orderBy'];
+		$taxonomy = $term_data['taxonomy'];
+
+		// Build Query.
+		$query = array();
+		switch ( $order_by ) {
+			case 'slug':
+				$query = array(
+					'orderby' => 'slug',
+					'order' => $order,
+					'hide_empty' => true,
+					'include' => $terms,
+					'taxonomy' => $taxonomy,
+				);
+				break;
+			case 'order':
+				// todo - compatibility with JJJ's term order plugin.
+				$query = array(
+					'orderby' => 'meta_value_num',
+					'order' => $order,
+					'meta_query' => array(
+						'relation' => 'OR',
+						array(
+							'key' => 'post_order',
+							'compare' => 'NOT EXISTS'
+						),
+						array(
+							'key' => 'post_order',
+							'value' => 0,
+							'compare' => '>='
+						)
+					),
+					'hide_empty' => true,
+					'parent' => 0,
+					'taxonomy' => $taxonomy,
+				);
+				break;
+			default:
+				$query = array(
+					'orderby' => 'name',
+					'order' => $order,
+					'hide_empty' => true,
+					'include' => $terms,
+					'taxonomy' => $taxonomy,
+				);
+				break;
+		}
+		if ( empty( $terms ) || ! is_array( $terms ) ) {
+			die( wp_json_encode( array() ) );
+		}
+
+		// Retrieve the terms in order.
+		$raw_term_results = get_terms( $query );
+		if ( is_wp_error( $raw_term_results ) ) {
+			die( wp_json_encode( array() ) );
+		}
+
+		// Get permalinks for each term.
+		foreach ( $raw_term_results as &$term ) {
+			$term->permalink = get_term_link( $term );
+		}
+
+		if ( is_wp_error( $terms ) ) {
+			die( wp_json_encode( array() ) );
+		} else {
+			die( wp_json_encode( $raw_term_results ) );
 		}
 	}
 
