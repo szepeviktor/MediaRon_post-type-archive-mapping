@@ -180,13 +180,13 @@ class Rest {
 				break;
 		}
 		if ( empty( $terms ) || ! is_array( $terms ) ) {
-			die( wp_json_encode( array() ) );
+			die( wp_json_encode( array( 'term_data' => new \stdClass() ) ) );
 		}
 
 		// Retrieve the terms in order.
 		$raw_term_results = get_terms( $query );
 		if ( is_wp_error( $raw_term_results ) ) {
-			die( wp_json_encode( array() ) );
+			die( wp_json_encode( array( 'term_data' => new \stdClass() ) ) );
 		}
 
 		// Get permalinks for each term.
@@ -195,9 +195,9 @@ class Rest {
 		}
 
 		if ( is_wp_error( $terms ) ) {
-			die( wp_json_encode( array() ) );
+			die( wp_json_encode( array( 'term_data' => new \stdClass() ) ) );
 		} else {
-			die( wp_json_encode( $raw_term_results ) );
+			die( wp_json_encode( array( 'term_data' => $raw_term_results ) ) );
 		}
 	}
 

@@ -78,6 +78,7 @@ class PTAM_Term_Grid extends Component {
 					loading: false,
 					terms: termsList,
 				});
+				this.displayTerms( { value: termsList } );
 			});
 	}
 	displayTerms = ( terms = [] ) => {
@@ -99,13 +100,31 @@ class PTAM_Term_Grid extends Component {
 			.then(response => {
 				if (Object.keys(response.data).length > 0) {
 					this.setState( {
-						termData: response.data.term_data,
+						termsToDisplay: response.data.term_data,
 					} );
 				}
 				this.setState( {
 					termLoading: false,
 				} );
 			});
+	}
+
+	getTermHtml = () => {
+		const terms = this.state.termsToDisplay;
+		if ( Object.keys( terms ).length === 0 ) {
+			return (
+				<h2>
+					{ __( 'No terms could be found.', 'post-type-archive-mapping' ) }
+				</h2>
+			);
+		}
+		return ( Object.keys(terms).map( ( term, i ) =>
+			<Fragment key={i}>
+				<div className="ptam-term-grid-item">
+					{terms[i].permalink}
+				</div>
+			</Fragment>
+		) );
 	}
 	
 
@@ -240,7 +259,7 @@ class PTAM_Term_Grid extends Component {
 								{__("Term Grid", "post-type-archive-mapping")}
 							</h1>
 							<h2>
-								{__("Finding items...", "post-type-archive-mapping")}{" "}
+								{__("Loading...", "post-type-archive-mapping")}{" "}
 								<Spinner />
 							</h2>
 						</div>
@@ -267,7 +286,7 @@ class PTAM_Term_Grid extends Component {
 								{__("Term Grid", "post-type-archive-mapping")}
 							</h1>
 							<h2>
-								{__("Finding items...", "post-type-archive-mapping")}{" "}
+								{__("Loading terms...", "post-type-archive-mapping")}{" "}
 								<Spinner />
 							</h2>
 						</div>
@@ -279,7 +298,7 @@ class PTAM_Term_Grid extends Component {
 			return (
 				<Fragment>
 					{inspectorControls}
-					test
+					{this.getTermHtml()}
 				</Fragment>
 			);
 		}
