@@ -5,6 +5,7 @@ import dayjs from "dayjs";
 import classnames from "classnames";
 import axios from "axios";
 import { SearchListControl } from '@woocommerce/components';
+import Loading from '../components/Loading';
 var HtmlToReactParser = require("html-to-react").Parser;
 
 const { Component, Fragment } = wp.element;
@@ -245,7 +246,7 @@ class PTAM_Term_Grid extends Component {
 			return (
 				<Fragment>
 					<Placeholder>
-						<div className="ptam-loading">
+						<div className="ptam-term-grid-loading">
 							<h1>
 								<svg
 									xmlns="http://www.w3.org/2000/svg"
@@ -259,8 +260,7 @@ class PTAM_Term_Grid extends Component {
 								{__("Term Grid", "post-type-archive-mapping")}
 							</h1>
 							<h2>
-								{__("Loading...", "post-type-archive-mapping")}{" "}
-								<Spinner />
+								<Loading cssClass="ptam-term-grid-loading-animation" />
 							</h2>
 						</div>
 					</Placeholder>
@@ -272,7 +272,7 @@ class PTAM_Term_Grid extends Component {
 				<Fragment>
 					{inspectorControls}
 					<Placeholder>
-						<div className="ptam-loading">
+						<div className="ptam-term-grid-loading">
 							<h1>
 								<svg
 									xmlns="http://www.w3.org/2000/svg"
@@ -286,8 +286,7 @@ class PTAM_Term_Grid extends Component {
 								{__("Term Grid", "post-type-archive-mapping")}
 							</h1>
 							<h2>
-								{__("Loading terms...", "post-type-archive-mapping")}{" "}
-								<Spinner />
+								<Loading cssClass="ptam-term-grid-loading-animation" />
 							</h2>
 						</div>
 					</Placeholder>

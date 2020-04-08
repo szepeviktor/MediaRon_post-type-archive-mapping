@@ -312,3 +312,43 @@ button.ptam-media-alt-upload.components-button {
 button.ptam-media-alt-reset.components-button {
 	margin: 15px 0;
 }
+/* Search Styles */
+.ptam-term-select {
+	.woocommerce-search-list__selected-header {
+		button {
+			display: block;
+			margin: 1em 0;
+		}
+	}
+	.woocommerce-search-list__selected {
+		margin-bottom: 15px;
+	}
+	.woocommerce-tag.has-remove {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		background: #FFF;
+		padding: 10px 20px;
+		border: 1px solid #EEE;
+		color: #000;
+
+		.woocommerce-tag__remove {
+			display: block;
+			align-self: flex-end;
+		}
+	}
+}
+
+/* Term Grid */
+.ptam-term-grid-loading {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	align-items: center;
+	text-align: center;
+	width: 100%;
+	h1 {
+		width: 100%;
+		text-align: center;
+	}
+}
