@@ -183,11 +183,10 @@ class Rest {
 				);
 				break;
 			case 'order':
-				// todo - compatibility with JJJ's term order plugin.
 				$query = array(
 					'orderby'    => 'meta_value_num',
 					'order'      => $order,
-					'meta_query' => array(
+					'meta_query' => array( // phpcs:ignore
 						'relation' => 'OR',
 						array(
 							'key'     => 'post_order',
