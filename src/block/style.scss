@@ -313,7 +313,8 @@ button.ptam-media-alt-reset.components-button {
 	margin: 15px 0;
 }
 /* Search Styles */
-.ptam-term-select {
+.ptam-term-select,
+.ptam-term-exclude {
 	.woocommerce-search-list__selected-header {
 		button {
 			display: block;

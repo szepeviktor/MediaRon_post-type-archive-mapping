@@ -23,7 +23,8 @@ const {
 	TextControl,
 	TextareaControl,
 	ToggleControl,
-	Toolbar
+	Toolbar,
+	Button,
 } = wp.components;
 
 const {
@@ -255,6 +256,8 @@ class PTAM_Term_Grid extends Component {
 						onChange={value => {
 							this.props.setAttributes({
 								taxonomy: value,
+								terms: [],
+								termsExclude: [],
 							});
 							this.getTerms({ taxonomy: value });
 						}}
@@ -265,6 +268,8 @@ class PTAM_Term_Grid extends Component {
 						value={order}
 						onChange={value => {
 							this.props.setAttributes({ order: value });
+							this.props.attributes.order = value;
+							this.displayTerms();
 						}}
 					/>
 					<SelectControl
@@ -273,6 +278,8 @@ class PTAM_Term_Grid extends Component {
 						value={orderBy}
 						onChange={value => {
 							this.props.setAttributes({ orderBy: value });
+							this.props.attributes.orderBy = value;
+							this.displayTerms();
 						}}
 					/>
 					<h2>{__('Terms to Include', 'post-type-archive-mapping')}</h2>
@@ -282,10 +289,19 @@ class PTAM_Term_Grid extends Component {
 						selected={terms}
 						onChange={value => {
 							this.props.setAttributes({ terms: value });
-							this.displayTerms( { value } );
 						}}
 						messages={termMessages}
 					/>
+					<Button
+						isTertiary={true}
+						isLink={true}
+						onClick={event => {
+							this.displayTerms();
+						}}
+					>
+						{__('Apply', 'post-type-archive-mapping')}
+					</Button>
+
 					{ showTermExclude &&
 						<Fragment>
 							<h2>{__('Terms to Exclude', 'post-type-archive-mapping')}</h2>
@@ -298,6 +314,15 @@ class PTAM_Term_Grid extends Component {
 								}}
 								messages={termMessagesExclude}
 							/>
+							<Button
+								isTertiary={true}
+								isLink={true}
+								onClick={event => {
+									this.displayTerms();
+								}}
+							>
+								{__('Apply', 'post-type-archive-mapping')}
+							</Button>
 						</Fragment>
 					}
 				</PanelBody>

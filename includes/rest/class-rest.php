@@ -130,52 +130,87 @@ class Rest {
 	 * @param WP_REST_Request $term_data The term data.
 	 */
 	public function get_tax_term_data( $term_data ) {
-		$terms = $term_data['terms'];
-		$order = $term_data['order'];
-		$order_by = $term_data['orderBy'];
-		$taxonomy = $term_data['taxonomy'];
+		$terms         = $term_data['terms'];
+		$terms_exclude = $term_data['termsExclude'];
+		$order         = $term_data['order'];
+		$order_by      = $term_data['orderBy'];
+		$taxonomy      = $term_data['taxonomy'];
+
+		// Get All Terms again so we have a full list.
+		$all_terms    = get_terms(
+			array(
+				'taxonomy'   => $taxonomy,
+				'hide_empty' => true,
+			)
+		);
+		$all_term_ids = array();
+		foreach ( $all_terms as $index => $term ) {
+			$all_term_ids[] = $term->term_id;
+		}
+
+		// Populate terms to display.
+		$display_all_terms = false;
+		$terms_to_include  = array();
+		foreach ( $terms as $index => $term_id ) {
+			if ( 0 === $term_id ) {
+				$display_all_terms = true;
+				$terms_to_include  = $all_term_ids;
+				break;
+			} else {
+				$terms_to_include[] = $term_id;
+			}
+		}
+
+		// Now let's get terms to exclude.
+		if ( $display_all_terms ) {
+			foreach ( $terms_to_include as $index => $term_id ) {
+				if ( in_array( $term_id, $terms_exclude, true ) ) {
+					unset( $terms_to_include[ $index ] );
+				}
+			}
+		}
 
 		// Build Query.
 		$query = array();
 		switch ( $order_by ) {
 			case 'slug':
 				$query = array(
-					'orderby' => 'slug',
-					'order' => $order,
+					'orderby'    => 'slug',
+					'order'      => $order,
 					'hide_empty' => true,
-					'include' => $terms,
-					'taxonomy' => $taxonomy,
+					'include'    => $terms_to_include,
+					'taxonomy'   => $taxonomy,
 				);
 				break;
 			case 'order':
 				// todo - compatibility with JJJ's term order plugin.
 				$query = array(
-					'orderby' => 'meta_value_num',
-					'order' => $order,
+					'orderby'    => 'meta_value_num',
+					'order'      => $order,
 					'meta_query' => array(
 						'relation' => 'OR',
 						array(
-							'key' => 'post_order',
-							'compare' => 'NOT EXISTS'
+							'key'     => 'post_order',
+							'compare' => 'NOT EXISTS',
 						),
 						array(
-							'key' => 'post_order',
-							'value' => 0,
-							'compare' => '>='
-						)
+							'key'     => 'post_order',
+							'value'   => 0,
+							'compare' => '>=',
+						),
 					),
 					'hide_empty' => true,
-					'parent' => 0,
-					'taxonomy' => $taxonomy,
+					'include'    => $terms_to_include,
+					'taxonomy'   => $taxonomy,
 				);
 				break;
 			default:
 				$query = array(
-					'orderby' => 'name',
-					'order' => $order,
+					'orderby'    => 'name',
+					'order'      => $order,
 					'hide_empty' => true,
-					'include' => $terms,
-					'taxonomy' => $taxonomy,
+					'include'    => $terms_to_include,
+					'taxonomy'   => $taxonomy,
 				);
 				break;
 		}
