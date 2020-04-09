@@ -52,6 +52,10 @@ class Terms {
 						'type'    => 'array',
 						'default' => array( '' ),
 					),
+					'termsExclude'    => array(
+						'type'    => 'array',
+						'default' => array( '' ),
+					),
 					'order'    => array(
 						'type'    => 'string',
 						'default' => 'desc',

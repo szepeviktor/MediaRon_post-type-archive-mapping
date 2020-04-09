@@ -46,6 +46,7 @@ class PTAM_Term_Grid extends Component {
 			fonts: [],
 			taxonomy: 'category',
 			termsToDisplay: {},
+			termsToExclude: {},
 			terms: [],
 		};
 
@@ -138,6 +139,7 @@ class PTAM_Term_Grid extends Component {
 		const { attributes, setAttributes } = this.props;
 		const {
 			terms,
+			termsExclude,
 			taxonomy,
 			align,
 			postLayout,
@@ -196,10 +198,37 @@ class PTAM_Term_Grid extends Component {
 				'post-type-archive-mapping'
 			),
 		};
+		// Term select messages.
+		const termMessagesExclude = {
+			clear: __( 'Clear all terms', 'post-type-archive-mapping' ),
+			list: __( 'Terms', 'post-type-archive-mapping' ),
+			noItems: __(
+				"There are no terms to select.",
+				'post-type-archive-mapping'
+			),
+			search: __(
+				'Search for terms to exclude',
+				'post-type-archive-mapping'
+			),
+			selected: ( n ) =>
+				sprintf(
+					_n(
+						'%d term selected',
+						'%d terms selected',
+						n,
+						'post-type-archive-mapping'
+					),
+					n
+				),
+			updated: __(
+				'Term search results updated.',
+				'post-type-archive-mapping'
+			),
+		};
 
 		const inspectorControls = (
 			<InspectorControls>
-				<PanelBody
+				<PanelBody collapsed={true}
 					title={__("Query", "post-type-archive-mapping")}
 				>
 					<SelectControl
@@ -212,16 +241,6 @@ class PTAM_Term_Grid extends Component {
 							});
 							this.getTerms({ taxonomy: value });
 						}}
-					/>
-					<SearchListControl
-						className="ptam-term-select"
-						list={this.state.terms}
-						selected={terms}
-						onChange={value => {
-							this.props.setAttributes({ terms: value });
-							this.displayTerms( { value } );
-						}}
-						messages={termMessages}
 					/>
 					<SelectControl
 						label={__("Order", "post-type-archive-mapping")}
@@ -238,6 +257,27 @@ class PTAM_Term_Grid extends Component {
 						onChange={value => {
 							this.props.setAttributes({ orderBy: value });
 						}}
+					/>
+					<h2>{__('Terms to Include', 'post-type-archive-mapping')}</h2>
+					<SearchListControl
+						className="ptam-term-select"
+						list={this.state.terms}
+						selected={terms}
+						onChange={value => {
+							this.props.setAttributes({ terms: value });
+							this.displayTerms( { value } );
+						}}
+						messages={termMessages}
+					/>
+					<h2>{__('Terms to Exclude', 'post-type-archive-mapping')}</h2>
+					<SearchListControl
+						className="ptam-term-exclude"
+						list={this.state.terms}
+						selected={termsExclude}
+						onChange={value => {
+							this.props.setAttributes({ termsExclude: value });
+						}}
+						messages={termMessagesExclude}
 					/>
 				</PanelBody>
 			</InspectorControls>
