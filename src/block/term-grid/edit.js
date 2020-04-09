@@ -48,6 +48,7 @@ class PTAM_Term_Grid extends Component {
 			termsToDisplay: {},
 			termsToExclude: {},
 			terms: [],
+			termsExclude: [],
 		};
 
 		//this.get_latest_data();
@@ -56,6 +57,7 @@ class PTAM_Term_Grid extends Component {
 	getTerms = ( object = {} ) => {
 		const props = jQuery.extend({}, this.props.attributes, object);
 		let termsList = [];
+		let termsListExclude = [];
 		let {
 			taxonomy,
 		} = props;
@@ -73,21 +75,27 @@ class PTAM_Term_Grid extends Component {
 						name: __("All", "post-type-archive-mapping")
 					});
 					jQuery.each(response.data, function(key, value) {
+						termsListExclude.push({ id: value.term_id, name: value.name });
 						termsList.push({ id: value.term_id, name: value.name });
 					});
 				}
 				this.setState({
 					loading: false,
 					terms: termsList,
+					termsExclude: termsListExclude,
 				});
 				this.displayTerms( { value: termsList } );
 			});
 	}
-	displayTerms = ( terms = [] ) => {
-		const { order, orderBy, taxonomy } = this.props.attributes;
+	displayTerms = () => {
+		const { order, orderBy, taxonomy, termsExclude, terms } = this.props.attributes;
 		let termsToRetrieve = [];
-		terms.value.forEach( function( termObject ) {
+		let termsToExclude = [];
+		terms.forEach( function( termObject ) {
 			termsToRetrieve.push( termObject.id );
+		} );
+		termsExclude.forEach( function( termObject ) {
+			termsToExclude.push( termObject.id );
 		} );
 		this.setState( {
 			termLoading: true,
@@ -95,6 +103,7 @@ class PTAM_Term_Grid extends Component {
 		axios
 			.post(ptam_globals.rest_url + `ptam/v2/get_tax_term_data`, {
 				terms: termsToRetrieve,
+				termsExclude: termsToExclude,
 				order: order,
 				orderBy: orderBy,
 				taxonomy: taxonomy,
@@ -142,7 +151,6 @@ class PTAM_Term_Grid extends Component {
 			termsExclude,
 			taxonomy,
 			align,
-			postLayout,
 			order,
 			orderBy,
 		} = attributes;
@@ -226,9 +234,18 @@ class PTAM_Term_Grid extends Component {
 			),
 		};
 
+		// Whether to show term exclusion or not.
+		let showTermExclude = false;
+		terms.forEach( function( termObject ) {
+			if ( 0 === termObject.id ) {
+				showTermExclude = true;
+				return;
+			}
+		} );
+
 		const inspectorControls = (
 			<InspectorControls>
-				<PanelBody collapsed={true}
+				<PanelBody initialOpen={false}
 					title={__("Query", "post-type-archive-mapping")}
 				>
 					<SelectControl
@@ -269,16 +286,20 @@ class PTAM_Term_Grid extends Component {
 						}}
 						messages={termMessages}
 					/>
-					<h2>{__('Terms to Exclude', 'post-type-archive-mapping')}</h2>
-					<SearchListControl
-						className="ptam-term-exclude"
-						list={this.state.terms}
-						selected={termsExclude}
-						onChange={value => {
-							this.props.setAttributes({ termsExclude: value });
-						}}
-						messages={termMessagesExclude}
-					/>
+					{ showTermExclude &&
+						<Fragment>
+							<h2>{__('Terms to Exclude', 'post-type-archive-mapping')}</h2>
+							<SearchListControl
+								className="ptam-term-exclude"
+								list={this.state.termsExclude}
+								selected={termsExclude}
+								onChange={value => {
+									this.props.setAttributes({ termsExclude: value });
+								}}
+								messages={termMessagesExclude}
+							/>
+						</Fragment>
+					}
 				</PanelBody>
 			</InspectorControls>
 		);
