@@ -108,6 +108,14 @@ class Terms {
 						'type'    => 'string',
 						'default' => 'ptam-term-grid-wrapper',
 					),
+					'overlayColor' => array(
+						'type' => 'string',
+						'default' => '#000000',
+					),
+					'overlayOpacity'             => array(
+						'type'    => 'number',
+						'default' => 0.8,
+					),
 				),
 				'render_callback' => array( $this, 'term_grid' ),
 				'editor_script'   => 'ptam-custom-posts-gutenberg',

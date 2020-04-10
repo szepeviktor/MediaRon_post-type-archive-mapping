@@ -149,7 +149,9 @@ class PTAM_Term_Grid extends Component {
 		return Object.keys(terms).map((term, i) => (
 			<Fragment key={i}>
 				<div className="ptam-term-grid-item" style={{backgroundImage: `url(${terms[i].background_image})`}}>
-					<h2>{terms[i].name}</h2>
+					<div className="ptam-term-grid-item-content">
+						<h2>{terms[i].name}</h2>
+					</div>
 				</div>
 			</Fragment>
 		));
@@ -179,6 +181,8 @@ class PTAM_Term_Grid extends Component {
 			backgroundImageFallback,
 			imageSize,
 			containerId,
+			overlayColor,
+			overlayOpacity,
 		} = attributes;
 
 		// Fonts
@@ -505,6 +509,26 @@ class PTAM_Term_Grid extends Component {
 									{__("Apply", "post-type-archive-mapping")}
 								</Button>
 							</div>
+							<PanelColorSettings
+								title={ __( 'Overlay Color', 'post-type-archive-mapping' ) }
+								initialOpen={ true }
+								colorSettings={ [ {
+									value: overlayColor,
+									onChange: ( value ) => {
+										setAttributes( { overlayColor: value});
+									},
+									label: __( 'Overlay Color', 'post-type-archive-mapping' ),
+								} ] }
+							>
+							</PanelColorSettings>
+							<RangeControl
+								label={ __( 'Opacity', 'post-type-archive-mapping' ) }
+								value={ overlayOpacity }
+								onChange={ ( value ) => setAttributes( { overlayOpacity: value } ) }
+								min={ 0 }
+								max={ 1 }
+								step={ 0.01 }
+							/>
 						</Fragment>
 					)}
 				</PanelBody>
@@ -565,7 +589,17 @@ class PTAM_Term_Grid extends Component {
 			return (
 				<Fragment>
 					{inspectorControls}
-					<div className={classnames(`columns-${columns}`, "ptam-term-grid")}>
+					<style dangerouslySetInnerHTML={{__html: `
+  #${containerId} .ptam-term-grid-item:before {
+	  content: '';
+	  position: absolute;
+	  width: 100%;
+	  height: 100%;
+	  background-color: rgba(0,0,0,0.8);
+	  z-index: 1;
+  }
+`}}></style>
+					<div id={containerId} className={classnames(`columns-${columns}`, "ptam-term-grid")}>
 						{this.getTermHtml()}
 					</div>
 				</Fragment>

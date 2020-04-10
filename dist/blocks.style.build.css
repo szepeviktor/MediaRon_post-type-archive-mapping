@@ -508,6 +508,7 @@ button.ptam-media-alt-reset.components-button {
       .ptam-term-grid.columns-4 {
         grid-template-columns: 1fr 1fr 1fr; } }
   .ptam-term-grid .ptam-term-grid-item {
+    position: relative;
     display: -ms-flexbox;
     display: flex;
     -ms-flex-wrap: wrap;
@@ -528,3 +529,6 @@ button.ptam-media-alt-reset.components-button {
     margin-right: 5px;
     -ms-flex: 1 1 300px;
         flex: 1 1 300px; }
+    .ptam-term-grid .ptam-term-grid-item .ptam-term-grid-item-content {
+      position: relative;
+      z-index: 2; }

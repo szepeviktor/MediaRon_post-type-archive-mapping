@@ -390,6 +390,7 @@ button.ptam-media-alt-reset.components-button {
 	}
 
 	.ptam-term-grid-item {
+		position: relative;
 		display: flex;
 		flex-wrap: wrap;
 		align-items: center;
@@ -406,5 +407,10 @@ button.ptam-media-alt-reset.components-button {
 		margin-left: 5px;
 		margin-right: 5px;
 		flex: 1 1 300px;
+
+		.ptam-term-grid-item-content {
+			position: relative;
+			z-index: 2;
+		}
 	}
 }
