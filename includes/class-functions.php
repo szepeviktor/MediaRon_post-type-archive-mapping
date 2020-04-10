@@ -39,6 +39,69 @@ class Functions {
 	}
 
 	/**
+	 * Return an image URL.
+	 *
+	 * @param int    $attachment_id The attachment ID.
+	 * @param string $size          The image size to retrieve.
+	 *
+	 * @return string Image URL or empty string if not found.
+	 */
+	public static function get_image( $attachment_id = 0, $size = 'large' ) {
+		$maybe_image = wp_get_attachment_image_src( $attachment_id, $size );
+		if ( ! $maybe_image ) {
+			return '';
+		}
+		if ( isset( $maybe_image[0] ) ) {
+			return esc_url( $maybe_image[0] );
+		}
+		return '';
+	}
+
+	/**
+	 * Get an image from term meta.
+	 *
+	 * @param string $size       The image size.
+	 * @param string $meta_field The meta field to query.
+	 * @param string $type       The type of meta to retrieve (meta, acf, pods).
+	 * @param string $taxonomy   The taxonomy slug to retrieve images for.
+	 * @param int    $term_id    The term to retrieve data for.
+	 *
+	 * @return string Image URL or blank if not found.
+	 */
+	public static function get_term_image( $size = 'large', $meta_field = '', $type = 'meta', $taxonomy = 'category', $term_id = 0 ) {
+		if ( 'none' === $type ) {
+			return '';
+		}
+		if ( 'acf' === $type && function_exists( 'get_field' ) ) {
+			$acf_term_id    = $taxonomy . '_' . $term_id;
+			$acf_term_value = get_field( $meta_field, $acf_term_id );
+			if ( ! $acf_term_value ) {
+				return '';
+			}
+			if ( is_numeric( $acf_term_value ) ) {
+				$image = self::get_image( $acf_term_value, $size );
+				return $image;
+			} elseif ( is_array( $acf_term_value ) && isset( $acf_term_value['url'] ) ) {
+				return esc_url( $acf_term_value['url'] );
+			} else {
+				return esc_url( $acf_term_value );
+			}
+		}
+		if ( 'meta' === $type ) {
+			$term_value = get_term_meta( $term_id, $meta_field, true );
+			if ( is_numeric( $term_value ) ) {
+				$image = self::get_image( $term_value, $size );
+				return $image;
+			} elseif ( is_array( $term_value ) && isset( $term_value['url'] ) ) {
+				return esc_url( $term_value['url'] );
+			} else {
+				return esc_url( $term_value );
+			}
+		}
+		return '';
+	}
+
+	/**
 	 * Get web safe fonts
 	 *
 	 * @return array $fonts Fonts to Use

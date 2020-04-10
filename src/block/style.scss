@@ -398,6 +398,9 @@ button.ptam-media-alt-reset.components-button {
 		width: 100%;
 		background: #24292d;
 		color: #FFF;
+		background-size: cover;
+		background-repeat: no-repeat;
+		background-position: center center;
 
 		/* Flex Fallback */
 		margin-left: 5px;

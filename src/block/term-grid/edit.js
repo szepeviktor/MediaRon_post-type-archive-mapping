@@ -50,6 +50,7 @@ class PTAM_Term_Grid extends Component {
 			termsToExclude: {},
 			terms: [],
 			termsExclude: [],
+			imageSizes: ptam_globals.image_sizes,
 		};
 
 		//this.get_latest_data();
@@ -93,6 +94,10 @@ class PTAM_Term_Grid extends Component {
 			taxonomy,
 			termsExclude,
 			terms,
+			backgroundImageSource,
+			backgroundImageFallback,
+			backgroundImageMeta,
+			imageSize,
 		} = this.props.attributes;
 		let termsToRetrieve = [];
 		let termsToExclude = [];
@@ -112,6 +117,9 @@ class PTAM_Term_Grid extends Component {
 				order: order,
 				orderBy: orderBy,
 				taxonomy: taxonomy,
+				backgroundImageSource: backgroundImageSource,
+				backgroundImageFallback: backgroundImageFallback,
+				backgroundImageMeta: backgroundImageMeta,
 			})
 			.then((response) => {
 				if (Object.keys(response.data).length > 0) {
@@ -140,7 +148,7 @@ class PTAM_Term_Grid extends Component {
 		}
 		return Object.keys(terms).map((term, i) => (
 			<Fragment key={i}>
-				<div className="ptam-term-grid-item">
+				<div className="ptam-term-grid-item" style={{backgroundImage: `url(${terms[i].background_image})`}}>
 					<h2>{terms[i].name}</h2>
 				</div>
 			</Fragment>
@@ -169,6 +177,8 @@ class PTAM_Term_Grid extends Component {
 			backgroundImageSource,
 			backgroundImageMeta,
 			backgroundImageFallback,
+			imageSize,
+			containerId,
 		} = attributes;
 
 		// Fonts
@@ -181,6 +191,13 @@ class PTAM_Term_Grid extends Component {
 		let taxOptions = [];
 		for (var key in ptam_globals.taxonomies) {
 			taxOptions.push({ value: key, label: ptam_globals.taxonomies[key] });
+		}
+
+		// Image Sizes.
+		let imageSizeOptions = [];
+		let imageSizes = this.state.imageSizes;
+		for (var key in imageSizes) {
+			imageSizeOptions.push({ value: key, label: key });
 		}
 
 		// Order Params.
@@ -384,6 +401,16 @@ class PTAM_Term_Grid extends Component {
 							});
 						}}
 					/>
+					<TextControl
+						label={__("Container ID", "post-type-archive-mapping")}
+						help={__('Unique CSS ID for styling if you have more than one term grid on the same page.', 'post-type-archive-mapping')}
+						type="text"
+						value={containerId}
+						onChange={(value) =>
+							this.props.setAttributes({ containerId: value })
+						}
+
+					/>
 				</PanelBody>
 				<PanelBody
 					initialOpen={false}
@@ -398,73 +425,88 @@ class PTAM_Term_Grid extends Component {
 						}}
 					/>
 					{"none" !== backgroundImageSource && (
-						<TextControl
-							label={__("Field Name", "post-type-archive-mapping")}
-							type="text"
-							value={backgroundImageMeta}
-							onChange={(value) =>
-								this.props.setAttributes({ backgroundImageMeta: value })
-							}
-						/>
-					)}
-					<MediaUpload
-						onSelect={imageObject => {
-							this.props.setAttributes({ backgroundImageFallback: imageObject });
-							this.props.attributes.backgroundImageFallback = imageObject;
-						}}
-						type="image"
-						value={backgroundImageFallback.url}
-						render={({ open }) => (
-							<Fragment>
-								<button
-									className="ptam-media-alt-upload components-button is-button secondary"
-									onClick={open}
-								>
-									{__(
-										"Fallback Background Image",
-										"post-type-archive-mapping"
-									)}
-								</button>
-								{backgroundImageFallback && (
+						<Fragment>
+							<SelectControl
+								label={__("Image Size", "post-type-archive-mapping")}
+								options={imageSizeOptions}
+								value={imageSize}
+								onChange={(value) => {
+									this.props.setAttributes({ imageSize: value });
+								}}
+							/>
+							<TextControl
+								label={__("Field Name", "post-type-archive-mapping")}
+								type="text"
+								value={backgroundImageMeta}
+								onChange={(value) =>
+									this.props.setAttributes({ backgroundImageMeta: value })
+								}
+							/>
+							<MediaUpload
+								onSelect={(imageObject) => {
+									this.props.setAttributes({
+										backgroundImageFallback: imageObject,
+									});
+									this.props.attributes.backgroundImageFallback = imageObject;
+								}}
+								type="image"
+								value={backgroundImageFallback.url}
+								render={({ open }) => (
 									<Fragment>
-										<div>
-											<img
-												src={backgroundImageFallback.url}
-												alt={__(
-													"Background Image",
-													"post-type-archive-mapping"
-												)}
-												width="250"
-												height="250"
-											/>
-										</div>
-										<div>
-											<button
-												className="ptam-media-alt-reset components-button is-button secondary"
-												onClick={event => {
-													this.props.setAttributes({ backgroundImageFallback: "" });
-													this.props.attributes.backgroundImageFallback = "";
-												}}
-											>
-												{__("Clear Image", "post-type-archive-mapping")}
-											</button>
-										</div>
+										<button
+											className="ptam-media-alt-upload components-button is-button secondary"
+											onClick={open}
+										>
+											{__(
+												"Fallback Background Image",
+												"post-type-archive-mapping"
+											)}
+										</button>
+										{backgroundImageFallback && (
+											<Fragment>
+												<div>
+													<img
+														src={backgroundImageFallback.url}
+														alt={__(
+															"Background Image",
+															"post-type-archive-mapping"
+														)}
+														width="250"
+														height="250"
+													/>
+												</div>
+												<div>
+													<button
+														className="ptam-media-alt-reset components-button is-button secondary"
+														onClick={(event) => {
+															this.props.setAttributes({
+																backgroundImageFallback: "",
+															});
+															this.props.attributes.backgroundImageFallback =
+																"";
+														}}
+													>
+														{__("Clear Image", "post-type-archive-mapping")}
+													</button>
+												</div>
+											</Fragment>
+										)}
 									</Fragment>
 								)}
-							</Fragment>
-						)}
-					/>
-					<div>
-						<Button
-							isTertiary={true}
-							isLink={true}
-							onClick={(event) => {
-								this.displayTerms();
-							}}
-						>
-							{__("Apply", "post-type-archive-mapping")}
-						</Button>
-					</div>
+							/>
+							<div>
+								<Button
+									isTertiary={true}
+									isLink={true}
+									onClick={(event) => {
+										this.displayTerms();
+									}}
+								>
+									{__("Apply", "post-type-archive-mapping")}
+								</Button>
+							</div>
+						</Fragment>
+					)}
 				</PanelBody>
 			</InspectorControls>
 		);

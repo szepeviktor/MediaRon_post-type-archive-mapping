@@ -130,11 +130,15 @@ class Rest {
 	 * @param WP_REST_Request $term_data The term data.
 	 */
 	public function get_tax_term_data( $term_data ) {
-		$terms         = $term_data['terms'];
-		$terms_exclude = $term_data['termsExclude'];
-		$order         = $term_data['order'];
-		$order_by      = $term_data['orderBy'];
-		$taxonomy      = $term_data['taxonomy'];
+		$terms                     = $term_data['terms'];
+		$terms_exclude             = $term_data['termsExclude'];
+		$order                     = $term_data['order'];
+		$order_by                  = $term_data['orderBy'];
+		$taxonomy                  = $term_data['taxonomy'];
+		$background_image_source   = $term_data['backgroundImageSource'];
+		$background_fallback_image = $term_data['backgroundImageFallback'];
+		$background_image_meta_key = $term_data['backgroundImageMeta'];
+		$background_image_size     = $term_data['imageSize'];
 
 		// Get All Terms again so we have a full list.
 		$all_terms    = get_terms(
@@ -223,9 +227,23 @@ class Rest {
 			die( wp_json_encode( array( 'term_data' => new \stdClass() ) ) );
 		}
 
-		// Get permalinks for each term.
+		// Get data for each term.
 		foreach ( $raw_term_results as &$term ) {
-			$term->permalink = get_term_link( $term );
+			$term->permalink        = get_term_link( $term );
+			$term->background_image = Functions::get_term_image(
+				$background_image_size,
+				$background_image_meta_key,
+				$background_image_source,
+				$taxonomy,
+				$term->term_id
+			);
+			if ( empty( $term->background_image ) ) {
+				$term->background_image = isset( $background_fallback_image['id'] ) ? absint( $background_fallback_image['id'] ) : 0;
+				$fallback_image         = wp_get_attachment_url( $term->background_image );
+				if ( $fallback_image ) {
+					$term->background_image = $fallback_image;
+				}
+			}
 		}
 
 		if ( is_wp_error( $terms ) ) {
