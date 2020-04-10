@@ -44,45 +44,61 @@ class Terms {
 			'ptam/term-grid',
 			array(
 				'attributes'      => array(
-					'taxonomy' => array(
+					'taxonomy'            => array(
 						'type'    => 'string',
 						'default' => 'category',
 					),
-					'terms'    => array(
+					'terms'               => array(
 						'type'    => 'array',
 						'default' => array( '' ),
 					),
-					'termsExclude'    => array(
+					'termsExclude'        => array(
 						'type'    => 'array',
 						'default' => array( '' ),
 					),
-					'order'    => array(
+					'order'               => array(
 						'type'    => 'string',
 						'default' => 'desc',
 					),
-					'orderBy'  => array(
+					'orderBy'             => array(
 						'type'    => 'string',
 						'default' => 'name',
 					),
-					'align'                  => array(
+					'align'               => array(
 						'type'    => 'string',
 						'default' => 'full',
 					),
-					'columns' => array(
-						'type' => 'integer',
+					'columns'             => array(
+						'type'    => 'integer',
 						'default' => 2,
 					),
-					'showTermTitle' => array(
-						'type' => 'boolean',
+					'showTermTitle'       => array(
+						'type'    => 'boolean',
 						'default' => true,
 					),
 					'showTermDescription' => array(
-						'type' => 'boolean',
+						'type'    => 'boolean',
 						'default' => false,
 					),
-					'maxSize' => array(
-						'type' => 'integer',
-						'default' => 400,
+					'disableStyles'       => array(
+						'type'    => 'boolean',
+						'default' => false,
+					),
+					'linkContainer'       => array(
+						'type'    => 'boolean',
+						'default' => true,
+					),
+					'backgroundImageSource'       => array(
+						'type'    => 'string',
+						'default' => 'none',
+					),
+					'backgroundImageMeta'       => array(
+						'type'    => 'string',
+						'default' => '',
+					),
+					'backgroundImageFallback'       => array(
+						'type'    => 'object',
+						'default' => '',
 					),
 				),
 				'render_callback' => array( $this, 'term_grid' ),

@@ -508,6 +508,14 @@ button.ptam-media-alt-reset.components-button {
       .ptam-term-grid.columns-4 {
         grid-template-columns: 1fr 1fr 1fr; } }
   .ptam-term-grid .ptam-term-grid-item {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: wrap;
+        flex-wrap: wrap;
+    -ms-flex-align: center;
+        align-items: center;
+    -ms-flex-pack: center;
+        justify-content: center;
     min-height: 300px;
     width: 100%;
     background: #24292d;

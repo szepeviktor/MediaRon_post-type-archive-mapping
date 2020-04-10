@@ -390,6 +390,10 @@ button.ptam-media-alt-reset.components-button {
 	}
 
 	.ptam-term-grid-item {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		justify-content: center;
 		min-height: 300px;
 		width: 100%;
 		background: #24292d;
