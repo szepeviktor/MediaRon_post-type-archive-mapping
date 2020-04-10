@@ -136,7 +136,43 @@ class Terms {
 			return ob_get_clean();
 		}
 
-		echo '<pre>' . print_r( $raw_term_results, true ) . '</pre>';
+		// Sanitize variables.
+		$text_vars = array(
+			backgroundType,
+			termTitleColor,
+			termDescriptionColor,
+			itemBorderColor,
+			termTitleFont,
+			termDescriptionFont,
+			termButtonText,
+			termButtonFont,
+			termButtonTextColor,
+			termButtonTextHoverColor,
+			termButtonBackgroundColor,
+			termButtonBackgroundHoverColor,
+			termButtonBorderColor,
+		);
+		$int_vars = array(
+			itemBorder,
+			itemBorderRadius,
+			termButtonBorder,
+			termButtonBorderRadius,
+		);
+		$bool_vars = array(
+			linkContainer,
+			showTermTitle,
+			showTermDescription,
+			disableStyles,
+			showButton,
+		);
+		foreach ( $text_vars as $index => $attribute ) {
+			if ( in_array( $attribute, $attributes, true ) ) {
+				$attributes[ $attribute ] = sanitize_text_field( $attributes[ $attribute ] );
+			}
+		}
+		
+
+		echo '<pre>' . print_r( $attributes, true ) . '</pre>';
 		/*
 		// Get data for each term.
 		foreach ( $raw_term_results as &$term ) {
