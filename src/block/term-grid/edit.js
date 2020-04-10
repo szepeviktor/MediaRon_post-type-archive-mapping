@@ -137,30 +137,91 @@ class PTAM_Term_Grid extends Component {
 
 	getTermHtml = () => {
 		const terms = this.state.termsToDisplay;
+		const htmlToReactParser = new HtmlToReactParser();
 		const {
 			linkContainer,
 			showTermTitle,
 			showTermDescription,
 			disableStyles,
 			backgroundType,
+			termTitleColor,
+			termDescriptionColor,
+			itemBorder,
+			itemBorderColor,
+			itemBorderRadius,
+			termTitleFont,
+			termDescriptionFont,
+			showButton,
+			termButtonText,
+			termButtonFont,
+			termButtonTextColor,
+			termButtonTextHoverColor,
+			termButtonBackgroundColor,
+			termButtonBackgroundHoverColor,
+			termButtonBorder,
+			termButtonBorderColor,
+			termButtonBorderRadius,
 		} = this.props.attributes;
 		if (Object.keys(terms).length === 0) {
 			return (
 				<h2>{__("No terms could be found.", "post-type-archive-mapping")}</h2>
 			);
 		}
+		const termTitleStyles = ! disableStyles ? {
+			color: termTitleColor,
+			fontFamily: `${termTitleFont}`,
+		} : {};
+		const termDescriptionStyles = ! disableStyles ? {
+			color: termDescriptionColor,
+			fontFamily: `${termDescriptionFont}`,
+		} : {};
+
+		const termButtonStyles = ! disableStyles ? {
+			color: termButtonTextColor,
+			backgroundColor: termButtonBackgroundColor,
+			borderWidth: termButtonBorder + 'px',
+			borderColor: termButtonBorderColor,
+			borderRadius: termButtonBorderRadius,
+			fontFamily: `${termButtonFont}`,
+			borderStyle: 'solid',
+		} : {};
+
 		return Object.keys(terms).map((term, i) => (
 			<Fragment key={i}>
 				<div
 					className="ptam-term-grid-item"
 					style={
-						"image" === backgroundType
-							? { backgroundImage: `url(${terms[i].background_image})` }
-							: {}
+						"image" === backgroundType && !disableStyles
+							? { 
+								backgroundImage: `url(${terms[i].background_image})`,
+								borderWidth: `${itemBorder}px`,
+								borderColor: `${itemBorderColor}`,
+								borderRadius: `${itemBorderRadius}%`,
+								borderStyle: 'solid',
+								 }
+							: ! disableStyles ? {
+								borderWidth: `${itemBorder}px`,
+								borderColor: `${itemBorderColor}`,
+								borderRadius: `${itemBorderRadius}%`,
+								borderStyle: 'solid',
+							} : {}
 					}
 				>
 					<div className="ptam-term-grid-item-content">
-						<h2>{terms[i].name}</h2>
+						{showTermTitle &&
+							<h2 style={termTitleStyles}>{terms[i].name}</h2>
+						}
+						{showTermDescription &&
+							<div className="ptam-term-grid-item-description" style={termDescriptionStyles}>
+								{htmlToReactParser.parse(terms[i].description)}
+							</div>
+						}
+						{!linkContainer && showButton &&
+							<a href="#" class="ptam-term-grid-button btn button" style={termButtonStyles}>
+								{termButtonText}
+							</a>
+						}
+						
 					</div>
 				</div>
 			</Fragment>
@@ -186,6 +247,8 @@ class PTAM_Term_Grid extends Component {
 			showTermDescription,
 			disableStyles,
 			linkContainer,
+			linkTermTitle,
+			showButton,
 			backgroundImageSource,
 			backgroundImageMeta,
 			backgroundImageFallback,
@@ -196,6 +259,22 @@ class PTAM_Term_Grid extends Component {
 			backgroundGradient,
 			overlayColor,
 			overlayOpacity,
+			termTitleColor,
+			termDescriptionColor,
+			itemBorder,
+			itemBorderColor,
+			itemBorderRadius,
+			termTitleFont,
+			termDescriptionFont,
+			termButtonText,
+			termButtonFont,
+			termButtonTextColor,
+			termButtonTextHoverColor,
+			termButtonBackgroundColor,
+			termButtonBackgroundHoverColor,
+			termButtonBorder,
+			termButtonBorderColor,
+			termButtonBorderRadius,
 		} = attributes;
 
 		// Fonts
@@ -475,6 +554,34 @@ class PTAM_Term_Grid extends Component {
 							});
 						}}
 					/>
+					{!linkContainer &&
+						<Fragment>
+							<ToggleControl
+								label={__(
+									"Link Term Title",
+									"post-type-archive-mapping"
+								)}
+								checked={linkTermTitle}
+								onChange={(value) => {
+									this.props.setAttributes({
+										linkTermTitle: value,
+									});
+								}}
+							/>
+							<ToggleControl
+								label={__(
+									"Show Button",
+									"post-type-archive-mapping"
+								)}
+								checked={showButton}
+								onChange={(value) => {
+									this.props.setAttributes({
+										showButton: value,
+									});
+								}}
+							/>
+						</Fragment>
+					}
 					<TextControl
 						label={__("Container ID", "post-type-archive-mapping")}
 						help={__(
@@ -614,6 +721,188 @@ class PTAM_Term_Grid extends Component {
 						</PanelBody>
 					</Fragment>
 				)}
+				<Fragment>
+					<PanelBody
+						initialOpen={false}
+						title={__("General Colors", "post-type-archive-mapping")}
+					>
+						<PanelColorSettings
+							title={__("Text Colors", "post-type-archive-mapping")}
+							initialOpen={true}
+							colorSettings={[
+								{
+									value: termTitleColor,
+									onChange: (value) => {
+										setAttributes({ termTitleColor: value });
+									},
+									label: __("Term Title Color", "post-type-archive-mapping"),
+								},
+								{
+									value: termDescriptionColor,
+									onChange: (value) => {
+										setAttributes({ termDescriptionColor: value });
+									},
+									label: __("Term Description Color", "post-type-archive-mapping"),
+								},
+							]}
+						></PanelColorSettings>
+
+					</PanelBody>
+				</Fragment>
+				<Fragment>
+					<PanelBody
+						initialOpen={false}
+						title={__("Border", "post-type-archive-mapping")}
+					>
+						<RangeControl
+							label={__("Border Width", "post-type-archive-mapping")}
+							value={itemBorder}
+							onChange={(value) =>
+								setAttributes({ itemBorder: value })
+							}
+							min={0}
+							max={50}
+							step={1}
+						/>
+						<RangeControl
+							label={__("Border Radius", "post-type-archive-mapping")}
+							help={__('Border radius as a percentage', 'post-type-archive-mapping')}
+							value={itemBorderRadius}
+							onChange={(value) =>
+								setAttributes({ itemBorderRadius: value })
+							}
+							min={0}
+							max={100}
+							step={1}
+						/>
+						<PanelColorSettings
+							title={__("Border Color", "post-type-archive-mapping")}
+							initialOpen={true}
+							colorSettings={[
+								{
+									value: itemBorderColor,
+									onChange: (value) => {
+										setAttributes({ itemBorderColor: value });
+									},
+									label: __("Border Color", "post-type-archive-mapping"),
+								},
+							]}
+						></PanelColorSettings>
+					</PanelBody>
+				</Fragment>
+				<Fragment>
+					<PanelBody
+						initialOpen={false}
+						title={__("Typography", "post-type-archive-mapping")}
+					>
+						<SelectControl
+							label={__("Title Typography", "post-type-archive-mapping")}
+							options={fontOptions}
+							value={termTitleFont}
+							onChange={(value) => {
+								this.props.setAttributes({ termTitleFont: value });
+							}}
+						/>
+						<SelectControl
+							label={__("Description Typography", "post-type-archive-mapping")}
+							options={fontOptions}
+							value={termDescriptionFont}
+							onChange={(value) => {
+								this.props.setAttributes({ termDescriptionFont: value });
+							}}
+						/>
+						
+
+					</PanelBody>
+				</Fragment>
+				{!linkContainer && showButton &&
+					<Fragment>
+						<PanelBody
+							initialOpen={false}
+							title={__("Button", "post-type-archive-mapping")}
+						>
+							<TextControl
+								label={__("Button Text", "post-type-archive-mapping")}
+								type="text"
+								value={termButtonText}
+								onChange={(value) =>
+									this.props.setAttributes({ termButtonText: value })
+								}
+							/>
+							<SelectControl
+								label={__("Button Typography", "post-type-archive-mapping")}
+								options={fontOptions}
+								value={termButtonFont}
+								onChange={(value) => {
+									this.props.setAttributes({ termButtonFont: value });
+								}}
+							/>
+							<PanelColorSettings
+								title={__("Button Colors", "post-type-archive-mapping")}
+								initialOpen={true}
+								colorSettings={[
+									{
+										value: termButtonTextColor,
+										onChange: (value) => {
+											setAttributes({ termButtonTextColor: value });
+										},
+										label: __("Text Color", "post-type-archive-mapping"),
+									},
+									{
+										value: termButtonTextHoverColor,
+										onChange: (value) => {
+											setAttributes({ termButtonTextHoverColor: value });
+										},
+										label: __("Text Color on Hover", "post-type-archive-mapping"),
+									},
+									{
+										value: termButtonBackgroundColor,
+										onChange: (value) => {
+											setAttributes({ termButtonBackgroundColor: value });
+										},
+										label: __("Background Color", "post-type-archive-mapping"),
+									},
+									{
+										value: termButtonBackgroundHoverColor,
+										onChange: (value) => {
+											setAttributes({ termButtonBackgroundHoverColor: value });
+										},
+										label: __("Background Color on Hover", "post-type-archive-mapping"),
+									},
+									{
+										value: termButtonBorderColor,
+										onChange: (value) => {
+											setAttributes({ termButtonBorderColor: value });
+										},
+										label: __("Border Color", "post-type-archive-mapping"),
+									},
+								]}
+							></PanelColorSettings>
+							<RangeControl
+								label={__("Border Width", "post-type-archive-mapping")}
+								value={termButtonBorder}
+								onChange={(value) =>
+									setAttributes({ termButtonBorder: value })
+								}
+								min={0}
+								max={50}
+								step={1}
+							/>
+							<RangeControl
+								label={__("Border Radius", "post-type-archive-mapping")}
+								help={__('Border radius as a percentage', 'post-type-archive-mapping')}
+								value={termButtonBorderRadius}
+								onChange={(value) =>
+									setAttributes({ termButtonBorderRadius: value })
+								}
+								min={0}
+								max={100}
+								step={1}
+							/>
+
+						</PanelBody>
+					</Fragment>
+				}
 			</InspectorControls>
 		);
 		if (this.state.loading) {
@@ -686,7 +975,7 @@ class PTAM_Term_Grid extends Component {
 						}}
 					></style>
 					}
-					{'none' === backgroundType &&
+					{'none' === backgroundType && !disableStyles &&
 						<style
 						dangerouslySetInnerHTML={{
 							__html: `
@@ -697,7 +986,7 @@ class PTAM_Term_Grid extends Component {
 						}}
 						></style>
 					}
-					{'color' === backgroundType &&
+					{'color' === backgroundType && !disableStyles &&
 						<style
 						dangerouslySetInnerHTML={{
 							__html: `
@@ -708,12 +997,25 @@ class PTAM_Term_Grid extends Component {
 						}}
 						></style>
 					}
-					{'gradient' === backgroundType &&
+					{'gradient' === backgroundType && !disableStyles &&
 						<style
 						dangerouslySetInnerHTML={{
 							__html: `
 							#${containerId} .ptam-term-grid-item {
 								background-image: ${backgroundGradient};
+								}
+							`,
+						}}
+						></style>
+					}
+					{ !linkContainer && showButton && !disableStyles &&
+						<style
+						dangerouslySetInnerHTML={{
+							__html: `
+							#${containerId} .ptam-term-grid-item .ptam-term-grid-button:hover {
+								background-color: ${termButtonBackgroundHoverColor} !important;
+								color: ${termButtonTextHoverColor} !important;
+								text-decoration: none;
 								}
 							`,
 						}}

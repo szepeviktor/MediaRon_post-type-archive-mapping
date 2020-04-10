@@ -98,6 +98,17 @@ class Functions {
 				return esc_url( $term_value );
 			}
 		}
+		if ( 'pods' === $type ) {
+			$term_value = get_term_meta( $term_id, $meta_field, true );
+			if ( is_numeric( $term_value ) ) {
+				$image = self::get_image( $term_value, $size );
+				return $image;
+			} elseif ( is_array( $term_value ) && isset( $term_value['ID'] ) ) {
+				return self::get_image( $term_value['ID'], $size );
+			} else {
+				return esc_url( $term_value );
+			}
+		}
 		return '';
 	}
 

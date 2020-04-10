@@ -88,6 +88,14 @@ class Terms {
 						'type'    => 'boolean',
 						'default' => true,
 					),
+					'linkTermTitle'           => array(
+						'type'    => 'boolean',
+						'default' => true,
+					),
+					'showButton'              => array(
+						'type'    => 'boolean',
+						'default' => false,
+					),
 					'backgroundImageSource'   => array(
 						'type'    => 'string',
 						'default' => 'none',
@@ -112,12 +120,12 @@ class Terms {
 						'type'    => 'string',
 						'default' => 'color',
 					),
-					'backgroundColor' => array(
-						'type' => 'string',
+					'backgroundColor'         => array(
+						'type'    => 'string',
 						'default' => '#CCCCCC',
 					),
-					'backgroundGradient' => array(
-						'type' => 'string',
+					'backgroundGradient'      => array(
+						'type'    => 'string',
 						'default' => '',
 					),
 					'overlayColor'            => array(
@@ -128,6 +136,72 @@ class Terms {
 						'type'    => 'number',
 						'default' => 0.3,
 					),
+					'termTitleColor'          => array(
+						'type'    => 'string',
+						'default' => '#FFFFFF',
+					),
+					'termDescriptionColor'    => array(
+						'type'    => 'string',
+						'default' => '#FFFFFF',
+					),
+					'itemBorder'              => array(
+						'type'    => 'integer',
+						'default' => 0,
+					),
+					'itemBorderColor'         => array(
+						'type'    => 'string',
+						'default' => '#000000',
+					),
+					'itemBorderRadius'        => array(
+						'type'    => 'integer',
+						'default' => 0,
+					),
+					'termTitleFont'           => array(
+						'type'    => 'string',
+						'default' => 'inherit',
+					),
+					'termDescriptionFont'     => array(
+						'type'    => 'string',
+						'default' => 'inherit',
+					),
+					'termButtonText'     => array(
+						'type'    => 'string',
+						'default' => __( 'Learn More...', 'post-type-archive-mapping' ),
+					),
+					'termButtonFont' => array(
+						'type' => 'string',
+						'default' => 'inherit',
+					),
+					'termButtonTextColor' => array(
+						'type' => 'string',
+						'default' => '#FFFFFF',
+					),
+					'termButtonTextHoverColor' => array(
+						'type' => 'string',
+						'default' => '#FFFFFF',
+					),
+					'termButtonBackgroundColor' => array(
+						'type' => 'string',
+						'default' => '#32373c',
+					),
+					'termButtonBackgroundHoverColor' => array(
+						'type' => 'string',
+						'default' => '#000000',
+					),
+					'termButtonBorder'              => array(
+						'type'    => 'integer',
+						'default' => 0,
+					),
+					'termButtonBorderColor'         => array(
+						'type'    => 'string',
+						'default' => '#000000',
+					),
+					'termButtonBorderRadius'        => array(
+						'type'    => 'integer',
+						'default' => 28,
+					),
+
+
 				),
 				'render_callback' => array( $this, 'term_grid' ),
 				'editor_script'   => 'ptam-custom-posts-gutenberg',
