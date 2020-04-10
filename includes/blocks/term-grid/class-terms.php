@@ -68,6 +68,22 @@ class Terms {
 						'type'    => 'string',
 						'default' => 'full',
 					),
+					'columns' => array(
+						'type' => 'integer',
+						'default' => 2,
+					),
+					'showTermTitle' => array(
+						'type' => 'boolean',
+						'default' => true,
+					),
+					'showTermDescription' => array(
+						'type' => 'boolean',
+						'default' => false,
+					),
+					'maxSize' => array(
+						'type' => 'integer',
+						'default' => 400,
+					),
 				),
 				'render_callback' => array( $this, 'term_grid' ),
 				'editor_script'   => 'ptam-custom-posts-gutenberg',

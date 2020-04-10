@@ -154,6 +154,10 @@ class PTAM_Term_Grid extends Component {
 			align,
 			order,
 			orderBy,
+			columns,
+			showTermTitle,
+			showTermDescription,
+			maxSize,
 		} = attributes;
 
 		// Fonts
@@ -326,6 +330,39 @@ class PTAM_Term_Grid extends Component {
 						</Fragment>
 					}
 				</PanelBody>
+				<PanelBody initialOpen={false}
+					title={__("Display", "post-type-archive-mapping")}
+				>
+					<RangeControl
+						label={__("Columns", "post-type-archive-mapping")}
+						value={columns}
+						onChange={value => this.props.setAttributes({ columns: value })}
+						min={1}
+						max={4}
+					/>
+					<ToggleControl
+						label={__("Show Term Title", "post-type-archive-mapping")}
+						checked={showTermTitle}
+						onChange={value => {
+							this.props.setAttributes(
+								{
+									showTermTitle: value
+								}
+							)
+						}}
+					/>
+					<ToggleControl
+						label={__("Show Term Description", "post-type-archive-mapping")}
+						checked={showTermDescription}
+						onChange={value => {
+							this.props.setAttributes(
+								{
+									showTermDescription: value
+								}
+							)
+						}}
+					/>
+				</PanelBody>
 			</InspectorControls>
 		);
 		if (this.state.loading) {
@@ -383,7 +420,13 @@ class PTAM_Term_Grid extends Component {
 			return (
 				<Fragment>
 					{inspectorControls}
+					<div className={classnames(
+						`columns-${columns}`,
+						'ptam-term-grid'
+					)}
+					>
 					{this.getTermHtml()}
+					</div>
 				</Fragment>
 			);
 		}
