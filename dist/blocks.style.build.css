@@ -510,7 +510,8 @@ button.ptam-media-alt-reset.components-button {
   .ptam-term-grid .ptam-term-grid-item {
     min-height: 300px;
     width: 100%;
-    background: red;
+    background: #24292d;
+    color: #FFF;
     /* Flex Fallback */
     margin-left: 5px;
     margin-right: 5px;
