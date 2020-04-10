@@ -6,6 +6,7 @@ import classnames from "classnames";
 import axios from "axios";
 import { SearchListControl } from "@woocommerce/components";
 import Loading from "../components/Loading";
+import hexToRgba from "hex-to-rgba";
 var HtmlToReactParser = require("html-to-react").Parser;
 
 const { Component, Fragment } = wp.element;
@@ -28,6 +29,7 @@ const {
 } = wp.components;
 
 const {
+	__experimentalGradientPickerControl,
 	MediaUpload,
 	InspectorControls,
 	BlockAlignmentToolbar,
@@ -140,6 +142,7 @@ class PTAM_Term_Grid extends Component {
 			showTermTitle,
 			showTermDescription,
 			disableStyles,
+			backgroundType,
 		} = this.props.attributes;
 		if (Object.keys(terms).length === 0) {
 			return (
@@ -148,7 +151,14 @@ class PTAM_Term_Grid extends Component {
 		}
 		return Object.keys(terms).map((term, i) => (
 			<Fragment key={i}>
-				<div className="ptam-term-grid-item" style={{backgroundImage: `url(${terms[i].background_image})`}}>
+				<div
+					className="ptam-term-grid-item"
+					style={
+						"image" === backgroundType
+							? { backgroundImage: `url(${terms[i].background_image})` }
+							: {}
+					}
+				>
 					<div className="ptam-term-grid-item-content">
 						<h2>{terms[i].name}</h2>
 					</div>
@@ -181,6 +191,9 @@ class PTAM_Term_Grid extends Component {
 			backgroundImageFallback,
 			imageSize,
 			containerId,
+			backgroundType,
+			backgroundColor,
+			backgroundGradient,
 			overlayColor,
 			overlayOpacity,
 		} = attributes;
@@ -224,6 +237,22 @@ class PTAM_Term_Grid extends Component {
 			},
 			{ value: "pods", label: __("Pods", "post-type-archive-mapping") },
 			{ value: "meta", label: __("Term Meta", "post-type-archive-mapping") },
+		];
+
+		const backgroundTypeOptions = [
+			{ value: "none", label: __("None", "post-type-archive-mapping") },
+			{
+				value: "color",
+				label: __("Background Color", "post-type-archive-mapping"),
+			},
+			{
+				value: "gradient",
+				label: __("Background Gradient", "post-type-archive-mapping"),
+			},
+			{
+				value: "image",
+				label: __("Background Image", "post-type-archive-mapping"),
+			},
 		];
 
 		// Term select messages.
@@ -271,6 +300,11 @@ class PTAM_Term_Grid extends Component {
 				return;
 			}
 		});
+
+		// Get background color with opacity.
+		const overlayColorRGBA = overlayColor
+			? hexToRgba(overlayColor, overlayOpacity)
+			: "";
 
 		const inspectorControls = (
 			<InspectorControls>
@@ -384,6 +418,42 @@ class PTAM_Term_Grid extends Component {
 							});
 						}}
 					/>
+					<SelectControl
+						label={__("Background Type", "post-type-archive-mapping")}
+						options={backgroundTypeOptions}
+						value={backgroundType}
+						onChange={(value) => {
+							this.props.setAttributes({
+								backgroundType: value,
+							});
+						}}
+					/>
+					{"color" === backgroundType && (
+						<PanelColorSettings
+							title={__("Background Color", "post-type-archive-mapping")}
+							initialOpen={true}
+							colorSettings={[
+								{
+									value: backgroundColor,
+									onChange: (value) => {
+										setAttributes({ backgroundColor: value });
+									},
+									label: __("Background Color", "post-type-archive-mapping"),
+								},
+							]}
+						></PanelColorSettings>
+					)}
+					{"gradient" === backgroundType &&
+						__experimentalGradientPickerControl && (
+							<__experimentalGradientPickerControl
+								label={__("Choose a Background Gradient", "wp-presenter-pro")}
+								value={backgroundGradient}
+								onChange={(value) => {
+									setAttributes({ backgroundGradient: value });
+								}}
+							/>
+						)}
+
 					<ToggleControl
 						label={__("Disable Styles", "post-type-archive-mapping")}
 						checked={disableStyles}
@@ -407,131 +477,143 @@ class PTAM_Term_Grid extends Component {
 					/>
 					<TextControl
 						label={__("Container ID", "post-type-archive-mapping")}
-						help={__('Unique CSS ID for styling if you have more than one term grid on the same page.', 'post-type-archive-mapping')}
+						help={__(
+							"Unique CSS ID for styling if you have more than one term grid on the same page.",
+							"post-type-archive-mapping"
+						)}
 						type="text"
 						value={containerId}
 						onChange={(value) =>
 							this.props.setAttributes({ containerId: value })
 						}
-
 					/>
 				</PanelBody>
-				<PanelBody
-					initialOpen={false}
-					title={__("Background Image", "post-type-archive-mapping")}
-				>
-					<SelectControl
-						label={__("Background Image Source", "post-type-archive-mapping")}
-						options={backgroundImage}
-						value={backgroundImageSource}
-						onChange={(value) => {
-							this.props.setAttributes({ backgroundImageSource: value });
-						}}
-					/>
-					{"none" !== backgroundImageSource && (
-						<Fragment>
+				{"image" === backgroundType && (
+					<Fragment>
+						<PanelBody
+							initialOpen={false}
+							title={__("Background Image", "post-type-archive-mapping")}
+						>
 							<SelectControl
-								label={__("Image Size", "post-type-archive-mapping")}
-								options={imageSizeOptions}
-								value={imageSize}
+								label={__(
+									"Background Image Source",
+									"post-type-archive-mapping"
+								)}
+								options={backgroundImage}
+								value={backgroundImageSource}
 								onChange={(value) => {
-									this.props.setAttributes({ imageSize: value });
+									this.props.setAttributes({ backgroundImageSource: value });
 								}}
 							/>
-							<TextControl
-								label={__("Field Name", "post-type-archive-mapping")}
-								type="text"
-								value={backgroundImageMeta}
-								onChange={(value) =>
-									this.props.setAttributes({ backgroundImageMeta: value })
-								}
-							/>
-							<MediaUpload
-								onSelect={(imageObject) => {
-									this.props.setAttributes({
-										backgroundImageFallback: imageObject,
-									});
-									this.props.attributes.backgroundImageFallback = imageObject;
-								}}
-								type="image"
-								value={backgroundImageFallback.url}
-								render={({ open }) => (
-									<Fragment>
-										<button
-											className="ptam-media-alt-upload components-button is-button secondary"
-											onClick={open}
-										>
-											{__(
-												"Fallback Background Image",
-												"post-type-archive-mapping"
-											)}
-										</button>
-										{backgroundImageFallback && (
+							{"none" !== backgroundImageSource && (
+								<Fragment>
+									<SelectControl
+										label={__("Image Size", "post-type-archive-mapping")}
+										options={imageSizeOptions}
+										value={imageSize}
+										onChange={(value) => {
+											this.props.setAttributes({ imageSize: value });
+										}}
+									/>
+									<TextControl
+										label={__("Field Name", "post-type-archive-mapping")}
+										type="text"
+										value={backgroundImageMeta}
+										onChange={(value) =>
+											this.props.setAttributes({ backgroundImageMeta: value })
+										}
+									/>
+									<MediaUpload
+										onSelect={(imageObject) => {
+											this.props.setAttributes({
+												backgroundImageFallback: imageObject,
+											});
+											this.props.attributes.backgroundImageFallback = imageObject;
+										}}
+										type="image"
+										value={backgroundImageFallback.url}
+										render={({ open }) => (
 											<Fragment>
-												<div>
-													<img
-														src={backgroundImageFallback.url}
-														alt={__(
-															"Background Image",
-															"post-type-archive-mapping"
-														)}
-														width="250"
-														height="250"
-													/>
-												</div>
-												<div>
-													<button
-														className="ptam-media-alt-reset components-button is-button secondary"
-														onClick={(event) => {
-															this.props.setAttributes({
-																backgroundImageFallback: "",
-															});
-															this.props.attributes.backgroundImageFallback =
-																"";
-														}}
-													>
-														{__("Clear Image", "post-type-archive-mapping")}
-													</button>
-												</div>
+												<button
+													className="ptam-media-alt-upload components-button is-button secondary"
+													onClick={open}
+												>
+													{__(
+														"Fallback Background Image",
+														"post-type-archive-mapping"
+													)}
+												</button>
+												{backgroundImageFallback && (
+													<Fragment>
+														<div>
+															<img
+																src={backgroundImageFallback.url}
+																alt={__(
+																	"Background Image",
+																	"post-type-archive-mapping"
+																)}
+																width="250"
+																height="250"
+															/>
+														</div>
+														<div>
+															<button
+																className="ptam-media-alt-reset components-button is-button secondary"
+																onClick={(event) => {
+																	this.props.setAttributes({
+																		backgroundImageFallback: "",
+																	});
+																	this.props.attributes.backgroundImageFallback =
+																		"";
+																}}
+															>
+																{__("Clear Image", "post-type-archive-mapping")}
+															</button>
+														</div>
+													</Fragment>
+												)}
 											</Fragment>
 										)}
-									</Fragment>
-								)}
-							/>
-							<div>
-								<Button
-									isTertiary={true}
-									isLink={true}
-									onClick={(event) => {
-										this.displayTerms();
-									}}
-								>
-									{__("Apply", "post-type-archive-mapping")}
-								</Button>
-							</div>
-							<PanelColorSettings
-								title={ __( 'Overlay Color', 'post-type-archive-mapping' ) }
-								initialOpen={ true }
-								colorSettings={ [ {
-									value: overlayColor,
-									onChange: ( value ) => {
-										setAttributes( { overlayColor: value});
-									},
-									label: __( 'Overlay Color', 'post-type-archive-mapping' ),
-								} ] }
-							>
-							</PanelColorSettings>
-							<RangeControl
-								label={ __( 'Opacity', 'post-type-archive-mapping' ) }
-								value={ overlayOpacity }
-								onChange={ ( value ) => setAttributes( { overlayOpacity: value } ) }
-								min={ 0 }
-								max={ 1 }
-								step={ 0.01 }
-							/>
-						</Fragment>
-					)}
-				</PanelBody>
+									/>
+									<div>
+										<Button
+											isTertiary={true}
+											isLink={true}
+											onClick={(event) => {
+												this.displayTerms();
+											}}
+										>
+											{__("Apply", "post-type-archive-mapping")}
+										</Button>
+									</div>
+									<PanelColorSettings
+										title={__("Overlay Color", "post-type-archive-mapping")}
+										initialOpen={true}
+										colorSettings={[
+											{
+												value: overlayColor,
+												onChange: (value) => {
+													setAttributes({ overlayColor: value });
+												},
+												label: __("Overlay Color", "post-type-archive-mapping"),
+											},
+										]}
+									></PanelColorSettings>
+									<RangeControl
+										label={__("Opacity", "post-type-archive-mapping")}
+										value={overlayOpacity}
+										onChange={(value) =>
+											setAttributes({ overlayOpacity: value })
+										}
+										min={0}
+										max={1}
+										step={0.01}
+									/>
+								</Fragment>
+							)}
+						</PanelBody>
+					</Fragment>
+				)}
 			</InspectorControls>
 		);
 		if (this.state.loading) {
@@ -589,17 +671,59 @@ class PTAM_Term_Grid extends Component {
 			return (
 				<Fragment>
 					{inspectorControls}
-					<style dangerouslySetInnerHTML={{__html: `
-  #${containerId} .ptam-term-grid-item:before {
-	  content: '';
-	  position: absolute;
-	  width: 100%;
-	  height: 100%;
-	  background-color: rgba(0,0,0,0.8);
-	  z-index: 1;
-  }
-`}}></style>
-					<div id={containerId} className={classnames(`columns-${columns}`, "ptam-term-grid")}>
+					{'image' === backgroundType &&
+						<style
+						dangerouslySetInnerHTML={{
+							__html: `
+							#${containerId} .ptam-term-grid-item:before {
+								content: '';
+								position: absolute;
+								width: 100%;
+								height: 100%;
+								background-color: ${overlayColorRGBA};
+								z-index: 1;}
+							`,
+						}}
+					></style>
+					}
+					{'none' === backgroundType &&
+						<style
+						dangerouslySetInnerHTML={{
+							__html: `
+							#${containerId} .ptam-term-grid-item {
+								background: transparent;
+								}
+							`,
+						}}
+						></style>
+					}
+					{'color' === backgroundType &&
+						<style
+						dangerouslySetInnerHTML={{
+							__html: `
+							#${containerId} .ptam-term-grid-item {
+								background-color: ${backgroundColor};
+								}
+							`,
+						}}
+						></style>
+					}
+					{'gradient' === backgroundType &&
+						<style
+						dangerouslySetInnerHTML={{
+							__html: `
+							#${containerId} .ptam-term-grid-item {
+								background-image: ${backgroundGradient};
+								}
+							`,
+						}}
+						></style>
+					}
+					
+					<div
+						id={containerId}
+						className={classnames(`columns-${columns}`, "ptam-term-grid")}
+					>
 						{this.getTermHtml()}
 					</div>
 				</Fragment>

@@ -108,13 +108,25 @@ class Terms {
 						'type'    => 'string',
 						'default' => 'ptam-term-grid-wrapper',
 					),
-					'overlayColor' => array(
+					'backgroundType'          => array(
+						'type'    => 'string',
+						'default' => 'color',
+					),
+					'backgroundColor' => array(
 						'type' => 'string',
+						'default' => '#CCCCCC',
+					),
+					'backgroundGradient' => array(
+						'type' => 'string',
+						'default' => '',
+					),
+					'overlayColor'            => array(
+						'type'    => 'string',
 						'default' => '#000000',
 					),
-					'overlayOpacity'             => array(
+					'overlayOpacity'          => array(
 						'type'    => 'number',
-						'default' => 0.8,
+						'default' => 0.3,
 					),
 				),
 				'render_callback' => array( $this, 'term_grid' ),
