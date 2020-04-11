@@ -191,13 +191,40 @@ class Terms {
 		$attributes['backgroundType']                 = Functions::sanitize_attribute( $attributes, 'backgroundType', 'text' );
 		$attributes['itemBorderRadius']               = Functions::sanitize_attribute( $attributes, 'itemBorderRadius', 'int' );
 		$attributes['termButtonBackgroundHoverColor'] = Functions::sanitize_attribute( $attributes, 'termButtonBackgroundHoverColor', 'text' );
-
 		?>
+		<style>
+			<?php
+			if ( 'image' === $attributes['backgroundType'] ) {
+				$overlay_color = Functions::hex2rgba( $attributes['overlayColor'], $attributes['overlayOpacity'] );
+				?>
+				#<?php echo esc_html( $attributes['containerId'] ); ?> .ptam-term-grid-item:before {
+					content: '';
+					position: absolute;
+					width: 100%;
+					height: 100%;
+					background-color: <?php echo esc_html( $overlay_color ); ?>;
+					z-index: 1;
+				}
+				<?php
+
+			}
+			?>
+		</style>
 		<div id="<?php echo ! is_wp_error( $attributes['containerId'] ) ? esc_attr( $attributes['containerId'] ) : ''; ?>" class="columns-<?php echo absint( $attributes['columns'] ); ?> ptam-term-grid" >
 			<?php
 			foreach ( $raw_term_results as $index => $term ) {
 				?>
-				<div class="ptam-term-grid-item" <?php if ( ! $attributes['disableStyles'] && 'image' === $attributes['backgroundType'] ) { echo 'style="background-image: url(' . esc_url( Functions::get_term_image( $attributes['imageSize'], $attributes['backgroundImageMeta'], $attributes['backgroundImageSource'], $taxonomy, $term->term_id ) ) . ')"'; } ?>>
+				<div class="ptam-term-grid-item" 
+					<?php
+					if ( ! $attributes['disableStyles'] && 'image' === $attributes['backgroundType'] ) {
+						$background_image = Functions::get_term_image( $attributes['imageSize'], $attributes['backgroundImageMeta'], $attributes['backgroundImageSource'], $taxonomy, $term->term_id );
+						if ( empty( $background_image ) ) {
+							$background_image = Functions::get_image( $attributes['backgroundImageFallback'], $attributes['imageSize'] );
+						}
+						echo 'style="background-image: url(' . esc_url( $background_image ) . ')"';
+					}
+					?>
+					>
 					<?php
 					if ( $attributes['linkContainer'] ) {
 						printf(
