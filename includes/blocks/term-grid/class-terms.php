@@ -191,7 +191,8 @@ class Terms {
 		$attributes['backgroundType']                 = Functions::sanitize_attribute( $attributes, 'backgroundType', 'text' );
 		$attributes['itemBorderRadius']               = Functions::sanitize_attribute( $attributes, 'itemBorderRadius', 'int' );
 		$attributes['termButtonBackgroundHoverColor'] = Functions::sanitize_attribute( $attributes, 'termButtonBackgroundHoverColor', 'text' );
-		?>
+		if ( ! $attributes['disableStyles'] ) :
+			?>
 		<style>
 			<?php
 			if ( 'image' === $attributes['backgroundType'] ) {
@@ -206,10 +207,39 @@ class Terms {
 					z-index: 1;
 				}
 				<?php
-
+			}
+			if ( 'none' === $attributes['backgroundType'] ) {
+				?>
+				#<?php echo esc_html( $attributes['containerId'] ); ?> .ptam-term-grid-item {
+					background: transparent;
+				}
+				<?php
+			}
+			if ( 'color' === $attributes['backgroundType'] ) {
+				?>
+				#<?php echo esc_html( $attributes['containerId'] ); ?> .ptam-term-grid-item {
+					background-color: <?php echo esc_html( $attributes['backgroundColor'] ); ?>;
+				}
+				<?php
+			}
+			if ( 'gradient' === $attributes['backgroundType'] ) {
+				?>
+				#<?php echo esc_html( $attributes['containerId'] ); ?> .ptam-term-grid-item {
+					background-image: <?php echo esc_html( $attributes['backgroundGradient'] ); ?>;
+				}
+				<?php
 			}
 			?>
+			#<?php echo esc_html( $attributes['containerId'] ); ?> .ptam-term-grid-item {
+				border-color: <?php echo esc_html( $attributes['itemBorderColor'] ); ?>;
+				border-width: <?php echo absint( $attributes['itemBorder'] ); ?>px;
+				border-radius: <?php echo absint( $attributes['itemBorderRadius'] ); ?>%;
+				border-style: solid;
+			}
 		</style>
+			<?php
+		endif;
+		?>
 		<div id="<?php echo ! is_wp_error( $attributes['containerId'] ) ? esc_attr( $attributes['containerId'] ) : ''; ?>" class="columns-<?php echo absint( $attributes['columns'] ); ?> ptam-term-grid" >
 			<?php
 			foreach ( $raw_term_results as $index => $term ) {
