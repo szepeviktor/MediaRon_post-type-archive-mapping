@@ -564,4 +564,8 @@ button.ptam-media-alt-reset.components-button {
       -o-transition: background-color 0.5s ease;
       transition: background-color 0.5s ease; }
     .ptam-term-grid .ptam-term-grid-item h2 {
-      color: #FFFFFF; }
+      color: #FFFFFF;
+      font-size: 2.2em; }
+    .ptam-term-grid .ptam-term-grid-item .ptam-term-grid-item-description {
+      font-size: 1.4em;
+      line-height: 1.5em; }
