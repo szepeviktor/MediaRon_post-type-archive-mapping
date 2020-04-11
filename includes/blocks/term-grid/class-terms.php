@@ -236,6 +236,17 @@ class Terms {
 				border-radius: <?php echo absint( $attributes['itemBorderRadius'] ); ?>%;
 				border-style: solid;
 			}
+			#<?php echo esc_html( $attributes['containerId'] ); ?> .ptam-term-grid-item h2,
+			#<?php echo esc_html( $attributes['containerId'] ); ?> .ptam-term-grid-item h2 a,
+			#<?php echo esc_html( $attributes['containerId'] ); ?> .ptam-term-grid-item h2 a:hover {
+				color: <?php echo esc_html( $attributes['termTitleColor'] ); ?>;
+				text-decoration: none;
+				font-family: '<?php echo esc_html( $attributes['termTitleFont'] ); ?>';
+			}
+			#<?php echo esc_html( $attributes['containerId'] ); ?> .ptam-term-grid-item .ptam-term-grid-item-description {
+				color: <?php echo esc_html( $attributes['termDescriptionColor'] ); ?>;
+				font-family: '<?php echo esc_html( $attributes['termDescriptionFont'] ); ?>';
+			}
 		</style>
 			<?php
 		endif;
@@ -279,6 +290,13 @@ class Terms {
 								echo esc_html( $term->name );
 							}
 							echo '</h2>';
+						}
+						if ( $attributes['showTermDescription'] ) {
+							?>
+							<div class="ptam-term-grid-item-description">
+								<?php echo wp_kses_post( $term->description ); ?>
+							</div>
+							<?php
 						}
 						?>
 					</div>
