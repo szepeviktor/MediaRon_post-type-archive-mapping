@@ -495,7 +495,7 @@ button.ptam-media-alt-reset.components-button {
     grid-template-columns: 1fr; }
   .ptam-term-grid.columns-2 {
     grid-template-columns: 1fr 1fr; }
-    @media only screen and (max-width: 600px) {
+    @media only screen and (max-width: 500px) {
       .ptam-term-grid.columns-2 {
         grid-template-columns: 1fr; } }
   .ptam-term-grid.columns-3 {
@@ -503,11 +503,20 @@ button.ptam-media-alt-reset.components-button {
     @media only screen and (max-width: 600px) {
       .ptam-term-grid.columns-3 {
         grid-template-columns: 1fr 1fr; } }
+    @media only screen and (max-width: 500px) {
+      .ptam-term-grid.columns-3 {
+        grid-template-columns: 1fr; } }
   .ptam-term-grid.columns-4 {
     grid-template-columns: 1fr 1fr 1fr 1fr; }
     @media only screen and (max-width: 800px) {
       .ptam-term-grid.columns-4 {
         grid-template-columns: 1fr 1fr 1fr; } }
+    @media only screen and (max-width: 600px) {
+      .ptam-term-grid.columns-4 {
+        grid-template-columns: 1fr 1fr; } }
+    @media only screen and (max-width: 500px) {
+      .ptam-term-grid.columns-4 {
+        grid-template-columns: 1fr; } }
   .ptam-term-grid .ptam-term-grid-anchor-full {
     position: absolute;
     z-index: 3;

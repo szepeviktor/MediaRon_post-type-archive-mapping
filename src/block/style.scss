@@ -371,7 +371,7 @@ button.ptam-media-alt-reset.components-button {
 
 	&.columns-2 {
 		grid-template-columns: 1fr 1fr;
-		@media only screen and (max-width: 600px) {
+		@media only screen and (max-width: 500px) {
 			grid-template-columns: 1fr;
 		}
 	}
@@ -381,12 +381,21 @@ button.ptam-media-alt-reset.components-button {
 		@media only screen and (max-width: 600px) {
 			grid-template-columns: 1fr 1fr;
 		}
+		@media only screen and (max-width: 500px) {
+			grid-template-columns: 1fr;
+		}
 	}
 
 	&.columns-4 {
 		grid-template-columns: 1fr 1fr 1fr 1fr;
 		@media only screen and (max-width: 800px) {
 			grid-template-columns: 1fr 1fr 1fr;
+		}
+		@media only screen and (max-width: 600px) {
+			grid-template-columns: 1fr 1fr;
+		}
+		@media only screen and (max-width: 500px) {
+			grid-template-columns: 1fr;
 		}
 	}
 	.ptam-term-grid-anchor-full {
