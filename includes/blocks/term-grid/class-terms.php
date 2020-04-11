@@ -37,6 +37,9 @@ class Terms {
 			return ob_get_clean();
 		}
 
+		// Get taxonomy.
+		$taxonomy = sanitize_text_field( $attributes['taxonomy'] );
+
 		// Get terms to exclude.
 		$terms_exclude = isset( $attributes['termsExclude'] ) ? $attributes['termsExclude'] : array();
 		if ( ! is_array( $terms_exclude ) ) {
@@ -194,7 +197,7 @@ class Terms {
 			<?php
 			foreach ( $raw_term_results as $index => $term ) {
 				?>
-				<div class="ptam-term-grid-item">
+				<div class="ptam-term-grid-item" <?php if ( ! $attributes['disableStyles'] && 'image' === $attributes['backgroundType'] ) { echo 'style="background-image: url(' . esc_url( Functions::get_term_image( $attributes['imageSize'], $attributes['backgroundImageMeta'], $attributes['backgroundImageSource'], $taxonomy, $term->term_id ) ) . ')"'; } ?>>
 					<?php
 					if ( $attributes['linkContainer'] ) {
 						printf(
