@@ -33,6 +33,12 @@ class Enqueue {
 			PTAM_VERSION,
 			'all'
 		);
+		wp_enqueue_style(
+			'ptam-style-css-editor',
+			\PostTypeArchiveMapping::get_plugin_url( 'dist/blocks.editor.build.css' ),
+			PTAM_VERSION,
+			'all'
+		);
 	}
 
 	/**

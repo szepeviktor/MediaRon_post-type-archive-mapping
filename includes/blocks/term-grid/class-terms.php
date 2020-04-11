@@ -7,6 +7,8 @@
 
 namespace PTAM\Includes\Blocks\Term_Grid;
 
+use PTAM\Includes\Functions as Functions;
+
 /**
  * Custom Post Types Block helper methods.
  */
@@ -46,12 +48,15 @@ class Terms {
 		$order    = isset( $attributes['order'] ) ? sanitize_text_field( $attributes['order'] ) : '';
 
 		// Get All Terms again so we have a full list.
-		$all_terms    = get_terms(
+		$all_terms = get_terms(
 			array(
 				'taxonomy'   => isset( $attributes['taxonomy'] ) ? sanitize_text_field( $attributes['taxonomy'] ) : '',
 				'hide_empty' => true,
 			)
 		);
+		if ( is_wp_error( $all_terms ) ) {
+			return ob_get_clean();
+		}
 		$all_term_ids = array();
 		foreach ( $all_terms as $index => $term ) {
 			$all_term_ids[] = $term->term_id;
@@ -136,83 +141,85 @@ class Terms {
 			return ob_get_clean();
 		}
 
-		// Sanitize variables.
-		$text_vars = array(
-			'backgroundImageSource',
-			'backgroundImageMeta',
-			'backgroundGradient',
-			'backgroundType',
-			'termTitleColor',
-			'termDescriptionColor',
-			'itemBorderColor',
-			'termTitleFont',
-			'termDescriptionFont',
-			'termButtonText',
-			'termButtonFont',
-			'termButtonTextColor',
-			'termButtonTextHoverColor',
-			'termButtonBackgroundColor',
-			'termButtonBackgroundHoverColor',
-			'termButtonBorderColor',
-			'overlayColor',
-		);
-		$int_vars  = array(
-			'itemBorder',
-			'itemBorderRadius',
-			'termButtonBorder',
-			'termButtonBorderRadius',
-			'overlayOpacity',
-		);
-		$bool_vars = array(
-			'linkContainer',
-			'showTermTitle',
-			'showTermDescription',
-			'disableStyles',
-			'showButton',
-		);
-		foreach ( $text_vars as $index => $attribute ) {
-			if ( isset( $attributes[ $attribute ] ) ) {
-				$attributes[ $attribute ] = sanitize_text_field( $attributes[ $attribute ] );
+		$attributes['align']                 = Functions::sanitize_attribute( $attributes, 'align', 'text' );
+		$attributes['columns']               = Functions::sanitize_attribute( $attributes, 'columns', 'int' );
+		$attributes['showTermTitle']         = Functions::sanitize_attribute( $attributes, 'showTermTitle', 'bool' );
+		$attributes['showTermDescription']   = Functions::sanitize_attribute( $attributes, 'showTermDescription', 'bool' );
+		$attributes['disableStyles']         = Functions::sanitize_attribute( $attributes, 'disableStyles', 'bool' );
+		$attributes['linkContainer']         = Functions::sanitize_attribute( $attributes, 'linkContainer', 'bool' );
+		$attributes['linkTermTitle']         = Functions::sanitize_attribute( $attributes, 'linkTermTitle', 'bool' );
+		$attributes['showButton']            = Functions::sanitize_attribute( $attributes, 'showButton', 'bool' );
+		$attributes['backgroundImageSource'] = Functions::sanitize_attribute( $attributes, 'backgroundImageSource', 'text' );
+		$attributes['backgroundImageMeta']   = Functions::sanitize_attribute( $attributes, 'backgroundImageMeta', 'text' );
+		if ( is_array( $attributes['backgroundImageFallback'] ) ) {
+			if ( isset( $attributes['backgroundImageFallback']['id'] ) ) {
+				$attributes['backgroundImageFallback'] = $attributes['backgroundImageFallback']['id'];
+				$attributes['backgroundImageFallback'] = Functions::sanitize_attribute( $attributes, 'backgroundImageFallback', 'int' );
+			} else {
+				$attributes['backgroundImageFallback'] = 0;
 			}
+		} else {
+			$attributes['backgroundImageFallback'] = 0;
 		}
-		foreach ( $int_vars as $index => $attribute ) {
-			if ( isset( $attributes[ $attribute ] ) ) {
-				$attributes[ $attribute ] = filter_var( $attributes[ $attribute ] );
-			}
-		}
-		/*
-		foreach ( $int as $index => $attribute ) {
-			if ( in_array( $attribute, $attributes, true ) ) {
-				$attributes[ $attribute ] = intval( $attributes[ $attribute ] );
-			}
-		}*/
+		$attributes['backgroundColor']                = Functions::sanitize_attribute( $attributes, 'backgroundColor', 'text' );
+		$attributes['backgroundGradient']             = Functions::sanitize_attribute( $attributes, 'backgroundGradient', 'text' );
+		$attributes['overlayColor']                   = Functions::sanitize_attribute( $attributes, 'overlayColor', 'text' );
+		$attributes['overlayOpacity']                 = Functions::sanitize_attribute( $attributes, 'overlayOpacity', 'float' );
+		$attributes['termTitleColor']                 = Functions::sanitize_attribute( $attributes, 'termTitleColor', 'text' );
+		$attributes['termDescriptionColor']           = Functions::sanitize_attribute( $attributes, 'termDescriptionColor', 'text' );
+		$attributes['itemBorder']                     = Functions::sanitize_attribute( $attributes, 'itemBorder', 'int' );
+		$attributes['itemBorderColor']                = Functions::sanitize_attribute( $attributes, 'itemBorderColor', 'text' );
+		$attributes['termTitleFont']                  = Functions::sanitize_attribute( $attributes, 'termTitleFont', 'text' );
+		$attributes['termDescriptionFont']            = Functions::sanitize_attribute( $attributes, 'termDescriptionFont', 'text' );
+		$attributes['termButtonText']                 = Functions::sanitize_attribute( $attributes, 'termButtonText', 'text' );
+		$attributes['termButtonFont']                 = Functions::sanitize_attribute( $attributes, 'termButtonFont', 'text' );
+		$attributes['termButtonTextColor']            = Functions::sanitize_attribute( $attributes, 'termButtonTextColor', 'text' );
+		$attributes['termButtonTextHoverColor']       = Functions::sanitize_attribute( $attributes, 'termButtonTextHoverColor', 'text' );
+		$attributes['termButtonBackgroundColor']      = Functions::sanitize_attribute( $attributes, 'termButtonBackgroundColor', 'text' );
+		$attributes['termButtonBorder']               = Functions::sanitize_attribute( $attributes, 'termButtonBorder', 'int' );
+		$attributes['termButtonBorderColor']          = Functions::sanitize_attribute( $attributes, 'termButtonBorderColor', 'text' );
+		$attributes['termButtonBorderRadius']         = Functions::sanitize_attribute( $attributes, 'termButtonBorderRadius', 'int' );
+		$attributes['columns']                        = Functions::sanitize_attribute( $attributes, 'columns', 'int' );
+		$attributes['showTermTitle']                  = Functions::sanitize_attribute( $attributes, 'showTermTitle', 'bool' );
+		$attributes['disableStyles']                  = Functions::sanitize_attribute( $attributes, 'disableStyles', 'bool' );
+		$attributes['linkTermTitle']                  = Functions::sanitize_attribute( $attributes, 'linkTermTitle', 'bool' );
+		$attributes['imageSize']                      = Functions::sanitize_attribute( $attributes, 'imageSize', 'text' );
+		$attributes['containerId']                    = Functions::sanitize_attribute( $attributes, 'containerId', 'text' );
+		$attributes['backgroundType']                 = Functions::sanitize_attribute( $attributes, 'backgroundType', 'text' );
+		$attributes['itemBorderRadius']               = Functions::sanitize_attribute( $attributes, 'itemBorderRadius', 'int' );
+		$attributes['termButtonBackgroundHoverColor'] = Functions::sanitize_attribute( $attributes, 'termButtonBackgroundHoverColor', 'text' );
 
-		echo '<pre>' . print_r( $attributes, true ) . '</pre>';
-		/*
-		// Get data for each term.
-		foreach ( $raw_term_results as &$term ) {
-			$term->permalink        = get_term_link( $term );
-			$term->background_image = Functions::get_term_image(
-				$background_image_size,
-				$background_image_meta_key,
-				$background_image_source,
-				$taxonomy,
-				$term->term_id
-			);
-			if ( empty( $term->background_image ) ) {
-				$term->background_image = isset( $background_fallback_image['id'] ) ? absint( $background_fallback_image['id'] ) : 0;
-				$fallback_image         = wp_get_attachment_url( $term->background_image );
-				if ( $fallback_image ) {
-					$term->background_image = $fallback_image;
-				}
-			}
-		}
 		?>
-		<div id="<?php echo isset( $attributes['containerId'] ) ? esc_attr( $attributes['containerId'] ) : ''; ?>">
+		<div id="<?php echo ! is_wp_error( $attributes['containerId'] ) ? esc_attr( $attributes['containerId'] ) : ''; ?>" class="columns-<?php echo absint( $attributes['columns'] ); ?> ptam-term-grid" >
+			<?php
+			foreach ( $raw_term_results as $index => $term ) {
+				?>
+				<div class="ptam-term-grid-item">
+					<div class="ptam-term-grid-item-content">
+						<?php
+						if ( $attributes['showTermTitle'] ) {
+							echo '<h2>';
+							if ( $attributes['linkTermTitle'] && ! $attributes['linkContainer'] ) {
+								$term_link = get_term_link( $term->term_id, $term->taxonomy );
+								printf(
+									'<a href="%s">%s</a>',
+									esc_url( $term_link ),
+									esc_html( $term->name )
+								);
+							} else {
+								echo esc_html( $term->name );
+							}
+							echo '</h2>';
+						}
+						?>
+					</div>
+				</div>
+				<?php
+			}
+			?>
 
 		</div>
-
-		*/
+		<?php
 		return ob_get_clean();
 	}
 

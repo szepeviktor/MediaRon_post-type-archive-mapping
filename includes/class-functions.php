@@ -39,6 +39,38 @@ class Functions {
 	}
 
 	/**
+	 * Sanitize an attribute based on type.
+	 *
+	 * @param array  $attributes Array of attributes.
+	 * @param string $attribute  The attribute to sanitize.
+	 * @param string $type       The type of sanitization you need (values can be int, text, float, bool, url).
+	 *
+	 * @return mixed Sanitized attribute. wp_error on failure.
+	 */
+	public static function sanitize_attribute( $attributes, $attribute, $type = 'text' ) {
+		if ( isset( $attributes[ $attribute ] ) ) {
+			switch ( $type ) {
+				case 'text':
+					return sanitize_text_field( $attributes[ $attribute ] );
+				case 'bool':
+					return filter_var( $attributes[ $attribute ], FILTER_VALIDATE_BOOLEAN );
+				case 'int':
+					return absint( $attributes[ $attribute ] );
+				case 'float':
+					if ( is_float( $attributes[ $attribute ] ) ) {
+						return $attributes[ $attribute ];
+					}
+					return 0;
+				case 'url':
+					return esc_url( $attributes[ $attribute ] );
+				case 'default':
+					return new \WP_Error( 'ptam_unknown_type', __( 'Unknown type.', 'post-type-archive-mapping' ) );
+			}
+		}
+		return new \WP_Error( 'ptam_attribute_not_found', __( 'Attribute not found.', 'post-type-archive-mapping' ) );
+	}
+
+	/**
 	 * Convert Hex to RGBA
 	 *
 	 * @param string $color   The color to convert.
