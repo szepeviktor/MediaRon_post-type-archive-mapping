@@ -195,6 +195,15 @@ class Terms {
 			foreach ( $raw_term_results as $index => $term ) {
 				?>
 				<div class="ptam-term-grid-item">
+					<?php
+					if ( $attributes['linkContainer'] ) {
+						printf(
+							'<a href="%s" aria-label="%s" class="ptam-term-grid-anchor-full"></a>',
+							esc_url( get_term_link( $term->term_id, $term->taxonomy ) ),
+							esc_attr( $term->name )
+						);
+					}
+					?>
 					<div class="ptam-term-grid-item-content">
 						<?php
 						if ( $attributes['showTermTitle'] ) {
