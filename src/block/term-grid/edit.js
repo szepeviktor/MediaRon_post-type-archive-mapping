@@ -216,7 +216,7 @@ class PTAM_Term_Grid extends Component {
 							</div>
 						}
 						{!linkContainer && showButton &&
-							<a href="#" class="ptam-term-grid-button btn button" style={termButtonStyles}>
+							<a href="#" className="ptam-term-grid-button btn button" style={termButtonStyles}>
 								{termButtonText}
 							</a>
 						}

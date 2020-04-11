@@ -247,6 +247,20 @@ class Terms {
 				color: <?php echo esc_html( $attributes['termDescriptionColor'] ); ?>;
 				font-family: '<?php echo esc_html( $attributes['termDescriptionFont'] ); ?>';
 			}
+			#<?php echo esc_html( $attributes['containerId'] ); ?> .ptam-term-grid-item .ptam-term-grid-button {
+				color: <?php echo esc_html( $attributes['termButtonTextColor'] ); ?>;
+				background-color: <?php echo esc_html( $attributes['termButtonBackgroundColor'] ); ?>;
+				border-width: <?php echo absint( $attributes['termButtonBorder'] ); ?>px;
+				border-color: <?php echo esc_html( $attributes['termButtonBorderColor'] ); ?>;
+				border-radius: <?php echo absint( $attributes['termButtonBorderRadius'] ); ?>px;
+				font-family: '<?php echo esc_html( $attributes['termButtonFont'] ); ?>';
+				border-style: solid;
+			}
+			#<?php echo esc_html( $attributes['containerId'] ); ?> .ptam-term-grid-item .ptam-term-grid-button:hover {
+				background-color: <?php echo esc_html( $attributes['termButtonBackgroundHoverColor'] ); ?>;
+				color: <?php echo esc_html( $attributes['termButtonTextHoverColor'] ); ?>;
+				text-decoration: none;
+			}
 		</style>
 			<?php
 		endif;
@@ -296,6 +310,11 @@ class Terms {
 							<div class="ptam-term-grid-item-description">
 								<?php echo wp_kses_post( $term->description ); ?>
 							</div>
+							<?php
+						}
+						if ( ! $attributes['linkContainer'] && $attributes['showButton'] ) {
+							?>
+							<a href="<?php echo esc_url( get_term_link( $term->term_id, $term->taxonomy ) ); ?>" class="ptam-term-grid-button btn button"><?php echo esc_html( $attributes['termButtonText'] ); ?></a>
 							<?php
 						}
 						?>
