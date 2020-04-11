@@ -138,39 +138,54 @@ class Terms {
 
 		// Sanitize variables.
 		$text_vars = array(
-			backgroundType,
-			termTitleColor,
-			termDescriptionColor,
-			itemBorderColor,
-			termTitleFont,
-			termDescriptionFont,
-			termButtonText,
-			termButtonFont,
-			termButtonTextColor,
-			termButtonTextHoverColor,
-			termButtonBackgroundColor,
-			termButtonBackgroundHoverColor,
-			termButtonBorderColor,
+			'backgroundImageSource',
+			'backgroundImageMeta',
+			'backgroundGradient',
+			'backgroundType',
+			'termTitleColor',
+			'termDescriptionColor',
+			'itemBorderColor',
+			'termTitleFont',
+			'termDescriptionFont',
+			'termButtonText',
+			'termButtonFont',
+			'termButtonTextColor',
+			'termButtonTextHoverColor',
+			'termButtonBackgroundColor',
+			'termButtonBackgroundHoverColor',
+			'termButtonBorderColor',
+			'overlayColor',
 		);
-		$int_vars = array(
-			itemBorder,
-			itemBorderRadius,
-			termButtonBorder,
-			termButtonBorderRadius,
+		$int_vars  = array(
+			'itemBorder',
+			'itemBorderRadius',
+			'termButtonBorder',
+			'termButtonBorderRadius',
+			'overlayOpacity',
 		);
 		$bool_vars = array(
-			linkContainer,
-			showTermTitle,
-			showTermDescription,
-			disableStyles,
-			showButton,
+			'linkContainer',
+			'showTermTitle',
+			'showTermDescription',
+			'disableStyles',
+			'showButton',
 		);
 		foreach ( $text_vars as $index => $attribute ) {
-			if ( in_array( $attribute, $attributes, true ) ) {
+			if ( isset( $attributes[ $attribute ] ) ) {
 				$attributes[ $attribute ] = sanitize_text_field( $attributes[ $attribute ] );
 			}
 		}
-		
+		foreach ( $int_vars as $index => $attribute ) {
+			if ( isset( $attributes[ $attribute ] ) ) {
+				$attributes[ $attribute ] = filter_var( $attributes[ $attribute ] );
+			}
+		}
+		/*
+		foreach ( $int as $index => $attribute ) {
+			if ( in_array( $attribute, $attributes, true ) ) {
+				$attributes[ $attribute ] = intval( $attributes[ $attribute ] );
+			}
+		}*/
 
 		echo '<pre>' . print_r( $attributes, true ) . '</pre>';
 		/*
