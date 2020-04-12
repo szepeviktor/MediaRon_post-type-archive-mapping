@@ -69,6 +69,11 @@ class Terms {
 		$display_all_terms = false;
 		$terms_to_include  = array();
 		foreach ( $terms as $index => $term_data ) {
+			if ( ! isset( $term_data['id'] ) ) {
+				$display_all_terms = true;
+				$terms_to_include  = $all_term_ids;
+				break;
+			}
 			if ( 0 === $term_data['id'] ) {
 				$display_all_terms = true;
 				$terms_to_include  = $all_term_ids;
