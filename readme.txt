@@ -4,7 +4,7 @@ Tags: custom post types, archive, mapping, gutenberg, block, taxonomy, terms
 Requires at least: 5.3
 Requires PHP: 5.6
 Tested up to: 5.4
-Stable tag: 4.0.0
+Stable tag: 4.0.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Donate link: https://mediaron.com/give/
@@ -109,9 +109,10 @@ Yes, just post in the support forums here and I'll do my best to address your is
 
 == Changelog ==
 
-= 4.0.0 =
+= 4.0.1 =
 * Released 2020-04-12
 * New block: Term (Category) Grid Block.
+* HOT FIX: Term Grid wasn't loading.
 
 = 3.3.5 =
 * Released 2020-04-07
@@ -257,6 +258,9 @@ Yes, just post in the support forums here and I'll do my best to address your is
 * Initial release.
 
 == Upgrade Notice ==
+
+= 4.0.1 =
+Added Term (Category) Grid Block. Hotfix. Term grid was erroring out.
 
 = 4.0.0 =
 Added Term (Category) Grid Block.
