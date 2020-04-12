@@ -56,6 +56,22 @@ class Rest {
 				'callback' => array( $this, 'get_image' ),
 			)
 		);
+		register_rest_route(
+			'ptam/v2',
+			'/get_tax_terms',
+			array(
+				'methods'  => 'POST',
+				'callback' => array( $this, 'get_tax_terms' ),
+			)
+		);
+		register_rest_route(
+			'ptam/v2',
+			'/get_tax_term_data',
+			array(
+				'methods'  => 'POST',
+				'callback' => array( $this, 'get_tax_term_data' ),
+			)
+		);
 	}
 
 	/**
@@ -81,6 +97,159 @@ class Rest {
 			die( wp_json_encode( array() ) );
 		} else {
 			die( wp_json_encode( $terms ) );
+		}
+	}
+
+	/**
+	 * Return terms for taxonomy.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param WP_REST_Request $tax_data The tax data.
+	 */
+	public function get_tax_terms( $tax_data ) {
+		$taxonomy = $tax_data['taxonomy'];
+		$terms    = get_terms(
+			array(
+				'taxonomy'   => $taxonomy,
+				'hide_empty' => true,
+			)
+		);
+		if ( is_wp_error( $terms ) ) {
+			die( wp_json_encode( array() ) );
+		} else {
+			die( wp_json_encode( $terms ) );
+		}
+	}
+
+	/**
+	 * Return term data for passed terms.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param WP_REST_Request $term_data The term data.
+	 */
+	public function get_tax_term_data( $term_data ) {
+		$terms                     = $term_data['terms'];
+		$terms_exclude             = $term_data['termsExclude'];
+		$order                     = $term_data['order'];
+		$order_by                  = $term_data['orderBy'];
+		$taxonomy                  = $term_data['taxonomy'];
+		$background_image_source   = $term_data['backgroundImageSource'];
+		$background_fallback_image = $term_data['backgroundImageFallback'];
+		$background_image_meta_key = $term_data['backgroundImageMeta'];
+		$background_image_size     = $term_data['imageSize'];
+
+		// Get All Terms again so we have a full list.
+		$all_terms    = get_terms(
+			array(
+				'taxonomy'   => $taxonomy,
+				'hide_empty' => true,
+			)
+		);
+		$all_term_ids = array();
+		foreach ( $all_terms as $index => $term ) {
+			$all_term_ids[] = $term->term_id;
+		}
+
+		// Populate terms to display.
+		$display_all_terms = false;
+		$terms_to_include  = array();
+		foreach ( $terms as $index => $term_id ) {
+			if ( 0 === $term_id ) {
+				$display_all_terms = true;
+				$terms_to_include  = $all_term_ids;
+				break;
+			} else {
+				$terms_to_include[] = $term_id;
+			}
+		}
+
+		// Now let's get terms to exclude.
+		if ( $display_all_terms ) {
+			foreach ( $terms_to_include as $index => $term_id ) {
+				if ( in_array( $term_id, $terms_exclude, true ) ) {
+					unset( $terms_to_include[ $index ] );
+				}
+			}
+		}
+
+		// Build Query.
+		$query = array();
+		switch ( $order_by ) {
+			case 'slug':
+				$query = array(
+					'orderby'    => 'slug',
+					'order'      => $order,
+					'hide_empty' => true,
+					'include'    => $terms_to_include,
+					'taxonomy'   => $taxonomy,
+				);
+				break;
+			case 'order':
+				$query = array(
+					'orderby'    => 'meta_value_num',
+					'order'      => $order,
+					'meta_query' => array( // phpcs:ignore
+						'relation' => 'OR',
+						array(
+							'key'     => 'post_order',
+							'compare' => 'NOT EXISTS',
+						),
+						array(
+							'key'     => 'post_order',
+							'value'   => 0,
+							'compare' => '>=',
+						),
+					),
+					'hide_empty' => true,
+					'include'    => $terms_to_include,
+					'taxonomy'   => $taxonomy,
+				);
+				break;
+			default:
+				$query = array(
+					'orderby'    => 'name',
+					'order'      => $order,
+					'hide_empty' => true,
+					'include'    => $terms_to_include,
+					'taxonomy'   => $taxonomy,
+				);
+				break;
+		}
+		if ( empty( $terms ) || ! is_array( $terms ) ) {
+			die( wp_json_encode( array( 'term_data' => new \stdClass() ) ) );
+		}
+
+		// Retrieve the terms in order.
+		$raw_term_results = get_terms( $query );
+		if ( is_wp_error( $raw_term_results ) ) {
+			die( wp_json_encode( array( 'term_data' => new \stdClass() ) ) );
+		}
+
+		// Get data for each term.
+		foreach ( $raw_term_results as &$term ) {
+			$term->permalink        = get_term_link( $term );
+			$term->background_image = Functions::get_term_image(
+				$background_image_size,
+				$background_image_meta_key,
+				$background_image_source,
+				$taxonomy,
+				$term->term_id
+			);
+			if ( empty( $term->background_image ) ) {
+				$term->background_image = isset( $background_fallback_image['id'] ) ? absint( $background_fallback_image['id'] ) : 0;
+				$fallback_image         = wp_get_attachment_url( $term->background_image );
+				if ( $fallback_image ) {
+					$term->background_image = $fallback_image;
+				}
+			}
+		}
+
+		if ( is_wp_error( $terms ) ) {
+			die( wp_json_encode( array( 'term_data' => new \stdClass() ) ) );
+		} else {
+			die( wp_json_encode( array( 'term_data' => $raw_term_results ) ) );
 		}
 	}
 

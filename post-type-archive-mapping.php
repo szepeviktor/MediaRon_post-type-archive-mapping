@@ -82,6 +82,10 @@ class PostTypeArchiveMapping {
 		$this->cpt_block_one = new PTAM\Includes\Blocks\Custom_Post_Types\Custom_Post_Types();
 		$this->cpt_block_one->run();
 
+		// Register Custom Post Type Block.
+		$this->term_grid = new PTAM\Includes\Blocks\Term_Grid\Terms();
+		$this->term_grid->run();
+
 		// Page columns.
 		$this->page_columns = new PTAM\Includes\Admin\Page_Columns();
 		$this->page_columns->run();
