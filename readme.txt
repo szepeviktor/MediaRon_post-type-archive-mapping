@@ -1,4 +1,4 @@
-=== Custom Post Types Block ===
+=== Custom Post Types and Term Grid Block ===
 Contributors: ronalfy, chrislogan, paaljoachim
 Tags: custom post types, archive, mapping, gutenberg, block, taxonomy, terms
 Requires at least: 5.3

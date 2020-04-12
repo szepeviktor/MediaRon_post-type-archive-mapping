@@ -1,6 +1,6 @@
 <?php // phpcs:ignore
 /*
-Plugin Name: Custom Post Types Block
+Plugin Name: Custom Post Types and Term Grid Block
 Plugin URI: https://mediaron.com/custom-post-types-block/
 Description: Map your post type archives to a page and use our Gutenberg block to show posts
 Author: MediaRon LLC
