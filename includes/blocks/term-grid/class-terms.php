@@ -175,11 +175,17 @@ class Terms {
 			$attributes['backgroundImageFallback'] = 0;
 		}
 		$attributes['backgroundColor']                = Functions::sanitize_attribute( $attributes, 'backgroundColor', 'text' );
+		$attributes['backgroundColorHover']           = Functions::sanitize_attribute( $attributes, 'backgroundColorHover', 'text' );
 		$attributes['backgroundGradient']             = Functions::sanitize_attribute( $attributes, 'backgroundGradient', 'text' );
+		$attributes['backgroundGradientHover']        = Functions::sanitize_attribute( $attributes, 'backgroundGradientHover', 'text' );
 		$attributes['overlayColor']                   = Functions::sanitize_attribute( $attributes, 'overlayColor', 'text' );
+		$attributes['overlayColorHover']              = Functions::sanitize_attribute( $attributes, 'overlayColorHover', 'text' );
 		$attributes['overlayOpacity']                 = Functions::sanitize_attribute( $attributes, 'overlayOpacity', 'float' );
+		$attributes['overlayOpacityHover']            = Functions::sanitize_attribute( $attributes, 'overlayOpacityHover', 'float' );
 		$attributes['termTitleColor']                 = Functions::sanitize_attribute( $attributes, 'termTitleColor', 'text' );
+		$attributes['termTitleColorHover']            = Functions::sanitize_attribute( $attributes, 'termTitleColorHover', 'text' );
 		$attributes['termDescriptionColor']           = Functions::sanitize_attribute( $attributes, 'termDescriptionColor', 'text' );
+		$attributes['termDescriptionColorHover']      = Functions::sanitize_attribute( $attributes, 'termDescriptionColorHover', 'text' );
 		$attributes['itemBorder']                     = Functions::sanitize_attribute( $attributes, 'itemBorder', 'int' );
 		$attributes['itemBorderColor']                = Functions::sanitize_attribute( $attributes, 'itemBorderColor', 'text' );
 		$attributes['termTitleFont']                  = Functions::sanitize_attribute( $attributes, 'termTitleFont', 'text' );
@@ -207,6 +213,7 @@ class Terms {
 			<?php
 			if ( 'image' === $attributes['backgroundType'] ) {
 				$overlay_color = Functions::hex2rgba( $attributes['overlayColor'], $attributes['overlayOpacity'] );
+				$overlay_color_hover = Functions::hex2rgba( $attributes['overlayColorHover'], $attributes['overlayOpacityHover'] );
 				?>
 				#<?php echo esc_html( $attributes['containerId'] ); ?> .ptam-term-grid-item:before {
 					content: '';
@@ -215,6 +222,9 @@ class Terms {
 					height: 100%;
 					background-color: <?php echo esc_html( $overlay_color ); ?>;
 					z-index: 1;
+				}
+				#<?php echo esc_html( $attributes['containerId'] ); ?> .ptam-term-grid-item:hover:before {
+					background-color: <?php echo esc_html( $overlay_color_hover ); ?>;
 				}
 				<?php
 			}
@@ -231,12 +241,30 @@ class Terms {
 					background-color: <?php echo esc_html( $attributes['backgroundColor'] ); ?>;
 				}
 				<?php
+				if ( $attributes['linkContainer'] ) :
+					?>
+					#<?php echo esc_html( $attributes['containerId'] ); ?> .ptam-term-grid-item:hover {
+						background-color: <?php echo esc_html( $attributes['backgroundColorHover'] ); ?>;
+					}
+					<?php
+				endif;
+				?>
+				<?php
 			}
 			if ( 'gradient' === $attributes['backgroundType'] ) {
 				?>
 				#<?php echo esc_html( $attributes['containerId'] ); ?> .ptam-term-grid-item {
 					background-image: <?php echo esc_html( $attributes['backgroundGradient'] ); ?>;
 				}
+				<?php
+				if ( $attributes['linkContainer'] ) :
+					?>
+					#<?php echo esc_html( $attributes['containerId'] ); ?> .ptam-term-grid-item:hover {
+						background-image: <?php echo esc_html( $attributes['backgroundGradientHover'] ); ?>;
+					}
+					<?php
+				endif;
+				?>
 				<?php
 			}
 			?>
@@ -253,10 +281,30 @@ class Terms {
 				text-decoration: none;
 				font-family: '<?php echo esc_html( $attributes['termTitleFont'] ); ?>';
 			}
+			<?php
+			if ( $attributes['linkContainer'] ) :
+				?>
+				#<?php echo esc_html( $attributes['containerId'] ); ?> .ptam-term-grid-item:hover h2,
+				#<?php echo esc_html( $attributes['containerId'] ); ?> .ptam-term-grid-item:hover h2 a,
+				#<?php echo esc_html( $attributes['containerId'] ); ?> .ptam-term-grid-item:hover h2 a:hover {
+					color: <?php echo esc_html( $attributes['termTitleColorHover'] ); ?>;
+				}
+				<?php
+			endif;
+			?>
 			#<?php echo esc_html( $attributes['containerId'] ); ?> .ptam-term-grid-item .ptam-term-grid-item-description {
 				color: <?php echo esc_html( $attributes['termDescriptionColor'] ); ?>;
 				font-family: '<?php echo esc_html( $attributes['termDescriptionFont'] ); ?>';
 			}
+			<?php
+			if ( $attributes['linkContainer'] ) :
+				?>
+				#<?php echo esc_html( $attributes['containerId'] ); ?> .ptam-term-grid-item:hover .ptam-term-grid-item-description {
+					color: <?php echo esc_html( $attributes['termDescriptionColorHover'] ); ?>;
+				}
+				<?php
+			endif;
+			?>
 			#<?php echo esc_html( $attributes['containerId'] ); ?> .ptam-term-grid-item .ptam-term-grid-button {
 				color: <?php echo esc_html( $attributes['termButtonTextColor'] ); ?>;
 				background-color: <?php echo esc_html( $attributes['termButtonBackgroundColor'] ); ?>;
@@ -442,7 +490,7 @@ class Terms {
 						'type'    => 'string',
 						'default' => '#32373c',
 					),
-					'backgroundColorHover'                => array(
+					'backgroundColorHover'           => array(
 						'type'    => 'string',
 						'default' => '#32373c',
 					),
@@ -450,7 +498,7 @@ class Terms {
 						'type'    => 'string',
 						'default' => '',
 					),
-					'backgroundGradientHover'             => array(
+					'backgroundGradientHover'        => array(
 						'type'    => 'string',
 						'default' => '',
 					),
@@ -458,7 +506,7 @@ class Terms {
 						'type'    => 'string',
 						'default' => '#000000',
 					),
-					'overlayColorHover'                   => array(
+					'overlayColorHover'              => array(
 						'type'    => 'string',
 						'default' => '#000000',
 					),
@@ -466,7 +514,7 @@ class Terms {
 						'type'    => 'number',
 						'default' => 0.3,
 					),
-					'overlayOpacityHover'                 => array(
+					'overlayOpacityHover'            => array(
 						'type'    => 'number',
 						'default' => 0.5,
 					),
@@ -474,7 +522,7 @@ class Terms {
 						'type'    => 'string',
 						'default' => '#FFFFFF',
 					),
-					'termTitleColorHover'                 => array(
+					'termTitleColorHover'            => array(
 						'type'    => 'string',
 						'default' => '#FFFFFF',
 					),
@@ -482,7 +530,7 @@ class Terms {
 						'type'    => 'string',
 						'default' => '#FFFFFF',
 					),
-					'termDescriptionColorHover'           => array(
+					'termDescriptionColorHover'      => array(
 						'type'    => 'string',
 						'default' => '#FFFFFF',
 					),

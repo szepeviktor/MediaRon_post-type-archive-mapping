@@ -543,6 +543,9 @@ button.ptam-media-alt-reset.components-button {
     text-align: center;
     padding: 20px;
     overflow: hidden;
+    -webkit-transition: background-color 0.5s ease;
+    -o-transition: background-color 0.5s ease;
+    transition: background-color 0.5s ease;
     /* Flex Fallback */
     margin-left: 5px;
     margin-right: 5px;
