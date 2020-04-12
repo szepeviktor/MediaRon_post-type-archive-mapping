@@ -19,11 +19,8 @@ const {
 	Placeholder,
 	RangeControl,
 	SelectControl,
-	Spinner,
 	TextControl,
-	TextareaControl,
 	ToggleControl,
-	Toolbar,
 	Button,
 } = wp.components;
 
@@ -31,7 +28,6 @@ const {
 	__experimentalGradientPickerControl,
 	MediaUpload,
 	InspectorControls,
-	BlockControls,
 	PanelColorSettings,
 } = wp.blockEditor;
 
