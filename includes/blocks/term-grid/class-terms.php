@@ -440,9 +440,17 @@ class Terms {
 					),
 					'backgroundColor'                => array(
 						'type'    => 'string',
-						'default' => '#CCCCCC',
+						'default' => '#32373c',
+					),
+					'backgroundColorHover'                => array(
+						'type'    => 'string',
+						'default' => '#32373c',
 					),
 					'backgroundGradient'             => array(
+						'type'    => 'string',
+						'default' => '',
+					),
+					'backgroundGradientHover'             => array(
 						'type'    => 'string',
 						'default' => '',
 					),
@@ -450,15 +458,31 @@ class Terms {
 						'type'    => 'string',
 						'default' => '#000000',
 					),
+					'overlayColorHover'                   => array(
+						'type'    => 'string',
+						'default' => '#000000',
+					),
 					'overlayOpacity'                 => array(
 						'type'    => 'number',
 						'default' => 0.3,
+					),
+					'overlayOpacityHover'                 => array(
+						'type'    => 'number',
+						'default' => 0.5,
 					),
 					'termTitleColor'                 => array(
 						'type'    => 'string',
 						'default' => '#FFFFFF',
 					),
+					'termTitleColorHover'                 => array(
+						'type'    => 'string',
+						'default' => '#FFFFFF',
+					),
 					'termDescriptionColor'           => array(
+						'type'    => 'string',
+						'default' => '#FFFFFF',
+					),
+					'termDescriptionColorHover'           => array(
 						'type'    => 'string',
 						'default' => '#FFFFFF',
 					),
@@ -476,11 +500,11 @@ class Terms {
 					),
 					'termTitleFont'                  => array(
 						'type'    => 'string',
-						'default' => 'inherit',
+						'default' => 'Arial',
 					),
 					'termDescriptionFont'            => array(
 						'type'    => 'string',
-						'default' => 'inherit',
+						'default' => 'Arial',
 					),
 					'termButtonText'                 => array(
 						'type'    => 'string',
@@ -488,7 +512,7 @@ class Terms {
 					),
 					'termButtonFont'                 => array(
 						'type'    => 'string',
-						'default' => 'inherit',
+						'default' => 'Arial',
 					),
 					'termButtonTextColor'            => array(
 						'type'    => 'string',

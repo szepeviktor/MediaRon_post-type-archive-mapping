@@ -255,11 +255,17 @@ class PTAM_Term_Grid extends Component {
 			containerId,
 			backgroundType,
 			backgroundColor,
+			backgroundColorHover,
 			backgroundGradient,
+			backgroundGradientHover,
 			overlayColor,
+			overlayColorHover,
 			overlayOpacity,
+			overlayOpacityHover,
 			termTitleColor,
+			termTitleColorHover,
 			termDescriptionColor,
+			termDescriptionColorHover,
 			itemBorder,
 			itemBorderColor,
 			itemBorderRadius,
@@ -382,6 +388,9 @@ class PTAM_Term_Grid extends Component {
 		// Get background color with opacity.
 		const overlayColorRGBA = overlayColor
 			? hexToRgba(overlayColor, overlayOpacity)
+			: "";
+		const overlayColorHoverRGBA = overlayColorHover
+			? hexToRgba(overlayColorHover, overlayOpacityHover)
 			: "";
 
 		const inspectorControls = (
@@ -518,18 +527,35 @@ class PTAM_Term_Grid extends Component {
 									},
 									label: __("Background Color", "post-type-archive-mapping"),
 								},
+								{
+									value: backgroundColorHover,
+									onChange: (value) => {
+										setAttributes({ backgroundColorHover: value });
+									},
+									label: __("Background Color on Hover", "post-type-archive-mapping"),
+								},
 							]}
 						></PanelColorSettings>
 					)}
 					{"gradient" === backgroundType &&
 						__experimentalGradientPickerControl && (
-							<__experimentalGradientPickerControl
-								label={__("Choose a Background Gradient", "wp-presenter-pro")}
-								value={backgroundGradient}
-								onChange={(value) => {
-									setAttributes({ backgroundGradient: value });
-								}}
-							/>
+							<Fragment>
+								<__experimentalGradientPickerControl
+									label={__("Choose a Background Gradient", "wp-presenter-pro")}
+									value={backgroundGradient}
+									onChange={(value) => {
+										setAttributes({ backgroundGradient: value });
+									}}
+								/>
+								<__experimentalGradientPickerControl
+									label={__("Choose a Background Gradient on Hover", "wp-presenter-pro")}
+									value={backgroundGradientHover}
+									onChange={(value) => {
+										setAttributes({ backgroundGradientHover: value });
+									}}
+								/>
+							</Fragment>
+							
 						)}
 
 					<ToggleControl
@@ -703,6 +729,13 @@ class PTAM_Term_Grid extends Component {
 												},
 												label: __("Overlay Color", "post-type-archive-mapping"),
 											},
+											{
+												value: overlayColorHover,
+												onChange: (value) => {
+													setAttributes({ overlayColorHover: value });
+												},
+												label: __("Overlay Color on Hover", "post-type-archive-mapping"),
+											},
 										]}
 									></PanelColorSettings>
 									<RangeControl
@@ -710,6 +743,16 @@ class PTAM_Term_Grid extends Component {
 										value={overlayOpacity}
 										onChange={(value) =>
 											setAttributes({ overlayOpacity: value })
+										}
+										min={0}
+										max={1}
+										step={0.01}
+									/>
+									<RangeControl
+										label={__("Opacity on Hover", "post-type-archive-mapping")}
+										value={overlayOpacityHover}
+										onChange={(value) =>
+											setAttributes({ overlayOpacityHover: value })
 										}
 										min={0}
 										max={1}
@@ -737,11 +780,25 @@ class PTAM_Term_Grid extends Component {
 									label: __("Term Title Color", "post-type-archive-mapping"),
 								},
 								{
+									value: termTitleColorHover,
+									onChange: (value) => {
+										setAttributes({ termTitleColorHover: value });
+									},
+									label: __("Term Title Color on Hover", "post-type-archive-mapping"),
+								},
+								{
 									value: termDescriptionColor,
 									onChange: (value) => {
 										setAttributes({ termDescriptionColor: value });
 									},
 									label: __("Term Description Color", "post-type-archive-mapping"),
+								},
+								{
+									value: termDescriptionColorHover,
+									onChange: (value) => {
+										setAttributes({ termDescriptionColorHover: value });
+									},
+									label: __("Term Description Color on Hover", "post-type-archive-mapping"),
 								},
 							]}
 						></PanelColorSettings>
@@ -1016,6 +1073,57 @@ class PTAM_Term_Grid extends Component {
 								color: ${termButtonTextHoverColor} !important;
 								text-decoration: none;
 								}
+							`,
+						}}
+						></style>
+					}
+					{ linkContainer && !disableStyles && 'color' === backgroundType &&
+						<style
+						dangerouslySetInnerHTML={{
+							__html: `
+							#${containerId} .ptam-term-grid-item:hover {
+								background-color: ${backgroundColorHover} !important;
+							}
+							#${containerId} .ptam-term-grid-item:hover .ptam-term-grid-item-content h2,
+							#${containerId} .ptam-term-grid-item:hover .ptam-term-grid-item-content h2 a
+							 {
+								color: ${termTitleColorHover} !important;
+							}
+							#${containerId} .ptam-term-grid-item:hover .ptam-term-grid-item-description
+							 {
+								color: ${termDescriptionColorHover} !important;
+							}
+							`,
+						}}
+						></style>
+					}
+					{ linkContainer && !disableStyles && 'gradient' === backgroundType &&
+						<style
+						dangerouslySetInnerHTML={{
+							__html: `
+							#${containerId} .ptam-term-grid-item:hover {
+								background-image: ${backgroundGradientHover} !important;
+							}
+							#${containerId} .ptam-term-grid-item:hover .ptam-term-grid-item-content h2,
+							#${containerId} .ptam-term-grid-item:hover .ptam-term-grid-item-content h2 a
+							 {
+								color: ${termTitleColorHover} !important;
+							}
+							#${containerId} .ptam-term-grid-item:hover .ptam-term-grid-item-description
+							 {
+								color: ${termDescriptionColorHover} !important;
+							}
+							`,
+						}}
+						></style>
+					}
+					{ !disableStyles && 'image' === backgroundType &&
+						<style
+						dangerouslySetInnerHTML={{
+							__html: `
+							#${containerId} .ptam-term-grid-item:hover:before {
+								background-color: ${overlayColorHoverRGBA} !important;
+							}
 							`,
 						}}
 						></style>
