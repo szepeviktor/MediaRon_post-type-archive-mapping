@@ -185,7 +185,6 @@ class PTAM_Term_Grid extends Component {
 					borderStyle: "solid",
 			  }
 			: {};
-
 		return Object.keys(terms).map((term, i) => (
 			<Fragment key={i}>
 				<div
@@ -210,13 +209,13 @@ class PTAM_Term_Grid extends Component {
 					}
 				>
 					<div className="ptam-term-grid-item-content">
-						{showTermTitle && <h2 style={termTitleStyles}>{terms[i].name}</h2>}
+						{showTermTitle && <h2 style={termTitleStyles}>{i in terms ? terms[i].name : __( 'Unknown Title', 'post-type-archive-mapping' )}</h2>}
 						{showTermDescription && (
 							<div
 								className="ptam-term-grid-item-description"
 								style={termDescriptionStyles}
 							>
-								{htmlToReactParser.parse(terms[i].description)}
+								{i in terms ? htmlToReactParser.parse(terms[i].description) : ''}
 							</div>
 						)}
 						{!linkContainer && showButton && (
@@ -385,12 +384,14 @@ class PTAM_Term_Grid extends Component {
 
 		// Whether to show term exclusion or not.
 		let showTermExclude = false;
-		terms.forEach(function (termObject) {
-			if (0 === termObject.id) {
-				showTermExclude = true;
-				return;
-			}
-		});
+		if ( Array.isArray( terms ) ) {
+			terms.forEach(function (termObject) {
+				if (0 === termObject.id) {
+					showTermExclude = true;
+					return;
+				}
+			});
+		}
 
 		// Get background color with opacity.
 		const overlayColorRGBA = overlayColor
