@@ -31,7 +31,6 @@ const {
 	__experimentalGradientPickerControl,
 	MediaUpload,
 	InspectorControls,
-	BlockAlignmentToolbar,
 	BlockControls,
 	PanelColorSettings,
 } = wp.blockEditor;
@@ -1041,18 +1040,6 @@ class PTAM_Term_Grid extends Component {
 			return (
 				<Fragment>
 					{inspectorControls}
-					<BlockControls>
-						<BlockAlignmentToolbar
-							value={align}
-							onChange={(value) => {
-								if (undefined == value) {
-									value = "full";
-								}
-								setAttributes({ align: value });
-							}}
-							controls={["center", "wide", "full"]}
-						/>
-					</BlockControls>
 					{"image" === backgroundType && (
 						<style
 							dangerouslySetInnerHTML={{

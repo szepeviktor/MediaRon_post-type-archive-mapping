@@ -328,7 +328,7 @@ class Terms {
 			<?php
 		endif;
 		?>
-		<div id="<?php echo ! is_wp_error( $attributes['containerId'] ) ? esc_attr( $attributes['containerId'] ) : ''; ?>" class="columns-<?php echo absint( $attributes['columns'] ); ?> ptam-term-grid" >
+		<div id="<?php echo ! is_wp_error( $attributes['containerId'] ) ? esc_attr( $attributes['containerId'] ) : ''; ?>" class="columns-<?php echo absint( $attributes['columns'] ); ?> ptam-term-grid align<?php echo esc_attr( $attributes['align'] ); ?>" >
 			<?php
 			foreach ( $raw_term_results as $index => $term ) {
 				?>
