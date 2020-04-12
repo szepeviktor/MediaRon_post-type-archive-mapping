@@ -137,6 +137,16 @@ class Terms {
 				);
 				break;
 		}
+		/**
+		 * Filter the term query.
+		 *
+		 * @since 4.0.0
+		 *
+		 * @param array  $query      The term query.
+		 * @param array  $attributes The passed attributes.
+		 * @parma string $taxonomy   The taxonomy.
+		 */
+		$query = apply_filters( 'ptam_term_grid_query', $query, $attributes, $taxonomy );
 
 		// Retrieve the terms in order.
 		$raw_term_results = get_terms( $query );
@@ -323,10 +333,19 @@ class Terms {
 				<?php
 			}
 			?>
-
 		</div>
 		<?php
-		return ob_get_clean();
+		/**
+		 * Override the term grid output.
+		 *
+		 * @since 4.0.0
+		 *
+		 * @param string $html             The grid HTML.
+		 * @param array  $attributes       The passed and sanitized attributes.
+		 * @param array  $raw_term_results The term results to show.
+		 * @param string $taxonomy         The taxonomy to return the terms for.
+		 */
+		return apply_filters( 'ptam_term_grid_output', ob_get_clean(), $attributes, $raw_term_results, $taxonomy );
 	}
 
 	/**

@@ -198,6 +198,13 @@ class Functions {
 	 * @return array $fonts Fonts to Use
 	 */
 	public static function get_fonts() {
+		/**
+		 * Filter the fonts that are available.
+		 *
+		 * @since 3.5.0
+		 *
+		 * @param array  associative array of key/value pairs of fonts.
+		 */
 		$fonts     = apply_filters(
 			'ptam_fonts',
 			array(
