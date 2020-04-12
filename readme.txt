@@ -4,26 +4,28 @@ Tags: custom post types, archive, mapping, gutenberg, block, taxonomy, terms
 Requires at least: 5.3
 Requires PHP: 5.6
 Tested up to: 5.4
-Stable tag: 3.3.5
+Stable tag: 4.0.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Donate link: https://mediaron.com/give/
 
-A WordPress plugin for displaying posts using a Gutenberg block. Works well with posts, pages, custom post types, taxonomies, and terms.
+A WordPress plugin for displaying posts or terms using a Gutenberg block. Works well with posts, pages, custom post types, taxonomies, and terms.
 
 == Description ==
 
-A WordPress plugin for displaying posts using a Gutenberg block. Works well with posts, pages, custom post types, taxonomies, and terms.
-
-You can also map a post type archive to page, as well as map term archives to a page.
+A WordPress plugin for displaying posts and terms (e.g., categories) using a Gutenberg block. Works well with posts, pages, custom post types, taxonomies, and terms.
 
 <a href="https://mediaron.com/custom-post-types-block/">View Documentation and Overview</a>
 
-=== Gutenberg Block ===
+=== Custom Post Types Gutenberg Block ===
 
 This 4-minute video covers how the Gutenberg block works.
 
 https://www.youtube.com/watch?v=YmlHOj68MeU&rel=0
+
+=== Term (Category) Grid Gutenberg Block ===
+
+<a href="https://mediaron.com/term-grid-block/">View documentation and overview of the Term Grid block</a>.
 
 === Post Type Archive Mapping ===
 
@@ -106,6 +108,10 @@ Yes, just post in the support forums here and I'll do my best to address your is
 4. Term archive option.
 
 == Changelog ==
+
+= 4.0.0 =
+* Released 2020-04-12
+* New block: Term (Category) Grid Block.
 
 = 3.3.5 =
 * Released 2020-04-07
@@ -251,6 +257,9 @@ Yes, just post in the support forums here and I'll do my best to address your is
 * Initial release.
 
 == Upgrade Notice ==
+
+= 4.0.0 =
+Added Term (Category) Grid Block.
 
 = 3.3.5 =
 Show mapped pages and its own column. Mapped term pages now redirect to the correct term. Added new contributor: Paal Joachim.
