@@ -80,7 +80,9 @@ class Enqueue {
 			'objects'
 		);
 		foreach ( $post_types as $post_type => $type ) {
-			$post_type_array[ $post_type ] = $type->label;
+			if ( get_object_taxonomies( $post_type, 'names' ) ) {
+				$post_type_array[ $post_type ] = $type->label;
+			}
 		}
 
 		// Pass in i18n variables.

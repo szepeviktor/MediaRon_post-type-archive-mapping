@@ -432,8 +432,8 @@ class Posts {
 						'default' => false,
 					),
 					'term'               => array(
-						'type'    => 'integer',
-						'default' => 0,
+						'type'    => 'string',
+						'default' => "0",
 					),
 					'postsInclude'       => array(
 						'type'    => 'array',

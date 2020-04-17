@@ -3,6 +3,7 @@
  */
 import classnames from "classnames";
 import axios from "axios";
+import dayjs from "dayjs";
 import { SearchListControl } from "@woocommerce/components/build/search-list-control";
 import Loading from "../components/Loading";
 import hexToRgba from "hex-to-rgba";
@@ -213,6 +214,68 @@ class PTAM_Featured_Posts extends Component {
 		this.get_latest_data({});
 	};
 
+	getPostHtml = () => {
+		const posts = this.state.latestPosts;
+		const htmlToReactParser = new HtmlToReactParser();
+		const {
+			align,
+			postType,
+			avatarSize,
+			imageType,
+			imageTypeSize,
+			postsToShow,
+			imageCrop,
+			fallbackImg,
+			term,
+			taxonomy,
+			postsInclude,
+			order,
+			orderBy,
+			postsExclude,
+			postLayout,
+			displayPostContent,
+		} = this.props.attributes;
+		if (Object.keys(posts).length === 0) {
+			return (
+				<h2>{__("No posts could be found.", "post-type-archive-mapping")}</h2>
+			);
+		}
+		console.log( posts );
+		return Object.keys(posts).map((term, i) => (
+			<Fragment key={i}>
+				<div
+					className="ptam-featured-post-item"
+				>
+					{posts[i].featured_image_src &&
+						<Fragment>
+							<a href={posts[i].link}>
+								<img src={posts[i].featured_image_src} />
+							</a>
+						</Fragment>
+					}
+					<div className="ptam-featured-post-meta">
+						<h3 className="entry-title"><a href={posts[i].link}>{posts[i].post_title}</a></h3>
+						<span className="author-name"><a href={posts[i].author_info.author_link}>{posts[i].author_info.display_name}</a></span>
+						<span className-="post-date">
+							<time
+								dateTime={dayjs(posts[i].post_date_gmt).format()}
+								className={"ptam-block-post-grid-date"}
+							>
+								{dayjs(posts[i].post_date_gmt).format("MMMM DD, YYYY")}
+							</time>
+						</span>
+						<span className="post-comments">
+							{posts[i].comment_count} {_n('Comment', 'Comments', posts[i].comment_count, 'post-type-archive-mapping')}
+						</span>
+					</div>
+					<div className="ptam-featured-post-content">
+						{htmlToReactParser.parse(posts[i].post_excerpt)}
+					</div>
+				</div>
+			</Fragment>
+		));
+	};
+
 	render() {
 		let htmlToReactParser = new HtmlToReactParser();
 		const { attributes, setAttributes } = this.props;
@@ -301,6 +364,21 @@ class PTAM_Featured_Posts extends Component {
 			{ value: "H6", label: __("H6", "post-type-archive-mapping") },
 		];
 
+		const layoutControls = [
+			{
+				icon: "excerpt-view",
+				title: __("Show Excerpt", "post-type-archive-mapping"),
+				onClick: () => setAttributes({ postLayout: "excerpt", displayPostContent: false }),
+				isActive: postLayout === "excerpt"
+			},
+			{
+				icon: "admin-page",
+				title: __("Full Content View", "post-type-archive-mapping"),
+				onClick: () => setAttributes({ postLayout: "full_content", displayPostContent: true }),
+				isActive: postLayout === "full_content"
+			}
+		];
+
 		const inspectorControls = (
 			<InspectorControls>
 				<PanelBody
@@ -362,7 +440,7 @@ class PTAM_Featured_Posts extends Component {
 									<path d="M0 0h24v24H0V0z" fill="none" />
 									<path d="M21 3H3c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-9 8H3V9h9v2zm0-4H3V5h9v2z" />
 								</svg>{" "}
-								{__("Featured Posts", "post-type-archive-mapping")}
+								{__("Featured Posts by Category", "post-type-archive-mapping")}
 							</h1>
 							<h2>
 								<Loading cssClass="ptam-term-grid-loading-animation" />
@@ -372,21 +450,8 @@ class PTAM_Featured_Posts extends Component {
 				</Fragment>
 			);
 		}
-		if (! this.state.loading) {
-			const layoutControls = [
-				{
-					icon: "excerpt-view",
-					title: __("Show Excerpt", "post-type-archive-mapping"),
-					onClick: () => setAttributes({ postLayout: "excerpt", displayPostContent: false }),
-					isActive: postLayout === "excerpt"
-				},
-				{
-					icon: "admin-page",
-					title: __("Full Content View", "post-type-archive-mapping"),
-					onClick: () => setAttributes({ postLayout: "full_content", displayPostContent: true }),
-					isActive: postLayout === "full_content"
-				}
-			];
+		if ( ! term ) {
+			console.log( term );
 			return (
 				<Fragment>
 					{inspectorControls}
@@ -403,7 +468,32 @@ class PTAM_Featured_Posts extends Component {
 						/>
 						<Toolbar controls={layoutControls} />
 					</BlockControls>
-					{__('test', 'post-type-archive-mapping')}
+					<h2 style={{textAlign: 'center'}}>{__('Please select a term to begin.', 'post-type-archive-mapping')}</h2>
+				</Fragment>
+			)
+		}
+		if (! this.state.loading) {
+			
+			return (
+				<Fragment>
+					{inspectorControls}
+					<BlockControls>
+						<BlockAlignmentToolbar
+							value={align}
+							onChange={value => {
+								if (undefined == value) {
+									value = "wide";
+								}
+								setAttributes({ align: value });
+							}}
+							controls={["center", "wide"]}
+						/>
+						<Toolbar controls={layoutControls} />
+					</BlockControls>
+					<div className="ptam-fp-wrapper">
+						<h4 className="ptam-fp-term">{this.state.termsList[term].label}</h4>
+						{this.getPostHtml()}
+					</div>
 				</Fragment>
 			);
 		}
