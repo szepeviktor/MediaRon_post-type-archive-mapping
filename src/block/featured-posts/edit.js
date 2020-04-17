@@ -335,7 +335,6 @@ class PTAM_Featured_Posts extends Component {
 						}}
 					/>
 					<SelectControl
-						mutltiple
 						label={__("Terms", "post-type-archive-mapping")}
 						options={this.state.termsList}
 						value={term}
@@ -350,6 +349,7 @@ class PTAM_Featured_Posts extends Component {
 		if (this.state.loading) {
 			return (
 				<Fragment>
+					{inspectorControls}
 					<Placeholder>
 						<div className="ptam-term-grid-loading">
 							<h1>
