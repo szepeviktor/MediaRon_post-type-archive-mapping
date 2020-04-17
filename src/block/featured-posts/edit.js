@@ -265,6 +265,12 @@ class PTAM_Featured_Posts extends Component {
 			taxOptions.push({ value: key, label: ptam_globals.taxonomies[key] });
 		}
 
+		// Post Types.
+		let postTypeOptions = [];
+		for (var key in ptam_globals.post_types) {
+			postTypeOptions.push({ value: key, label: ptam_globals.post_types[key] });
+		}
+
 		// Image Sizes.
 		let imageSizeOptions = [];
 		let imageSizes = this.state.imageSizes;
