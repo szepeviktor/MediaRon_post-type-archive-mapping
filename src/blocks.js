@@ -11,3 +11,4 @@
 
 import './block/block.js'; // Import main block.
 import './block/term-grid/block.js'; // Import term grid block.
+import './block/featured-posts/block.js'; // Import Featured Posts Block.
