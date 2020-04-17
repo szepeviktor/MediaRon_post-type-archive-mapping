@@ -89,6 +89,10 @@ class PostTypeArchiveMapping {
 		// Page columns.
 		$this->page_columns = new PTAM\Includes\Admin\Page_Columns();
 		$this->page_columns->run();
+
+		// Yoast Compatibility.
+		$this->yoast = new PTAM\Includes\Yoast();
+		$this->yoast->run();
 	} //end constructor
 
 	/**
@@ -184,6 +188,7 @@ class PostTypeArchiveMapping {
 					$query->set( 'redirected', true );
 					$query->set( 'original_archive_type', 'page' );
 					$query->set( 'original_archive_id', $post_type );
+					$query->set( 'term_tax', '' );
 					$query->set( 'paged', $this->paged );
 					$query->is_archive           = false;
 					$query->is_single            = true;
@@ -195,6 +200,7 @@ class PostTypeArchiveMapping {
 		}
 		if ( is_tax() || $query->is_category || $query->is_tag ) {
 			$post_id = get_term_meta( get_queried_object_id(), '_term_archive_mapping', true );
+			$term    = get_queried_object();
 			if ( $post_id && 'default' !== $post_id ) {
 				$post_id = absint( $post_id );
 				$query->set( 'post_type', 'page' );
@@ -202,7 +208,8 @@ class PostTypeArchiveMapping {
 				$query->set( 'redirected', true );
 				$query->set( 'paged', $this->paged );
 				$query->set( 'original_archive_type', 'term' );
-				$query->set( 'original_archive_id', get_queried_object_id() );
+				$query->set( 'original_archive_id', absint( $term->term_id ) );
+				$query->set( 'term_tax', sanitize_text_field( $term->taxonomy ) );
 				$query->is_page              = true;
 				$query->is_archive           = false;
 				$query->is_category          = false;
