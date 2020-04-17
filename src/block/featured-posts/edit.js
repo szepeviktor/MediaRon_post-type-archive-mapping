@@ -22,6 +22,7 @@ const {
 	TextControl,
 	ToggleControl,
 	Button,
+	Toolbar,
 } = wp.components;
 
 const {
@@ -29,6 +30,8 @@ const {
 	MediaUpload,
 	InspectorControls,
 	PanelColorSettings,
+	BlockAlignmentToolbar,
+	BlockControls,
 } = wp.blockEditor;
 
 const MAX_POSTS_COLUMNS = 1;
@@ -40,229 +43,202 @@ class PTAM_Featured_Posts extends Component {
 		this.state = {
 			loading: true,
 			taxonomy: "category",
-			postType: 'post',
+			postType: "post",
 			postTypes: ptam_globals.post_types,
 			imageSizes: ptam_globals.image_sizes,
+			taxonomyList: [],
+			termsList: [],
 		};
 
 		//this.get_latest_data();
 	}
 
-	getTerms = (object = {}) => {
-		const props = jQuery.extend({}, this.props.attributes, object);
+	get_term_list = (object = {}) => {
 		let termsList = [];
-		let termsListExclude = [];
-		let { taxonomy } = props;
-		this.setState({
-			loading: true,
-		});
+		const props = jQuery.extend({}, this.props.attributes, object);
+		const { postType, taxonomy } = props;
 		axios
-			.post(ptam_globals.rest_url + `ptam/v2/get_tax_terms`, {
+			.post(ptam_globals.rest_url + `ptam/v2/get_terms`, {
 				taxonomy: taxonomy,
+				post_type: postType
 			})
-			.then((response) => {
+			.then(response => {
 				if (Object.keys(response.data).length > 0) {
 					termsList.push({
-						id: 0,
-						name: __("All", "post-type-archive-mapping"),
+						value: 0,
+						label: __("All", "post-type-archive-mapping")
 					});
-					jQuery.each(response.data, function (key, value) {
-						termsListExclude.push({ id: value.term_id, name: value.name });
-						termsList.push({ id: value.term_id, name: value.name });
+					jQuery.each(response.data, function(key, value) {
+						termsList.push({ value: value.term_id, label: value.name });
 					});
 				}
 				this.setState({
 					loading: false,
-					terms: termsList,
-					termsExclude: termsListExclude,
+					termsList: termsList
 				});
-				this.displayTerms({ value: termsList });
 			});
-	};
-	displayTerms = () => {
-		const {
+	}
+
+	get_latest_posts(object = {}) {
+		this.setState({ loading: true });
+		const props = jQuery.extend({}, this.props.attributes, object);
+		let {
+			postType,
 			order,
 			orderBy,
+			avatarSize,
+			imageType,
+			imageTypeSize,
 			taxonomy,
-			termsExclude,
-			terms,
-			backgroundImageSource,
-			backgroundImageFallback,
-			backgroundImageMeta,
-			imageSize,
-		} = this.props.attributes;
-		let termsToRetrieve = [];
-		let termsToExclude = [];
-		terms.forEach(function (termObject) {
-			termsToRetrieve.push(termObject.id);
-		});
-		termsExclude.forEach(function (termObject) {
-			termsToExclude.push(termObject.id);
-		});
-		this.setState({
-			termLoading: true,
-		});
+			term,
+			postsToShow,
+			imageCrop,
+			fallbackImg,
+		} = props;
 		axios
-			.post(ptam_globals.rest_url + `ptam/v2/get_tax_term_data`, {
-				terms: termsToRetrieve,
-				termsExclude: termsToExclude,
+			.post(ptam_globals.rest_url + `ptam/v2/get_posts`, {
+				post_type: postType,
 				order: order,
-				orderBy: orderBy,
+				orderby: orderBy,
 				taxonomy: taxonomy,
-				backgroundImageSource: backgroundImageSource,
-				backgroundImageFallback: backgroundImageFallback,
-				backgroundImageMeta: backgroundImageMeta,
+				term: term,
+				posts_per_page: postsToShow,
+				image_size: imageCrop,
+				avatar_size: avatarSize,
+				image_type: imageType,
+				image_size: imageTypeSize,
+				default_image: fallbackImg
 			})
-			.then((response) => {
-				if (Object.keys(response.data).length > 0) {
-					this.setState({
-						termsToDisplay: response.data.term_data,
-					});
-				}
+			.then(response => {
+				// Now Set State
 				this.setState({
-					termLoading: false,
+					loading: false,
+					latestPosts: response.data.posts,
+					userTaxonomies: response.data.taxonomies,
+					userTerms: response.data.terms
 				});
 			});
-	};
+	}
 
-	getTermHtml = () => {
-		const terms = this.state.termsToDisplay;
-		const htmlToReactParser = new HtmlToReactParser();
-		const {
-			linkContainer,
-			showTermTitle,
-			showTermDescription,
-			disableStyles,
-			backgroundType,
-			termTitleColor,
-			termDescriptionColor,
-			itemBorder,
-			itemBorderColor,
-			itemBorderRadius,
-			termTitleFont,
-			termDescriptionFont,
-			showButton,
-			termButtonText,
-			termButtonFont,
-			termButtonTextColor,
-			termButtonTextHoverColor,
-			termButtonBackgroundColor,
-			termButtonBackgroundHoverColor,
-			termButtonBorder,
-			termButtonBorderColor,
-			termButtonBorderRadius,
-		} = this.props.attributes;
-		if (Object.keys(terms).length === 0) {
-			return (
-				<h2>{__("No terms could be found.", "post-type-archive-mapping")}</h2>
-			);
-		}
-		const termTitleStyles = !disableStyles
-			? {
-					color: termTitleColor,
-					fontFamily: `${termTitleFont}`,
-			  }
-			: {};
-		const termDescriptionStyles = !disableStyles
-			? {
-					color: termDescriptionColor,
-					fontFamily: `${termDescriptionFont}`,
-			  }
-			: {};
+	get_latest_data = (object = {}) => {
+		this.setState({ loading: true });
+		let latestPosts = [];
+		let taxonomyList = [];
+		let termsList = [];
+		let userTaxonomies = [];
+		let userTerms = [];
+		const props = jQuery.extend({}, this.props.attributes, object);
+		let {
+			postType,
+			order,
+			orderBy,
+			avatarSize,
+			imageType,
+			imageTypeSize,
+			taxonomy,
+			term,
+			postsToShow,
+			imageCrop,
+			fallbackImg,
+		} = props;
 
-		const termButtonStyles = !disableStyles
-			? {
-					color: termButtonTextColor,
-					backgroundColor: termButtonBackgroundColor,
-					borderWidth: termButtonBorder + "px",
-					borderColor: termButtonBorderColor,
-					borderRadius: termButtonBorderRadius,
-					fontFamily: `${termButtonFont}`,
-					borderStyle: "solid",
-			  }
-			: {};
-		return Object.keys(terms).map((term, i) => (
-			<Fragment key={i}>
-				<div
-					className="ptam-term-grid-item"
-					style={
-						"image" === backgroundType && !disableStyles
-							? {
-									backgroundImage: `url(${terms[i].background_image})`,
-									borderWidth: `${itemBorder}px`,
-									borderColor: `${itemBorderColor}`,
-									borderRadius: `${itemBorderRadius}%`,
-									borderStyle: "solid",
-							  }
-							: !disableStyles
-							? {
-									borderWidth: `${itemBorder}px`,
-									borderColor: `${itemBorderColor}`,
-									borderRadius: `${itemBorderRadius}%`,
-									borderStyle: "solid",
-							  }
-							: {}
-					}
-				>
-					<div className="ptam-term-grid-item-content">
-						{showTermTitle && (
-							<h2 style={termTitleStyles}>
-								{i in terms
-									? terms[i].name
-									: __("Unknown Title", "post-type-archive-mapping")}
-							</h2>
-						)}
-						{showTermDescription && (
-							<div
-								className="ptam-term-grid-item-description"
-								style={termDescriptionStyles}
-							>
-								{i in terms
-									? htmlToReactParser.parse(terms[i].description)
-									: ""}
-							</div>
-						)}
-						{!linkContainer && showButton && (
-							<a
-								href="#"
-								className="ptam-term-grid-button btn button"
-								style={termButtonStyles}
-							>
-								{termButtonText}
-							</a>
-						)}
-					</div>
-				</div>
-			</Fragment>
-		));
-	};
+		// Get Latest Posts and Chain Promises
+		axios
+			.post(ptam_globals.rest_url + `ptam/v2/get_featured_posts`, {
+				post_type: postType,
+				order: order,
+				orderby: orderBy,
+				taxonomy: taxonomy,
+				term: term,
+				posts_per_page: postsToShow,
+				image_size: imageCrop,
+				avatar_size: avatarSize,
+				image_type: imageType,
+				image_size: imageTypeSize,
+				default_image: fallbackImg,
+			})
+			.then((response) => {
+				latestPosts = response.data.posts;
+				userTaxonomies = response.data.taxonomies;
+				termsList = response.data.terms;
+
+				// Get Terms
+				axios
+					.post(ptam_globals.rest_url + `ptam/v2/get_terms`, {
+						taxonomy: taxonomy,
+						post_type: postType,
+					})
+					.then((response) => {
+						if (Object.keys(response.data).length > 0) {
+							termsList.push({
+								value: 0,
+								label: __("All", "post-type-archive-mapping"),
+							});
+							jQuery.each(response.data, function (key, value) {
+								termsList.push({ value: value.term_id, label: value.name });
+							});
+						}
+
+						// Get Taxonomies
+						axios
+							.post(ptam_globals.rest_url + `ptam/v2/get_taxonomies`, {
+								post_type: postType,
+							})
+							.then((response) => {
+								if (Object.keys(response.data).length > 0) {
+									taxonomyList.push({
+										value: "none",
+										label: __("Select a Taxonomy", "post-type-archive-mapping"),
+									});
+									jQuery.each(response.data, function (key, value) {
+										taxonomyList.push({ value: key, label: value.label });
+									});
+								}
+
+								// Now Set State
+								this.setState({
+									loading: false,
+									latestPosts: latestPosts,
+									taxonomyList: taxonomyList,
+									termsList: termsList,
+									userTaxonomies: userTaxonomies,
+									userTerms: userTerms,
+								});
+							});
+					});
+			});
+	}
 
 	componentDidMount = () => {
-		//this.getTerms(this.state);
+		this.get_latest_data({});
 	};
 
 	render() {
 		let htmlToReactParser = new HtmlToReactParser();
 		const { attributes, setAttributes } = this.props;
 		const {
+			align,
+			postType,
+			avatarSize,
+			imageType,
+			imageTypeSize,
+			postsToShow,
+			imageCrop,
+			fallbackImg,
 			term,
 			taxonomy,
 			postsInclude,
 			order,
 			orderBy,
 			postsExclude,
+			postLayout,
+			displayPostContent,
 		} = attributes;
 
 		// Fonts
 		let fontOptions = [];
 		for (var key in ptam_globals.fonts) {
 			fontOptions.push({ value: key, label: ptam_globals.fonts[key] });
-		}
-
-		// Taxonomies.
-		let taxOptions = [];
-		for (var key in ptam_globals.taxonomies) {
-			taxOptions.push({ value: key, label: ptam_globals.taxonomies[key] });
 		}
 
 		// Post Types.
@@ -315,12 +291,60 @@ class PTAM_Featured_Posts extends Component {
 			},
 		];
 
+		// Title Heading Options
+		const titleHeadingOptions = [
+			{ value: "h1", label: __("H1", "post-type-archive-mapping") },
+			{ value: "h2", label: __("H2", "post-type-archive-mapping") },
+			{ value: "h3", label: __("H3", "post-type-archive-mapping") },
+			{ value: "h4", label: __("H4", "post-type-archive-mapping") },
+			{ value: "h5", label: __("H5", "post-type-archive-mapping") },
+			{ value: "H6", label: __("H6", "post-type-archive-mapping") },
+		];
+
 		const inspectorControls = (
 			<InspectorControls>
 				<PanelBody
 					initialOpen={false}
 					title={__("Query", "post-type-archive-mapping")}
-				></PanelBody>
+				>
+					<SelectControl
+						label={__("Post Type", "post-type-archive-mapping")}
+						options={postTypeOptions}
+						value={postType}
+						onChange={(value) => {
+							this.props.setAttributes({
+								postType: value,
+								taxonomy: "none",
+								term: 0,
+							});
+							this.get_latest_data({
+								postType: value,
+								taxonomy: "none",
+								term: 0
+							});
+						}}
+					/>
+					<SelectControl
+						label={__("Taxonomy", "post-type-archive-mapping")}
+						options={this.state.taxonomyList}
+						value={taxonomy}
+						onChange={(value) => {
+							this.props.setAttributes({ taxonomy: value });
+							this.get_term_list({ taxonomy: value, term: 0 });
+							this.get_latest_posts({ term: value });
+						}}
+					/>
+					<SelectControl
+						mutltiple
+						label={__("Terms", "post-type-archive-mapping")}
+						options={this.state.termsList}
+						value={term}
+						onChange={value => {
+							this.props.setAttributes({ term: value });
+							this.get_latest_posts({ term: value });
+						}}
+					/>
+				</PanelBody>
 			</InspectorControls>
 		);
 		if (this.state.loading) {
@@ -345,6 +369,41 @@ class PTAM_Featured_Posts extends Component {
 							</h2>
 						</div>
 					</Placeholder>
+				</Fragment>
+			);
+		}
+		if (! this.state.loading) {
+			const layoutControls = [
+				{
+					icon: "excerpt-view",
+					title: __("Show Excerpt", "post-type-archive-mapping"),
+					onClick: () => setAttributes({ postLayout: "excerpt", displayPostContent: false }),
+					isActive: postLayout === "excerpt"
+				},
+				{
+					icon: "admin-page",
+					title: __("Full Content View", "post-type-archive-mapping"),
+					onClick: () => setAttributes({ postLayout: "full_content", displayPostContent: true }),
+					isActive: postLayout === "full_content"
+				}
+			];
+			return (
+				<Fragment>
+					{inspectorControls}
+					<BlockControls>
+						<BlockAlignmentToolbar
+							value={align}
+							onChange={value => {
+								if (undefined == value) {
+									value = "wide";
+								}
+								setAttributes({ align: value });
+							}}
+							controls={["center", "wide"]}
+						/>
+						<Toolbar controls={layoutControls} />
+					</BlockControls>
+					{__('test', 'post-type-archive-mapping')}
 				</Fragment>
 			);
 		}

@@ -217,7 +217,7 @@ class Posts {
 		<style>
 			<?php
 			if ( 'image' === $attributes['backgroundType'] ) {
-				$overlay_color = Functions::hex2rgba( $attributes['overlayColor'], $attributes['overlayOpacity'] );
+				$overlay_color       = Functions::hex2rgba( $attributes['overlayColor'], $attributes['overlayOpacity'] );
 				$overlay_color_hover = Functions::hex2rgba( $attributes['overlayColorHover'], $attributes['overlayOpacityHover'] );
 				?>
 				#<?php echo esc_html( $attributes['containerId'] ); ?> .ptam-term-grid-item:before {
@@ -415,33 +415,69 @@ class Posts {
 			'ptam/featured-posts',
 			array(
 				'attributes'      => array(
-					'taxonomy'                       => array(
+					'taxonomy'           => array(
 						'type'    => 'string',
 						'default' => 'category',
 					),
-					'term'                          => array(
+					'postType'           => array(
+						'type'    => 'string',
+						'default' => 'post',
+					),
+					'postLayout'         => array(
+						'type'    => 'string',
+						'default' => 'excerpt',
+					),
+					'displayPostContent' => array(
+						'type'    => 'boolean',
+						'default' => false,
+					),
+					'term'               => array(
 						'type'    => 'integer',
 						'default' => 0,
 					),
-					'postsInclude'                   => array(
+					'postsInclude'       => array(
 						'type'    => 'array',
 						'default' => array( '' ),
 					),
-					'postsExclude'                   => array(
+					'postsExclude'       => array(
 						'type'    => 'array',
 						'default' => array( '' ),
 					),
-					'order'                          => array(
+					'order'              => array(
 						'type'    => 'string',
 						'default' => 'desc',
 					),
-					'orderBy'                        => array(
+					'orderBy'            => array(
 						'type'    => 'string',
 						'default' => 'name',
 					),
-					'align'                          => array(
+					'align'              => array(
 						'type'    => 'string',
 						'default' => 'full',
+					),
+					'avatarSize'         => array(
+						'type'    => 'integer',
+						'default' => 500,
+					),
+					'imageType'          => array(
+						'type'    => 'string',
+						'default' => 'regular',
+					),
+					'imageTypeSize'      => array(
+						'type'    => 'string',
+						'default' => 'thumbnail',
+					),
+					'postsToShow'        => array(
+						'type'    => 'number',
+						'default' => 1,
+					),
+					'imageCrop'          => array(
+						'type'    => 'string',
+						'default' => 'landscape',
+					),
+					'fallbackImg'        => array(
+						'type'    => 'object',
+						'default' => '',
 					),
 				),
 				'render_callback' => array( $this, 'term_grid' ),
