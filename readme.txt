@@ -104,8 +104,9 @@ Yes, just post in the support forums here and I'll do my best to address your is
 
 1. Setting up the custom post types block.
 2. Styling the block.
-3. Settings->Reading option.
-4. Term archive option.
+3. New Term Grid Block.
+4. Settings->Reading option.
+5. Term archive option.
 
 == Changelog ==
 
