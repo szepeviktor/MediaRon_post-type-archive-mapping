@@ -182,6 +182,8 @@ class PostTypeArchiveMapping {
 					$query->set( 'post_type', 'page' );
 					$query->set( 'page_id', $post_id );
 					$query->set( 'redirected', true );
+					$query->set( 'original_archive_type', 'page' );
+					$query->set( 'original_archive_id', $post_type );
 					$query->set( 'paged', $this->paged );
 					$query->is_archive           = false;
 					$query->is_single            = true;
@@ -199,6 +201,8 @@ class PostTypeArchiveMapping {
 				$query->set( 'page_id', $post_id );
 				$query->set( 'redirected', true );
 				$query->set( 'paged', $this->paged );
+				$query->set( 'original_archive_type', 'term' );
+				$query->set( 'original_archive_id', get_queried_object_id() );
 				$query->is_page              = true;
 				$query->is_archive           = false;
 				$query->is_category          = false;
