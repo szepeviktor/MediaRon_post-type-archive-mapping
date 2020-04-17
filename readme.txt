@@ -4,7 +4,7 @@ Tags: custom post types, archive, mapping, gutenberg, block, taxonomy, terms
 Requires at least: 5.3
 Requires PHP: 5.6
 Tested up to: 5.4
-Stable tag: 4.0.1
+Stable tag: 4.0.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Donate link: https://mediaron.com/give/
@@ -108,6 +108,10 @@ Yes, just post in the support forums here and I'll do my best to address your is
 4. Term archive option.
 
 == Changelog ==
+
+= 4.0.5 -
+* Released 2020-04-16
+* Added compatibility for Yoast SEO.
 
 = 4.0.1 =
 * Released 2020-04-12
@@ -258,6 +262,9 @@ Yes, just post in the support forums here and I'll do my best to address your is
 * Initial release.
 
 == Upgrade Notice ==
+
+= 4.0.5 =
+Added compatibility for Yoast SEO.
 
 = 4.0.1 =
 Added Term (Category) Grid Block. Hotfix. Term grid was erroring out.
