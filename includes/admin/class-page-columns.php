@@ -54,11 +54,13 @@ class Page_Columns {
 			$post_type = get_post_meta( $page_id, '_post_type_mapped', true );
 			if ( $post_type && ! empty( $post_type ) ) {
 				$archive_link = get_post_type_archive_link( $post_type );
-				echo sprintf(
-					'<a href="%s">%s</a>',
-					esc_url( $archive_link ),
-					esc_html__( 'View Post Type Archive', 'post-type-archive-mapping' )
-				);
+				if ( $archive_link ) {
+					echo sprintf(
+						'<a href="%s">%s</a>',
+						esc_url( $archive_link ),
+						esc_html__( 'View Post Type Archive', 'post-type-archive-mapping' )
+					);
+				}
 				return;
 			}
 			$term_id = get_post_meta( $page_id, '_term_mapped', true );
