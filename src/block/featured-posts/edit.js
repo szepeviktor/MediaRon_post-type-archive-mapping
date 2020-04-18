@@ -257,7 +257,7 @@ class PTAM_Featured_Posts extends Component {
 					<div className="ptam-featured-post-meta">
 						<h3 className="entry-title"><a style={titleStyles} href={posts[i].link}>{posts[i].post_title}</a></h3>
 						<span className="author-name"><a href={posts[i].author_info.author_link}>{posts[i].author_info.display_name}</a></span>
-						<span className-="post-date">
+						<span className="post-date">
 							<time
 								dateTime={dayjs(posts[i].post_date_gmt).format()}
 								className={"ptam-block-post-grid-date"}
@@ -271,7 +271,7 @@ class PTAM_Featured_Posts extends Component {
 					</div>
 					{posts[i].featured_image_src &&
 						<Fragment>
-							<div classname="ptam-featured-post-image">
+							<div className="ptam-featured-post-image">
 								<a href={posts[i].link}>
 									<img src={posts[i].featured_image_src} />
 								</a>
@@ -334,6 +334,8 @@ class PTAM_Featured_Posts extends Component {
 			titleFontSize,
 			titleColor,
 			titleColorHover,
+			containerId,
+			disableStyles,
 		} = attributes;
 
 		// Fonts
@@ -531,6 +533,23 @@ class PTAM_Featured_Posts extends Component {
 					/>
 				</PanelBody>
 				<PanelBody
+					initialOpen={true}
+					title={__("Container", "post-type-archive-mapping")}
+				>
+					<TextControl
+						label={__("Container ID", "post-type-archive-mapping")}
+						help={__(
+							"Unique CSS ID for styling if you have more than one term grid on the same page.",
+							"post-type-archive-mapping"
+						)}
+						type="text"
+						value={containerId}
+						onChange={(value) =>
+							this.props.setAttributes({ containerId: value })
+						}
+					/>
+				</PanelBody>
+				<PanelBody
 					initialOpen={false}
 					title={__("Term Display", "post-type-archive-mapping")}
 				>
@@ -718,7 +737,18 @@ class PTAM_Featured_Posts extends Component {
 						/>
 						<Toolbar controls={layoutControls} />
 					</BlockControls>
-					<div className="ptam-fp-wrapper">
+					{!disableStyles && (
+						<style
+							dangerouslySetInnerHTML={{
+								__html: `
+							#${containerId} .entry-title a:hover {
+								color: ${titleColorHover} !important;
+							}
+							`,
+							}}
+						></style>
+					)}
+					<div className="ptam-fp-wrapper" id={containerId}>
 						<h4 className="ptam-fp-term" style={termContainerStyles}><span style={termButtonStyles}>{selectedTerm}</span></h4>
 						{this.getPostHtml()}
 					</div>

@@ -534,7 +534,15 @@ class Posts {
 					'titleColorHover' => array(
 						'type' => 'string',
 						'default' => '#128c20',
-					)
+					),
+					'containerId' => array(
+						'type' => 'string',
+						'default' => 'ptam-featured-post-list',
+					),
+					'disableStyles' => array(
+						'type' => 'boolean',
+						'default' => false,
+					),
 				),
 				'render_callback' => array( $this, 'term_grid' ),
 				'editor_script'   => 'ptam-custom-posts-gutenberg',
