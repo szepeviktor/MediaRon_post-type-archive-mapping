@@ -269,6 +269,7 @@ class PTAM_Featured_Posts extends Component {
 			titleStyles = {};
 			excerptStyles = {};
 		}
+		console.log( posts );
 		return Object.keys(posts).map((term, i) => (
 			<Fragment key={i}>
 				<div
@@ -303,7 +304,7 @@ class PTAM_Featured_Posts extends Component {
 						<Fragment>
 							<div className="ptam-featured-post-image">
 								<a href={posts[i].link}>
-									<img src={posts[i].featured_image_src} />
+									{htmlToReactParser.parse(posts[i].featured_image_src)}
 								</a>
 							</div>
 						</Fragment>
@@ -782,39 +783,110 @@ class PTAM_Featured_Posts extends Component {
 						max={60}
 					/>
 				</PanelBody>
-				<PanelBody
-					initialOpen={false}
-					title={__("Post Excerpt", "post-type-archive-mapping")}
-				>
-					<PanelColorSettings
-						title={__("Excerpt Colors", "post-type-archive-mapping")}
-						initialOpen={true}
-						colorSettings={[
-							{
-								value: excerptTextColor,
-								onChange: (value) => {
-									setAttributes({ excerptTextColor: value });
+				{showFeaturedImage &&
+					<PanelBody
+						initialOpen={false}
+						title={__("Featured Image", "post-type-archive-mapping")}
+					>
+						<Fragment>
+							<MediaUpload
+								onSelect={imageObject => {
+									this.props.setAttributes({ fallbackImg: imageObject });
+									this.get_latest_posts({ fallbackImg: imageObject });
+								}}
+								type="image"
+								value={fallbackImg.url}
+								render={({ open }) => (
+									<Fragment>
+										<button
+											className="ptam-media-alt-upload components-button is-button secondary"
+											onClick={open}
+										>
+											{__(
+												"Fallback Featured Image",
+												"post-type-archive-mapping"
+											)}
+										</button>
+										{fallbackImg && (
+											<Fragment>
+												<div>
+													<img
+														src={fallbackImg.url}
+														alt={__(
+															"Featured Image",
+															"post-type-archive-mapping"
+														)}
+														width="250"
+														height="250"
+													/>
+												</div>
+												<div>
+													<button
+														className="ptam-media-alt-reset components-button is-button secondary"
+														onClick={event => {
+															this.props.setAttributes({ fallbackImg: "" });
+															this.get_latest_posts({ fallbackImg: 0 });
+														}}
+													>
+														{__("Reset Image", "post-type-archive-mapping")}
+													</button>
+												</div>
+											</Fragment>
+										)}
+									</Fragment>
+								)}
+							/>
+							<SelectControl
+								label={__(
+									"Featured Image Size",
+									"post-type-archive-mapping"
+								)}
+								options={imageSizeOptions}
+								value={imageTypeSize}
+								onChange={value => {
+									this.props.setAttributes({ imageTypeSize: value });
+									this.get_latest_posts({ imageTypeSize: value });
+								}}
+							/>
+						</Fragment>
+					</PanelBody>
+				}
+				{showExcerpt &&
+					<PanelBody
+						initialOpen={false}
+						title={__("Post Excerpt", "post-type-archive-mapping")}
+					>
+						<PanelColorSettings
+							title={__("Excerpt Colors", "post-type-archive-mapping")}
+							initialOpen={true}
+							colorSettings={[
+								{
+									value: excerptTextColor,
+									onChange: (value) => {
+										setAttributes({ excerptTextColor: value });
+									},
+									label: __("Text Color", "post-type-archive-mapping"),
 								},
-								label: __("Text Color", "post-type-archive-mapping"),
-							},
-						]}
-					></PanelColorSettings>
-					<SelectControl
-						label={__("Excerpt Typography", "post-type-archive-mapping")}
-						options={fontOptions}
-						value={excerptFont}
-						onChange={(value) => {
-							this.props.setAttributes({ excerptFont: value });
-						}}
-					/>
-					<RangeControl
-						label={__("Excerpt Font Size", "post-type-archive-mapping")}
-						value={excerptFontSize}
-						onChange={(value) => this.props.setAttributes({ excerptFontSize: value })}
-						min={10}
-						max={60}
-					/>
-				</PanelBody>
+							]}
+						></PanelColorSettings>
+						<SelectControl
+							label={__("Excerpt Typography", "post-type-archive-mapping")}
+							options={fontOptions}
+							value={excerptFont}
+							onChange={(value) => {
+								this.props.setAttributes({ excerptFont: value });
+							}}
+						/>
+						<RangeControl
+							label={__("Excerpt Font Size", "post-type-archive-mapping")}
+							value={excerptFontSize}
+							onChange={(value) => this.props.setAttributes({ excerptFontSize: value })}
+							min={10}
+							max={60}
+						/>
+					</PanelBody>
+				}
+				
 			</InspectorControls>
 		);
 		if (this.state.loading) {
