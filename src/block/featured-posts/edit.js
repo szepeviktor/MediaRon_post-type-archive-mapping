@@ -235,20 +235,27 @@ class PTAM_Featured_Posts extends Component {
 			postsExclude,
 			postLayout,
 			displayPostContent,
+			titleFont,
+			titleFontSize,
+			titleColor,
 		} = this.props.attributes;
 		if (Object.keys(posts).length === 0) {
 			return (
 				<h2>{__("No posts could be found.", "post-type-archive-mapping")}</h2>
 			);
 		}
-		console.log( posts );
+		const titleStyles = {
+			fontFamily: titleFont,
+			fontSize: titleFontSize + 'px',
+			color: titleColor,
+		};
 		return Object.keys(posts).map((term, i) => (
 			<Fragment key={i}>
 				<div
 					className="ptam-featured-post-item"
 				>
 					<div className="ptam-featured-post-meta">
-						<h3 className="entry-title"><a href={posts[i].link}>{posts[i].post_title}</a></h3>
+						<h3 className="entry-title"><a style={titleStyles} href={posts[i].link}>{posts[i].post_title}</a></h3>
 						<span className="author-name"><a href={posts[i].author_info.author_link}>{posts[i].author_info.display_name}</a></span>
 						<span className-="post-date">
 							<time
@@ -323,6 +330,10 @@ class PTAM_Featured_Posts extends Component {
 			termFont,
 			termFontSize,
 			termTitle,
+			titleFont,
+			titleFontSize,
+			titleColor,
+			titleColorHover,
 		} = attributes;
 
 		// Fonts
@@ -594,6 +605,49 @@ class PTAM_Featured_Posts extends Component {
 						label={__("Font Size", "post-type-archive-mapping")}
 						value={termFontSize}
 						onChange={(value) => this.props.setAttributes({ termFontSize: value })}
+						min={10}
+						max={60}
+					/>
+				</PanelBody>
+				<PanelBody
+					initialOpen={false}
+					title={__("Post Title", "post-type-archive-mapping")}
+				>
+					<PanelColorSettings
+						title={__("Title Colors", "post-type-archive-mapping")}
+						initialOpen={true}
+						colorSettings={[
+							{
+								value: titleColor,
+								onChange: (value) => {
+									setAttributes({ titleColor: value });
+								},
+								label: __("Title Color", "post-type-archive-mapping"),
+							},
+							{
+								value: titleColorHover,
+								onChange: (value) => {
+									setAttributes({ titleColorHover: value });
+								},
+								label: __(
+									"Title Color on Hover",
+									"post-type-archive-mapping"
+								),
+							},
+						]}
+					></PanelColorSettings>
+					<SelectControl
+						label={__("Title Typography", "post-type-archive-mapping")}
+						options={fontOptions}
+						value={titleFont}
+						onChange={(value) => {
+							this.props.setAttributes({ titleFont: value });
+						}}
+					/>
+					<RangeControl
+						label={__("Title Font Size", "post-type-archive-mapping")}
+						value={titleFontSize}
+						onChange={(value) => this.props.setAttributes({ titleFontSize: value })}
 						min={10}
 						max={60}
 					/>

@@ -519,6 +519,22 @@ class Posts {
 						'type' => 'string',
 						'default' => '',
 					),
+					'titleFont' => array(
+						'type' => 'string',
+						'default' => 'inherit',
+					),
+					'titleFontSize' => array(
+						'type' => 'integer',
+						'default' => 24,
+					),
+					'titleColor' => array(
+						'type' => 'string',
+						'default' => '#000000',
+					),
+					'titleColorHover' => array(
+						'type' => 'string',
+						'default' => '#128c20',
+					)
 				),
 				'render_callback' => array( $this, 'term_grid' ),
 				'editor_script'   => 'ptam-custom-posts-gutenberg',

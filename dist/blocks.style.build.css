@@ -587,3 +587,13 @@ button.ptam-media-alt-reset.components-button {
   margin-bottom: 20px; }
   .ptam-fp-wrapper .ptam-fp-term span {
     display: inline-block; }
+
+.ptam-fp-wrapper .ptam-featured-post-meta .entry-title {
+  font-weight: 700;
+  line-height: 1.4em; }
+  .ptam-fp-wrapper .ptam-featured-post-meta .entry-title a {
+    color: #000000;
+    text-decoration: none; }
+    .ptam-fp-wrapper .ptam-featured-post-meta .entry-title a:hover {
+      color: #000000;
+      text-decoration: none; }

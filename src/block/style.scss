@@ -465,10 +465,24 @@ button.ptam-media-alt-reset.components-button {
 
 /* Featured Post Styles */
 .ptam-fp-wrapper {
-		.ptam-fp-term {
-			margin-bottom: 20px;
-			span {
-				display: inline-block;
+	.ptam-fp-term {
+		margin-bottom: 20px;
+		span {
+			display: inline-block;
+		}
+	}
+	.ptam-featured-post-meta {
+		.entry-title {
+			font-weight: 700;
+			line-height: 1.4em;
+			a {
+				color: #000000;
+				text-decoration: none;
+				&:hover {
+					color: #000000;
+					text-decoration: none;
+				}
 			}
 		}
+	}
 }
