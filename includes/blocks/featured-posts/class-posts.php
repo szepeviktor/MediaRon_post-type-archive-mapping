@@ -445,11 +445,11 @@ class Posts {
 					),
 					'order'              => array(
 						'type'    => 'string',
-						'default' => 'desc',
+						'default' => 'DESC',
 					),
 					'orderBy'            => array(
 						'type'    => 'string',
-						'default' => 'name',
+						'default' => 'date',
 					),
 					'align'              => array(
 						'type'    => 'string',
@@ -477,6 +477,46 @@ class Posts {
 					),
 					'fallbackImg'        => array(
 						'type'    => 'object',
+						'default' => '',
+					),
+					'postsToShow' => array(
+						'type' => 'integer',
+						'default' => 2,
+					),
+					'termDisplayPaddingLeft' => array(
+						'type' => 'integer',
+						'default' => 20,
+					),
+					'termDisplayPaddingRight' => array(
+						'type' => 'integer',
+						'default' => 20,
+					),
+					'termDisplayPaddingTop' => array(
+						'type' => 'integer',
+						'default' => 10,
+					),
+					'termDisplayPaddingBottom' => array(
+						'type' => 'integer',
+						'default' => 10,
+					),
+					'termBackgroundColor' => array(
+						'type' => 'string',
+						'default' => '#128c20',
+					),
+					'termTextColor' => array(
+						'type' => 'string',
+						'default' => '#FFFFFF',
+					),
+					'termFont' => array(
+						'type' => 'string',
+						'default' => 'inherit',
+					),
+					'termFontSize' => array(
+						'type' => 'integer',
+						'default' => 20,
+					),
+					'termTitle' => array(
+						'type' => 'string',
 						'default' => '',
 					),
 				),

@@ -49,6 +49,7 @@ class PTAM_Featured_Posts extends Component {
 			imageSizes: ptam_globals.image_sizes,
 			taxonomyList: [],
 			termsList: [],
+			itemNumberTimer: 0,
 		};
 
 		//this.get_latest_data();
@@ -246,13 +247,6 @@ class PTAM_Featured_Posts extends Component {
 				<div
 					className="ptam-featured-post-item"
 				>
-					{posts[i].featured_image_src &&
-						<Fragment>
-							<a href={posts[i].link}>
-								<img src={posts[i].featured_image_src} />
-							</a>
-						</Fragment>
-					}
 					<div className="ptam-featured-post-meta">
 						<h3 className="entry-title"><a href={posts[i].link}>{posts[i].post_title}</a></h3>
 						<span className="author-name"><a href={posts[i].author_info.author_link}>{posts[i].author_info.display_name}</a></span>
@@ -268,14 +262,38 @@ class PTAM_Featured_Posts extends Component {
 							{posts[i].comment_count} {_n('Comment', 'Comments', posts[i].comment_count, 'post-type-archive-mapping')}
 						</span>
 					</div>
+					{posts[i].featured_image_src &&
+						<Fragment>
+							<div classname="ptam-featured-post-image">
+								<a href={posts[i].link}>
+									<img src={posts[i].featured_image_src} />
+								</a>
+							</div>
+						</Fragment>
+					}
 					<div className="ptam-featured-post-content">
 						{htmlToReactParser.parse(posts[i].post_excerpt)}
 					</div>
+					<div className="ptam-featured-post-button">
+						<a className="btn btn-primary" href={posts[i].link}>{__('Read More', 'post-type-archive-mapping' )}</a>
+					</div>
+					
 				</div>
 			</Fragment>
 		));
 	};
 
+	itemNumberRender = ( value ) => {
+		const postsToShow = value;
+		if ( this.state.itemNumberTimer ) {
+			clearTimeout(this.state.itemNumberTimer);
+		}
+		this.setState( {
+			itemNumberTimer: setTimeout( () => {
+				this.get_latest_data( { postsToShow: postsToShow });
+			}, 1000 ),
+		});
+	}
 	render() {
 		let htmlToReactParser = new HtmlToReactParser();
 		const { attributes, setAttributes } = this.props;
@@ -296,6 +314,15 @@ class PTAM_Featured_Posts extends Component {
 			postsExclude,
 			postLayout,
 			displayPostContent,
+			termDisplayPaddingBottom,
+			termDisplayPaddingTop,
+			termDisplayPaddingLeft,
+			termDisplayPaddingRight,
+			termBackgroundColor,
+			termTextColor,
+			termFont,
+			termFontSize,
+			termTitle,
 		} = attributes;
 
 		// Fonts
@@ -324,9 +351,23 @@ class PTAM_Featured_Posts extends Component {
 		];
 
 		const orderByOptions = [
-			{ value: "name", label: __("Term Name", "post-type-archive-mapping") },
-			{ value: "slug", label: __("Term Slug", "post-type-archive-mapping") },
-			{ value: "order", label: __("Term Order", "post-type-archive-mapping") },
+			{ value: "ID", label: __("ID", "post-type-archive-mapping") },
+			{
+				value: "menu_order",
+				label: __("Menu Order", "post-type-archive-mapping")
+			},
+			{
+				value: "author",
+				label: __("Post Author", "post-type-archive-mapping")
+			},
+			{ value: "date", label: __("Date", "post-type-archive-mapping") },
+			{
+				value: "modified",
+				label: __("Date Modified", "post-type-archive-mapping")
+			},
+			{ value: "name", label: __("Post Slug", "post-type-archive-mapping") },
+			{ value: "title", label: __("Title", "post-type-archive-mapping") },
+			{ value: "rand", label: __("Random", "post-type-archive-mapping") }
 		];
 
 		const featuredImageOptions = [
@@ -379,6 +420,34 @@ class PTAM_Featured_Posts extends Component {
 			}
 		];
 
+		// Get the term label.
+		let selectedTerm = 0;
+		for ( let key in this.state.termsList ) {
+			if ( this.state.termsList[key].value == term ) {
+				selectedTerm = this.state.termsList[key].label;
+				break;
+			}
+		}
+		if ( termTitle !== '' ) {
+			selectedTerm = termTitle;
+		}
+
+		// Term Styles
+		let termContainerStyles = {
+			borderBottom: `2px solid ${termBackgroundColor}`,
+			marginBottom: '20px',
+		};
+		let termButtonStyles = {
+			paddingBottom: termDisplayPaddingBottom + 'px',
+			paddingTop: termDisplayPaddingTop + 'px',
+			paddingLeft: termDisplayPaddingLeft + 'px',
+			paddingRight: termDisplayPaddingRight + 'px',
+			backgroundColor: termBackgroundColor,
+			color: termTextColor,
+			fontFamily: termFont,
+			fontSize: termFontSize + 'px',
+		};
+
 		const inspectorControls = (
 			<InspectorControls>
 				<PanelBody
@@ -421,6 +490,113 @@ class PTAM_Featured_Posts extends Component {
 							this.get_latest_posts({ term: value });
 						}}
 					/>
+					<SelectControl
+						label={__("Order", "post-type-archive-mapping")}
+						options={orderOptions}
+						value={order}
+						onChange={(value) => {
+							this.props.setAttributes({ order: value });
+							this.get_latest_posts({ order: value });
+						}}
+					/>
+					<SelectControl
+						label={__("Order By", "post-type-archive-mapping")}
+						options={orderByOptions}
+						value={orderBy}
+						onChange={(value) => {
+							this.props.setAttributes({ orderBy: value });
+							this.get_latest_posts({ orderBy: value });
+						}}
+					/>
+					<RangeControl
+						label={__("Number of Items", "post-type-archive-mapping")}
+						value={postsToShow}
+						onChange={value => {
+							this.props.setAttributes({ postsToShow: value });
+							this.itemNumberRender( value );
+						}}
+						min={1}
+						max={100}
+					/>
+				</PanelBody>
+				<PanelBody
+					initialOpen={false}
+					title={__("Term Display", "post-type-archive-mapping")}
+				>
+					<TextControl
+						label={__("Term Title", "post-type-archive-mapping")}
+						type="text"
+						value={termTitle}
+						onChange={(value) =>
+							this.props.setAttributes({ termTitle: value })
+						}
+					/>
+					<RangeControl
+						label={__("Padding Top", "post-type-archive-mapping")}
+						value={termDisplayPaddingTop}
+						onChange={(value) => this.props.setAttributes({ termDisplayPaddingTop: value })}
+						min={1}
+						max={100}
+					/>
+					<RangeControl
+						label={__("Padding Right", "post-type-archive-mapping")}
+						value={termDisplayPaddingRight}
+						onChange={(value) => this.props.setAttributes({ termDisplayPaddingRight: value })}
+						min={1}
+						max={100}
+					/>
+					<RangeControl
+						label={__("Padding Bottom", "post-type-archive-mapping")}
+						value={termDisplayPaddingBottom}
+						onChange={(value) => this.props.setAttributes({ termDisplayPaddingBottom: value })}
+						min={1}
+						max={100}
+					/>
+					<RangeControl
+						label={__("Padding Left", "post-type-archive-mapping")}
+						value={termDisplayPaddingLeft}
+						onChange={(value) => this.props.setAttributes({ termDisplayPaddingLeft: value })}
+						min={1}
+						max={100}
+					/>
+					<PanelColorSettings
+						title={__("Term Colors", "post-type-archive-mapping")}
+						initialOpen={true}
+						colorSettings={[
+							{
+								value: termBackgroundColor,
+								onChange: (value) => {
+									setAttributes({ termBackgroundColor: value });
+								},
+								label: __("Background Color", "post-type-archive-mapping"),
+							},
+							{
+								value: termTextColor,
+								onChange: (value) => {
+									setAttributes({ termTextColor: value });
+								},
+								label: __(
+									"Text Color",
+									"post-type-archive-mapping"
+								),
+							},
+						]}
+					></PanelColorSettings>
+					<SelectControl
+						label={__("Term Typography", "post-type-archive-mapping")}
+						options={fontOptions}
+						value={termFont}
+						onChange={(value) => {
+							this.props.setAttributes({ termFont: value });
+						}}
+					/>
+					<RangeControl
+						label={__("Font Size", "post-type-archive-mapping")}
+						value={termFontSize}
+						onChange={(value) => this.props.setAttributes({ termFontSize: value })}
+						min={10}
+						max={60}
+					/>
 				</PanelBody>
 			</InspectorControls>
 		);
@@ -451,7 +627,6 @@ class PTAM_Featured_Posts extends Component {
 			);
 		}
 		if ( ! term ) {
-			console.log( term );
 			return (
 				<Fragment>
 					{inspectorControls}
@@ -473,7 +648,6 @@ class PTAM_Featured_Posts extends Component {
 			)
 		}
 		if (! this.state.loading) {
-			
 			return (
 				<Fragment>
 					{inspectorControls}
@@ -491,7 +665,7 @@ class PTAM_Featured_Posts extends Component {
 						<Toolbar controls={layoutControls} />
 					</BlockControls>
 					<div className="ptam-fp-wrapper">
-						<h4 className="ptam-fp-term">{this.state.termsList[term].label}</h4>
+						<h4 className="ptam-fp-term" style={termContainerStyles}><span style={termButtonStyles}>{selectedTerm}</span></h4>
 						{this.getPostHtml()}
 					</div>
 				</Fragment>

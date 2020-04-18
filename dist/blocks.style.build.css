@@ -581,3 +581,9 @@ button.ptam-media-alt-reset.components-button {
     .ptam-term-grid .ptam-term-grid-item .ptam-term-grid-item-description {
       font-size: 1.4em;
       line-height: 1.5em; }
+
+/* Featured Post Styles */
+.ptam-fp-wrapper .ptam-fp-term {
+  margin-bottom: 20px; }
+  .ptam-fp-wrapper .ptam-fp-term span {
+    display: inline-block; }
