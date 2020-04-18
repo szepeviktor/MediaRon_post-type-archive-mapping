@@ -543,6 +543,46 @@ class Posts {
 						'type' => 'boolean',
 						'default' => false,
 					),
+					'showMeta' => array(
+						'type' => 'boolean',
+						'default' => true,
+					),
+					'showMetaAuthor' => array(
+						'type' => 'boolean',
+						'default' => true,
+					),
+					'showMetaDate' => array(
+						'type' => 'boolean',
+						'default' => true,
+					),
+					'showMetaComments' => array(
+						'type' => 'boolean',
+						'default' => false,
+					),
+					'showFeaturedImage' => array(
+						'type' => 'boolean',
+						'default' => true,
+					),
+					'showReadMore' => array(
+						'type' => 'boolean',
+						'default' => true,
+					),
+					'showExcerpt' => array(
+						'type' => 'boolean',
+						'default' => true,
+					),
+					'excerptFont' => array(
+						'type' => 'string',
+						'default' => 'inherit',
+					),
+					'excerptFontSize' => array(
+						'type' => 'integer',
+						'default' => 18,
+					),
+					'excerptTextColor' => array(
+						'type' => 'string',
+						'default' => '#000000',
+					),
 				),
 				'render_callback' => array( $this, 'term_grid' ),
 				'editor_script'   => 'ptam-custom-posts-gutenberg',

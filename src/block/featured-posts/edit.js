@@ -235,20 +235,40 @@ class PTAM_Featured_Posts extends Component {
 			postsExclude,
 			postLayout,
 			displayPostContent,
+			disableStyles,
 			titleFont,
 			titleFontSize,
 			titleColor,
+			showMeta,
+			showMetaAuthor,
+			showMetaDate,
+			showMetaComments,
+			showFeaturedImage,
+			showReadMore,
+			showExcerpt,
+			excerptFont,
+			excerptFontSize,
+			excerptTextColor,
 		} = this.props.attributes;
 		if (Object.keys(posts).length === 0) {
 			return (
 				<h2>{__("No posts could be found.", "post-type-archive-mapping")}</h2>
 			);
 		}
-		const titleStyles = {
+		let titleStyles = {
 			fontFamily: titleFont,
 			fontSize: titleFontSize + 'px',
 			color: titleColor,
 		};
+		let excerptStyles = {
+			fontFamily: excerptFont,
+			fontSize: excerptFontSize + 'px',
+			color: excerptTextColor,
+		};
+		if ( disableStyles ) {
+			titleStyles = {};
+			excerptStyles = {};
+		}
 		return Object.keys(posts).map((term, i) => (
 			<Fragment key={i}>
 				<div
@@ -256,20 +276,30 @@ class PTAM_Featured_Posts extends Component {
 				>
 					<div className="ptam-featured-post-meta">
 						<h3 className="entry-title"><a style={titleStyles} href={posts[i].link}>{posts[i].post_title}</a></h3>
-						<span className="author-name"><a href={posts[i].author_info.author_link}>{posts[i].author_info.display_name}</a></span>
-						<span className="post-date">
-							<time
-								dateTime={dayjs(posts[i].post_date_gmt).format()}
-								className={"ptam-block-post-grid-date"}
-							>
-								{dayjs(posts[i].post_date_gmt).format("MMMM DD, YYYY")}
-							</time>
-						</span>
-						<span className="post-comments">
-							{posts[i].comment_count} {_n('Comment', 'Comments', posts[i].comment_count, 'post-type-archive-mapping')}
-						</span>
+						{showMeta &&
+							<Fragment>
+								{showMetaAuthor &&
+									<span className="author-name"><a href={posts[i].author_info.author_link}>{posts[i].author_info.display_name}</a></span>
+								}
+								{showMetaDate &&
+									<span className="post-date">
+										<time
+											dateTime={dayjs(posts[i].post_date_gmt).format()}
+											className={"ptam-block-post-grid-date"}
+										>
+											{dayjs(posts[i].post_date_gmt).format("MMMM DD, YYYY")}
+										</time>
+									</span>
+								}
+								{showMetaComments &&
+									<span className="post-comments">
+										{posts[i].comment_count} {_n('Comment', 'Comments', posts[i].comment_count, 'post-type-archive-mapping')}
+									</span>
+								}
+							</Fragment>
+						}
 					</div>
-					{posts[i].featured_image_src &&
+					{posts[i].featured_image_src && showFeaturedImage &&
 						<Fragment>
 							<div className="ptam-featured-post-image">
 								<a href={posts[i].link}>
@@ -278,13 +308,16 @@ class PTAM_Featured_Posts extends Component {
 							</div>
 						</Fragment>
 					}
-					<div className="ptam-featured-post-content">
-						{htmlToReactParser.parse(posts[i].post_excerpt)}
-					</div>
-					<div className="ptam-featured-post-button">
-						<a className="btn btn-primary" href={posts[i].link}>{__('Read More', 'post-type-archive-mapping' )}</a>
-					</div>
-					
+					{showExcerpt &&
+						<div className="ptam-featured-post-content" style={excerptStyles}>
+							{htmlToReactParser.parse(posts[i].post_excerpt)}
+						</div>
+					}
+					{showReadMore &&
+						<div className="ptam-featured-post-button">
+							<a className="btn btn-primary" href={posts[i].link}>{__('Read More', 'post-type-archive-mapping' )}</a>
+						</div>
+					}
 				</div>
 			</Fragment>
 		));
@@ -336,6 +369,16 @@ class PTAM_Featured_Posts extends Component {
 			titleColorHover,
 			containerId,
 			disableStyles,
+			showMeta,
+			showMetaAuthor,
+			showMetaDate,
+			showMetaComments,
+			showFeaturedImage,
+			showReadMore,
+			showExcerpt,
+			excerptFont,
+			excerptFontSize,
+			excerptTextColor,
 		} = attributes;
 
 		// Fonts
@@ -548,6 +591,74 @@ class PTAM_Featured_Posts extends Component {
 							this.props.setAttributes({ containerId: value })
 						}
 					/>
+					<ToggleControl
+						label={__("Show Post Meta", "post-type-archive-mapping")}
+						checked={showMeta}
+						onChange={(value) => {
+							this.props.setAttributes({
+								showMeta: value,
+							});
+						}}
+					/>
+					{
+						showMeta &&
+						<Fragment>
+							<ToggleControl
+								label={__("Show Author", "post-type-archive-mapping")}
+								checked={showMetaAuthor}
+								onChange={(value) => {
+									this.props.setAttributes({
+										showMetaAuthor: value,
+									});
+								}}
+							/>
+							<ToggleControl
+								label={__("Show Date", "post-type-archive-mapping")}
+								checked={showMetaDate}
+								onChange={(value) => {
+									this.props.setAttributes({
+										showMetaDate: value,
+									});
+								}}
+							/>
+							<ToggleControl
+								label={__("Show Comments", "post-type-archive-mapping")}
+								checked={showMetaComments}
+								onChange={(value) => {
+									this.props.setAttributes({
+										showMetaComments: value,
+									});
+								}}
+							/>
+						</Fragment>
+					}
+					<ToggleControl
+						label={__("Show Featured Image", "post-type-archive-mapping")}
+						checked={showFeaturedImage}
+						onChange={(value) => {
+							this.props.setAttributes({
+								showFeaturedImage: value,
+							});
+						}}
+					/>
+					<ToggleControl
+						label={__("Show The Excerpt", "post-type-archive-mapping")}
+						checked={showExcerpt}
+						onChange={(value) => {
+							this.props.setAttributes({
+								showExcerpt: value,
+							});
+						}}
+					/>
+					<ToggleControl
+						label={__("Show Read More Button", "post-type-archive-mapping")}
+						checked={showReadMore}
+						onChange={(value) => {
+							this.props.setAttributes({
+								showReadMore: value,
+							});
+						}}
+					/>
 				</PanelBody>
 				<PanelBody
 					initialOpen={false}
@@ -667,6 +778,39 @@ class PTAM_Featured_Posts extends Component {
 						label={__("Title Font Size", "post-type-archive-mapping")}
 						value={titleFontSize}
 						onChange={(value) => this.props.setAttributes({ titleFontSize: value })}
+						min={10}
+						max={60}
+					/>
+				</PanelBody>
+				<PanelBody
+					initialOpen={false}
+					title={__("Post Excerpt", "post-type-archive-mapping")}
+				>
+					<PanelColorSettings
+						title={__("Excerpt Colors", "post-type-archive-mapping")}
+						initialOpen={true}
+						colorSettings={[
+							{
+								value: excerptTextColor,
+								onChange: (value) => {
+									setAttributes({ excerptTextColor: value });
+								},
+								label: __("Text Color", "post-type-archive-mapping"),
+							},
+						]}
+					></PanelColorSettings>
+					<SelectControl
+						label={__("Excerpt Typography", "post-type-archive-mapping")}
+						options={fontOptions}
+						value={excerptFont}
+						onChange={(value) => {
+							this.props.setAttributes({ excerptFont: value });
+						}}
+					/>
+					<RangeControl
+						label={__("Excerpt Font Size", "post-type-archive-mapping")}
+						value={excerptFontSize}
+						onChange={(value) => this.props.setAttributes({ excerptFontSize: value })}
 						min={10}
 						max={60}
 					/>
