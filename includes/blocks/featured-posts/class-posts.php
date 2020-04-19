@@ -338,6 +338,24 @@ class Posts {
 					<?php
 				endif;
 				?>
+				<?php
+				if ( $attributes['showExcerpt'] ) {
+					?>
+					<div class="ptam-featured-post-content">
+						<?php echo wp_kses_post( $post->post_excerpt ); ?>
+					</div>
+					<?php
+				}
+				?>
+				<?php
+				if ( $attributes['showReadMore'] ) {
+					?>
+					<div class="ptam-featured-post-button">
+						<a class="button button-primary btn btn-primary" href="<?php echo esc_url( $post->link ); ?>"><?php echo wp_kses_post( $attributes['readMoreButtonText'] ); ?></a>
+					</div>
+					<?php
+				}
+				?>
 			</div><!-- .ptam-featured-post-item -->
 			<?php
 		}
