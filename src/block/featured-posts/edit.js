@@ -279,6 +279,7 @@ class PTAM_Featured_Posts extends Component {
 						<h3 className="entry-title"><a style={titleStyles} href={posts[i].link}>{posts[i].post_title}</a></h3>
 						{showMeta &&
 							<Fragment>
+								<div className="entry-meta">
 								{showMetaAuthor &&
 									<span className="author-name"><a href={posts[i].author_info.author_link}>{posts[i].author_info.display_name}</a></span>
 								}
@@ -297,6 +298,7 @@ class PTAM_Featured_Posts extends Component {
 										{posts[i].comment_count} {_n('Comment', 'Comments', posts[i].comment_count, 'post-type-archive-mapping')}
 									</span>
 								}
+								</div>
 							</Fragment>
 						}
 					</div>
@@ -583,7 +585,7 @@ class PTAM_Featured_Posts extends Component {
 					<TextControl
 						label={__("Container ID", "post-type-archive-mapping")}
 						help={__(
-							"Unique CSS ID for styling if you have more than one term grid on the same page.",
+							"Unique CSS ID for styling if you have more than one featured category on the same page.",
 							"post-type-archive-mapping"
 						)}
 						type="text"

@@ -36,6 +36,7 @@ class Custom_Post_Types {
 		}
 		add_image_size( 'ptam-block-post-grid-landscape', 600, 400, true );
 		add_image_size( 'ptam-block-post-grid-square', 600, 600, true );
+		add_image_size( 'ptam-block-post-grid-featured-landscape', 1000, 600, true );
 	}
 
 	/**

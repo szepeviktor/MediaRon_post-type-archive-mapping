@@ -484,6 +484,18 @@ button.ptam-media-alt-reset.components-button {
 				}
 			}
 		}
+		.entry-meta {
+			.author-name {
+				a {
+					&:before {
+						font-family: 'PTAM';
+						content: '\e71e';
+						display: inline-block;
+						margin-right: 5px;
+					}
+				}
+			}
+		}
 	}
 	.ptam-featured-post-content {
 		line-height: 1.2em;

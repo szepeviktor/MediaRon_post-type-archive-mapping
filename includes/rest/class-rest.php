@@ -439,7 +439,7 @@ class Rest {
 					continue;
 				}
 				$term_list = get_the_terms( $post->ID, $key );
-				if ( ! is_wp_error( $term_list ) && ! $term_list ) {
+				if ( ! is_wp_error( $term_list ) && ! $term_list && is_array( $term_list ) ) {
 					foreach ( $term_list as $index => $term_raw ) {
 						$terms[ $term_raw->term_id ] = $term_raw->name;
 					}

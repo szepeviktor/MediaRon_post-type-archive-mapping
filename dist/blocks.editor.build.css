@@ -2,6 +2,13 @@
  * Common styles
  * Loads on front end and back end
  */
+@font-face {
+  font-family: 'PTAM';
+  src: url("../fonts/ptam.eot");
+  /* IE9 Compat Modes */
+  src: url("../fonts/ptam.eot?#iefix") format("embedded-opentype"), url("../fonts/ptam.woff2") format("woff2"), url("../fonts/ptam.woff") format("woff"), url("../fonts/ptam.ttf") format("truetype"), url("../fonts/ptam.svg#svgFontName") format("svg");
+  /* Legacy iOS */ }
+
 /* Font size styles */
 @media only screen and (min-width: 600px) {
   div[class*="wp-block-atomic"].ptam-font-size-14.ptam-block-testimonial p,
