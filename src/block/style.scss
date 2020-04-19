@@ -542,4 +542,13 @@ button.ptam-media-alt-reset.components-button {
 			}
 		}
 	}
+	.ptam-featured-post-image {
+		overflow: hidden;
+		img {
+			transition: transform .8s;
+			&:hover {
+				transform: scale( 1.3 );
+			}
+		}
+	}
 }

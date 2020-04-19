@@ -257,12 +257,9 @@ class Posts {
 			}
 		}
 		?>
-		<div className="ptam-fp-wrapper" id="<?php echo esc_attr( $attributes['containerId'] ); ?>">
-			<h4 className="ptam-fp-term"><span><?php echo esc_html( $term_name ); ?></span></h4>
-		</div><!-- .ptam-fp-wrapper -->
-
+		<div class="ptam-fp-wrapper" id="<?php echo esc_attr( $attributes['containerId'] ); ?>">
+			<h4 class="ptam-fp-term"><span><?php echo esc_html( $term_name ); ?></span></h4>
 		<?php
-		return ob_get_clean();
 		foreach ( $posts as &$post ) {
 			$thumbnail = get_the_post_thumbnail( $post->ID, $attributes['imageTypeSize'] );
 			if ( empty( $thumbnail ) ) {
@@ -290,7 +287,63 @@ class Posts {
 
 			$post->post_excerpt = wp_kses_post( $post->post_excerpt );
 			$post->post_content = apply_filters( 'ptam_the_content', $post->post_content );
+
+			?>
+			<div class="ptam-featured-post-item">
+				<div class="ptam-featured-post-meta">
+					<h3 class="entry-title"><a href="<?php echo esc_url( $post->link ); ?>"><?php echo wp_kses_post( get_the_title( $post ) ); ?></a></h3>
+					<?php
+					if ( $attributes['showMeta'] ) :
+						?>
+						<div class="entry-meta">
+							<?php
+							if ( $attributes['showMetaAuthor'] ) :
+								?>
+								<span class="author-name"><a href="<?php echo esc_url( $post->author_info->author_link ); ?>"><?php echo esc_html( $post->author_info->display_name ); ?></a></span>
+								<?php
+							endif;
+							if ( $attributes['showMetaDate'] ) :
+								?>
+								<span class="post-date">
+									<time
+										datetime="<?php echo esc_attr( get_the_date( 'c', $post->ID ) ); ?>"
+										class="ptam-block-post-grid-date"
+									>
+									<?php echo esc_html( get_the_date( '', $post_id ) ); ?>
+									</time>
+								</span>
+								<?php
+							endif;
+							if ( $attributes['showMetaComments'] ) :
+								?>
+								<span class="post-comments">
+									<?php echo absint( $post->comment_count ); ?> <?php echo esc_html( _n( 'Comment', 'Comments', $post->comment_count, 'post-type-archive-mapping' ) ); ?>
+								</span>
+								<?php
+							endif;
+							?>
+						</div><!-- .entry-meta -->
+						<?php
+						endif;
+					?>
+				</div><!-- .ptam-featured-post-meta -->
+				<?php
+				if ( $attributes['showFeaturedImage'] && ! empty( $post->featured_image_src ) ) :
+					?>
+					<div class="ptam-featured-post-image">
+						<a href="<?php echo esc_url( $post->link ); ?>">
+							<?php echo wp_kses_post( $post->featured_image_src ); ?>
+						</a>
+					</div>
+					<?php
+				endif;
+				?>
+			</div><!-- .ptam-featured-post-item -->
+			<?php
 		}
+		?>
+		</div><!-- .ptam-fp-wrapper -->
+		<?php
 		/**
 		 * Override the Featured Posts Output.
 		 *
