@@ -1,6 +1,6 @@
 <?php
 /**
- * Terms Block.
+ * Featured Posts Block.
  *
  * @package PTAM
  */
@@ -28,191 +28,109 @@ class Posts {
 	 *
 	 * @return string HTML of the custom posts.
 	 */
-	public function term_grid( $attributes ) {
+	public function output( $attributes ) {
 		ob_start();
-
-		// Get terms to include.
-		$terms = isset( $attributes['terms'] ) ? $attributes['terms'] : array();
-		if ( ! is_array( $terms ) || empty( $terms ) ) {
-			return ob_get_clean();
-		}
 
 		// Get taxonomy.
 		$taxonomy = sanitize_text_field( $attributes['taxonomy'] );
-
-		// Get terms to exclude.
-		$terms_exclude = isset( $attributes['termsExclude'] ) ? $attributes['termsExclude'] : array();
-		if ( ! is_array( $terms_exclude ) ) {
-			return ob_get_clean();
-		}
+		$term     = absint( $attributes['term'] );
 
 		// Get oroder and orderby.
-		$order_by = isset( $attributes['orderBy'] ) ? sanitize_text_field( $attributes['orderBy'] ) : '';
-		$order    = isset( $attributes['order'] ) ? sanitize_text_field( $attributes['order'] ) : '';
+		$orderby = isset( $attributes['orderBy'] ) ? sanitize_text_field( $attributes['orderBy'] ) : '';
+		$order   = isset( $attributes['order'] ) ? sanitize_text_field( $attributes['order'] ) : '';
 
-		// Get All Terms again so we have a full list.
-		$all_terms = get_terms(
-			array(
-				'taxonomy'   => isset( $attributes['taxonomy'] ) ? sanitize_text_field( $attributes['taxonomy'] ) : '',
-				'hide_empty' => true,
-			)
-		);
-		if ( is_wp_error( $all_terms ) ) {
-			return ob_get_clean();
-		}
-		$all_term_ids = array();
-		foreach ( $all_terms as $index => $term ) {
-			$all_term_ids[] = $term->term_id;
-		}
+		// Get post type.
+		$post_type = isset( $attributes['postType'] ) ? sanitize_text_field( $attributes['postType'] ) : 'post';
 
-		// Populate terms to display.
-		$display_all_terms = false;
-		$terms_to_include  = array();
-		foreach ( $terms as $index => $term_data ) {
-			if ( ! isset( $term_data['id'] ) ) {
-				$display_all_terms = true;
-				$terms_to_include  = $all_term_ids;
-				break;
-			}
-			if ( 0 === $term_data['id'] ) {
-				$display_all_terms = true;
-				$terms_to_include  = $all_term_ids;
-				break;
-			} else {
-				$terms_to_include[] = absint( $term_data['id'] );
-			}
-		}
-
-		$terms_to_exclude = array();
-		foreach ( $terms_exclude as $index => $term_data ) {
-			if ( isset( $term_data['id'] ) ) {
-				$terms_to_exclude[] = absint( $term_data['id'] );
-			}
-		}
-
-		// Now let's get terms to exclude.
-		if ( $display_all_terms ) {
-			foreach ( $terms_to_include as $index => $term_id ) {
-				if ( in_array( $term_id, $terms_to_exclude, true ) ) {
-					unset( $terms_to_include[ $index ] );
-				}
-			}
-		}
+		// Get posts per page.
+		$posts_per_page = isset( $attributes['postsToShow'] ) ? absint( $attributes['postsToShow'] ) : 2;
 
 		// Build Query.
-		$query = array();
-		switch ( $order_by ) {
-			case 'slug':
-				$query = array(
-					'orderby'    => 'slug',
-					'order'      => $order,
-					'hide_empty' => true,
-					'include'    => $terms_to_include,
-					'taxonomy'   => $taxonomy,
-				);
-				break;
-			case 'order':
-				$query = array(
-					'orderby'    => 'meta_value_num',
-					'order'      => $order,
-					'meta_query' => array( // phpcs:ignore
-						'relation' => 'OR',
-						array(
-							'key'     => 'post_order',
-							'compare' => 'NOT EXISTS',
-						),
-						array(
-							'key'     => 'post_order',
-							'value'   => 0,
-							'compare' => '>=',
-						),
-					),
-					'hide_empty' => true,
-					'include'    => $terms_to_include,
-					'taxonomy'   => $taxonomy,
-				);
-				break;
-			default:
-				$query = array(
-					'orderby'    => 'name',
-					'order'      => $order,
-					'hide_empty' => true,
-					'include'    => $terms_to_include,
-					'taxonomy'   => $taxonomy,
-				);
-				break;
-		}
-		/**
-		 * Filter the term query.
-		 *
-		 * @since 4.0.0
-		 *
-		 * @param array  $query      The term query.
-		 * @param array  $attributes The passed attributes.
-		 * @parma string $taxonomy   The taxonomy.
-		 */
-		$query = apply_filters( 'ptam_term_grid_query', $query, $attributes, $taxonomy );
-
-		// Retrieve the terms in order.
-		$raw_term_results = get_terms( $query );
-		if ( is_wp_error( $raw_term_results ) ) {
-			return ob_get_clean();
+		$post_args = array(
+			'post_type'      => $post_type,
+			'post_status'    => 'publish',
+			'order'          => $order,
+			'orderby'        => $orderby,
+			'posts_per_page' => $posts_per_page,
+		);
+		if ( 'all' !== $term && 0 !== absint( $term ) && 'none' !== $taxonomy ) {
+			$post_args['tax_query'] = array( // phpcs:ignore
+			array(
+				'taxonomy' => $taxonomy,
+				'terms'    => $term,
+			),
+			);
 		}
 
-		$attributes['align']                 = Functions::sanitize_attribute( $attributes, 'align', 'text' );
-		$attributes['columns']               = Functions::sanitize_attribute( $attributes, 'columns', 'int' );
-		$attributes['showTermTitle']         = Functions::sanitize_attribute( $attributes, 'showTermTitle', 'bool' );
-		$attributes['showTermDescription']   = Functions::sanitize_attribute( $attributes, 'showTermDescription', 'bool' );
-		$attributes['disableStyles']         = Functions::sanitize_attribute( $attributes, 'disableStyles', 'bool' );
-		$attributes['linkContainer']         = Functions::sanitize_attribute( $attributes, 'linkContainer', 'bool' );
-		$attributes['linkTermTitle']         = Functions::sanitize_attribute( $attributes, 'linkTermTitle', 'bool' );
-		$attributes['showButton']            = Functions::sanitize_attribute( $attributes, 'showButton', 'bool' );
-		$attributes['backgroundImageSource'] = Functions::sanitize_attribute( $attributes, 'backgroundImageSource', 'text' );
-		$attributes['backgroundImageMeta']   = Functions::sanitize_attribute( $attributes, 'backgroundImageMeta', 'text' );
-		if ( is_array( $attributes['backgroundImageFallback'] ) ) {
-			if ( isset( $attributes['backgroundImageFallback']['id'] ) ) {
-				$attributes['backgroundImageFallback'] = $attributes['backgroundImageFallback']['id'];
-				$attributes['backgroundImageFallback'] = Functions::sanitize_attribute( $attributes, 'backgroundImageFallback', 'int' );
+		$attributes['taxonomy']           = Functions::sanitize_attribute( $attributes, 'align', 'text' );
+		$attributes['postType']           = Functions::sanitize_attribute( $attributes, 'postType', 'text' );
+		$attributes['postLayout']         = Functions::sanitize_attribute( $attributes, 'postLayout', 'text' );
+		$attributes['displayPostContent'] = Functions::sanitize_attribute( $attributes, 'displayPostContent', 'bool' );
+		$attributes['term']               = Functions::sanitize_attribute( $attributes, 'term', 'int' );
+		$attributes['order']              = Functions::sanitize_attribute( $attributes, 'order', 'text' );
+		$attributes['orderBy']            = Functions::sanitize_attribute( $attributes, 'orderBy', 'text' );
+		$attributes['align']              = Functions::sanitize_attribute( $attributes, 'align', 'text' );
+		$attributes['imageTypeSize']      = Functions::sanitize_attribute( $attributes, 'imageTypeSize', 'text' );
+		$attributes['postsToShow']        = Functions::sanitize_attribute( $attributes, 'postsToShow', 'int' );
+		if ( is_array( $attributes['fallbackImg'] ) ) {
+			if ( isset( $attributes['fallbackImg']['id'] ) ) {
+				$attributes['fallbackImg'] = $attributes['fallbackImg']['id'];
+				$attributes['fallbackImg'] = Functions::sanitize_attribute( $attributes, 'fallbackImg', 'int' );
 			} else {
-				$attributes['backgroundImageFallback'] = 0;
+				$attributes['fallbackImg'] = 0;
 			}
 		} else {
-			$attributes['backgroundImageFallback'] = 0;
+			$attributes['fallbackImg'] = 0;
 		}
-		$attributes['backgroundColor']                = Functions::sanitize_attribute( $attributes, 'backgroundColor', 'text' );
-		$attributes['backgroundColorHover']           = Functions::sanitize_attribute( $attributes, 'backgroundColorHover', 'text' );
-		$attributes['backgroundGradient']             = Functions::sanitize_attribute( $attributes, 'backgroundGradient', 'text' );
-		$attributes['backgroundGradientHover']        = Functions::sanitize_attribute( $attributes, 'backgroundGradientHover', 'text' );
-		$attributes['overlayColor']                   = Functions::sanitize_attribute( $attributes, 'overlayColor', 'text' );
-		$attributes['overlayColorHover']              = Functions::sanitize_attribute( $attributes, 'overlayColorHover', 'text' );
-		$attributes['overlayOpacity']                 = Functions::sanitize_attribute( $attributes, 'overlayOpacity', 'float' );
-		$attributes['overlayOpacityHover']            = Functions::sanitize_attribute( $attributes, 'overlayOpacityHover', 'float' );
-		$attributes['termTitleColor']                 = Functions::sanitize_attribute( $attributes, 'termTitleColor', 'text' );
-		$attributes['termTitleColorHover']            = Functions::sanitize_attribute( $attributes, 'termTitleColorHover', 'text' );
-		$attributes['termDescriptionColor']           = Functions::sanitize_attribute( $attributes, 'termDescriptionColor', 'text' );
-		$attributes['termDescriptionColorHover']      = Functions::sanitize_attribute( $attributes, 'termDescriptionColorHover', 'text' );
-		$attributes['itemBorder']                     = Functions::sanitize_attribute( $attributes, 'itemBorder', 'int' );
-		$attributes['itemBorderColor']                = Functions::sanitize_attribute( $attributes, 'itemBorderColor', 'text' );
-		$attributes['termTitleFont']                  = Functions::sanitize_attribute( $attributes, 'termTitleFont', 'text' );
-		$attributes['termDescriptionFont']            = Functions::sanitize_attribute( $attributes, 'termDescriptionFont', 'text' );
-		$attributes['termButtonText']                 = Functions::sanitize_attribute( $attributes, 'termButtonText', 'text' );
-		$attributes['termButtonFont']                 = Functions::sanitize_attribute( $attributes, 'termButtonFont', 'text' );
-		$attributes['termButtonTextColor']            = Functions::sanitize_attribute( $attributes, 'termButtonTextColor', 'text' );
-		$attributes['termButtonTextHoverColor']       = Functions::sanitize_attribute( $attributes, 'termButtonTextHoverColor', 'text' );
-		$attributes['termButtonBackgroundColor']      = Functions::sanitize_attribute( $attributes, 'termButtonBackgroundColor', 'text' );
-		$attributes['termButtonBorder']               = Functions::sanitize_attribute( $attributes, 'termButtonBorder', 'int' );
-		$attributes['termButtonBorderColor']          = Functions::sanitize_attribute( $attributes, 'termButtonBorderColor', 'text' );
-		$attributes['termButtonBorderRadius']         = Functions::sanitize_attribute( $attributes, 'termButtonBorderRadius', 'int' );
-		$attributes['columns']                        = Functions::sanitize_attribute( $attributes, 'columns', 'int' );
-		$attributes['showTermTitle']                  = Functions::sanitize_attribute( $attributes, 'showTermTitle', 'bool' );
-		$attributes['disableStyles']                  = Functions::sanitize_attribute( $attributes, 'disableStyles', 'bool' );
-		$attributes['linkTermTitle']                  = Functions::sanitize_attribute( $attributes, 'linkTermTitle', 'bool' );
-		$attributes['imageSize']                      = Functions::sanitize_attribute( $attributes, 'imageSize', 'text' );
-		$attributes['containerId']                    = Functions::sanitize_attribute( $attributes, 'containerId', 'text' );
-		$attributes['backgroundType']                 = Functions::sanitize_attribute( $attributes, 'backgroundType', 'text' );
-		$attributes['itemBorderRadius']               = Functions::sanitize_attribute( $attributes, 'itemBorderRadius', 'int' );
-		$attributes['termButtonBackgroundHoverColor'] = Functions::sanitize_attribute( $attributes, 'termButtonBackgroundHoverColor', 'text' );
+		$attributes['termDisplayPaddingLeft']             = Functions::sanitize_attribute( $attributes, 'termDisplayPaddingLeft', 'int' );
+		$attributes['termDisplayPaddingRight']            = Functions::sanitize_attribute( $attributes, 'termDisplayPaddingRight', 'int' );
+		$attributes['termDisplayPaddingBottom']           = Functions::sanitize_attribute( $attributes, 'termDisplayPaddingBottom', 'int' );
+		$attributes['termBackgroundColor']                = Functions::sanitize_attribute( $attributes, 'termBackgroundColor', 'text' );
+		$attributes['termTextColor']                      = Functions::sanitize_attribute( $attributes, 'termTextColor', 'text' );
+		$attributes['termFont']                           = Functions::sanitize_attribute( $attributes, 'termFont', 'text' );
+		$attributes['termTitle']                          = Functions::sanitize_attribute( $attributes, 'termTitle', 'text' );
+		$attributes['titleFont']                          = Functions::sanitize_attribute( $attributes, 'titleFont', 'text' );
+		$attributes['titleFontSize']                      = Functions::sanitize_attribute( $attributes, 'titleFontSize', 'int' );
+		$attributes['titleColor']                         = Functions::sanitize_attribute( $attributes, 'titleColor', 'text' );
+		$attributes['titleColorHover']                    = Functions::sanitize_attribute( $attributes, 'titleColorHover', 'text' );
+		$attributes['containerId']                        = Functions::sanitize_attribute( $attributes, 'containerId', 'text' );
+		$attributes['disableStyles']                      = Functions::sanitize_attribute( $attributes, 'disableStyles', 'bool' );
+		$attributes['showMeta']                           = Functions::sanitize_attribute( $attributes, 'showMeta', 'bool' );
+		$attributes['showMetaAuthor']                     = Functions::sanitize_attribute( $attributes, 'showMetaAuthor', 'bool' );
+		$attributes['showMetaDate']                       = Functions::sanitize_attribute( $attributes, 'showMetaDate', 'bool' );
+		$attributes['showMetaComments']                   = Functions::sanitize_attribute( $attributes, 'showMetaComments', 'bool' );
+		$attributes['showFeaturedImage']                  = Functions::sanitize_attribute( $attributes, 'showFeaturedImage', 'bool' );
+		$attributes['showReadMore']                       = Functions::sanitize_attribute( $attributes, 'showReadMore', 'bool' );
+		$attributes['showExcerpt']                        = Functions::sanitize_attribute( $attributes, 'showExcerpt', 'bool' );
+		$attributes['excerptFont']                        = Functions::sanitize_attribute( $attributes, 'excerptFont', 'text' );
+		$attributes['excerptFontSize']                    = Functions::sanitize_attribute( $attributes, 'excerptFontSize', 'int' );
+		$attributes['excerptTextColor']                   = Functions::sanitize_attribute( $attributes, 'excerptTextColor', 'text' );
+		$attributes['readMoreButtonText']                 = Functions::sanitize_attribute( $attributes, 'readMoreButtonText', 'text' );
+		$attributes['readMoreButtonFont']                 = Functions::sanitize_attribute( $attributes, 'readMoreButtonFont', 'text' );
+		$attributes['readMoreButtonTextColor']            = Functions::sanitize_attribute( $attributes, 'readMoreButtonTextColor', 'text' );
+		$attributes['readMoreButtonTextHoverColor']       = Functions::sanitize_attribute( $attributes, 'readMoreButtonTextHoverColor', 'text' );
+		$attributes['readMoreButtonBackgroundColor']      = Functions::sanitize_attribute( $attributes, 'readMoreButtonBackgroundColor', 'text' );
+		$attributes['readMoreButtonBackgroundHoverColor'] = Functions::sanitize_attribute( $attributes, 'readMoreButtonBackgroundHoverColor', 'text' );
+		$attributes['readMoreButtonBorder']               = Functions::sanitize_attribute( $attributes, 'readMoreButtonBorder', 'int' );
+		$attributes['readMoreButtonBorderColor']          = Functions::sanitize_attribute( $attributes, 'readMoreButtonBorderColor', 'text' );
+		$attributes['readMoreButtonBorderRadius']         = Functions::sanitize_attribute( $attributes, 'readMoreButtonBorderRadius', 'int' );
+
+		/**
+		 * Filter the post query.
+		 *
+		 * @since 4.5.0
+		 *
+		 * @param array  $post_args  The post arguments.
+		 * @param array  $attributes The passed attributes.
+		 * @param string $post_type  The post type.
+		 * @param int    $term       The term ID.
+		 * @parma string $taxonomy   The taxonomy.
+		 */
+		$post_args = apply_filters( 'ptam_featured_post_by_term_query', $post_args, $attributes, $post_type, $term, $taxonomy );
+		$posts     = get_posts( $post_args );
+		/*
 		if ( ! $attributes['disableStyles'] ) :
+			
 			?>
 		<style>
 			<?php
@@ -326,79 +244,62 @@ class Posts {
 			}
 		</style>
 			<?php
-		endif;
+			endif;
 		?>
-		<div id="<?php echo ! is_wp_error( $attributes['containerId'] ) ? esc_attr( $attributes['containerId'] ) : ''; ?>" class="columns-<?php echo absint( $attributes['columns'] ); ?> ptam-term-grid align<?php echo esc_attr( $attributes['align'] ); ?>" >
-			<?php
-			foreach ( $raw_term_results as $index => $term ) {
-				?>
-				<div class="ptam-term-grid-item" 
-					<?php
-					if ( ! $attributes['disableStyles'] && 'image' === $attributes['backgroundType'] ) {
-						$background_image = Functions::get_term_image( $attributes['imageSize'], $attributes['backgroundImageMeta'], $attributes['backgroundImageSource'], $taxonomy, $term->term_id );
-						if ( empty( $background_image ) ) {
-							$background_image = Functions::get_image( $attributes['backgroundImageFallback'], $attributes['imageSize'] );
-						}
-						echo 'style="background-image: url(' . esc_url( $background_image ) . ')"';
-					}
-					?>
-					>
-					<?php
-					if ( $attributes['linkContainer'] ) {
-						printf(
-							'<a href="%s" aria-label="%s" class="ptam-term-grid-anchor-full"></a>',
-							esc_url( get_term_link( $term->term_id, $term->taxonomy ) ),
-							esc_attr( $term->name )
-						);
-					}
-					?>
-					<div class="ptam-term-grid-item-content">
-						<?php
-						if ( $attributes['showTermTitle'] ) {
-							echo '<h2>';
-							if ( $attributes['linkTermTitle'] && ! $attributes['linkContainer'] ) {
-								$term_link = get_term_link( $term->term_id, $term->taxonomy );
-								printf(
-									'<a href="%s">%s</a>',
-									esc_url( $term_link ),
-									esc_html( $term->name )
-								);
-							} else {
-								echo esc_html( $term->name );
-							}
-							echo '</h2>';
-						}
-						if ( $attributes['showTermDescription'] ) {
-							?>
-							<div class="ptam-term-grid-item-description">
-								<?php echo wp_kses_post( $term->description ); ?>
-							</div>
-							<?php
-						}
-						if ( ! $attributes['linkContainer'] && $attributes['showButton'] ) {
-							?>
-							<a href="<?php echo esc_url( get_term_link( $term->term_id, $term->taxonomy ) ); ?>" class="ptam-term-grid-button btn button"><?php echo esc_html( $attributes['termButtonText'] ); ?></a>
-							<?php
-						}
-						?>
-					</div>
-				</div>
-				<?php
+		*/
+
+		$term_name = _x( 'All', 'All Terms', 'post-type-archive-mapping' );
+		$term_object = get_term_by( 'id', $term, $taxonomy );
+		if ( ! is_wp_error( $term_object ) ) {
+			$term_name = sanitize_text_field( $term_object->name );
+			if ( ! empty( $attributes['termTitle'] ) ) {
+				$term_name = $attributes['termTitle'];
 			}
-			?>
-		</div>
+		}
+		?>
+		<div className="ptam-fp-wrapper" id="<?php echo esc_attr( $attributes['containerId'] ); ?>">
+			<h4 className="ptam-fp-term"><span><?php echo esc_html( $term_name ); ?></span></h4>
+		</div><!-- .ptam-fp-wrapper -->
+
 		<?php
+		return ob_get_clean();
+		foreach ( $posts as &$post ) {
+			$thumbnail = get_the_post_thumbnail( $post->ID, $attributes['imageTypeSize'] );
+			if ( empty( $thumbnail ) ) {
+				$thumbnail = wp_get_attachment_image( $attributes['fallbackImg'], $attributes['imageTypeSize'] );
+			}
+			$post->featured_image_src = $thumbnail;
+
+			// Get author information.
+			$display_name = get_the_author_meta( 'display_name', $post->post_author );
+			$author_url   = get_author_posts_url( $post->post_author );
+
+			$post->author_info               = new \stdClass();
+			$post->author_info->display_name = $display_name;
+			$post->author_info->author_link  = $author_url;
+
+			$post->link = get_permalink( $post->ID );
+
+			if ( empty( $post->post_excerpt ) ) {
+				$post->post_excerpt = apply_filters( 'the_excerpt', wp_strip_all_tags( strip_shortcodes( $post->post_content ) ) );
+			}
+
+			if ( ! $post->post_excerpt ) {
+				$post->post_excerpt = null;
+			}
+
+			$post->post_excerpt = wp_kses_post( $post->post_excerpt );
+			$post->post_content = apply_filters( 'ptam_the_content', $post->post_content );
+		}
 		/**
-		 * Override the term grid output.
+		 * Override the Featured Posts Output.
 		 *
-		 * @since 4.0.0
+		 * @since 4.5.0
 		 *
 		 * @param string $html             The grid HTML.
 		 * @param array  $attributes       The passed and sanitized attributes.
-		 * @param array  $raw_term_results The term results to show.
-		 * @param string $taxonomy         The taxonomy to return the terms for.
 		 */
-		return apply_filters( 'ptam_term_grid_output', ob_get_clean(), $attributes, $raw_term_results, $taxonomy );
+		return apply_filters( 'ptam_featured_posts_by_term_output', ob_get_clean(), $attributes );
 	}
 
 	/**
@@ -415,212 +316,208 @@ class Posts {
 			'ptam/featured-posts',
 			array(
 				'attributes'      => array(
-					'taxonomy'           => array(
+					'taxonomy'                           => array(
 						'type'    => 'string',
 						'default' => 'category',
 					),
-					'postType'           => array(
+					'postType'                           => array(
 						'type'    => 'string',
 						'default' => 'post',
 					),
-					'postLayout'         => array(
+					'postLayout'                         => array(
 						'type'    => 'string',
 						'default' => 'excerpt',
 					),
-					'displayPostContent' => array(
+					'displayPostContent'                 => array(
 						'type'    => 'boolean',
 						'default' => false,
 					),
-					'term'               => array(
+					'term'                               => array(
 						'type'    => 'string',
-						'default' => "0",
+						'default' => '0',
 					),
-					'postsInclude'       => array(
+					'postsInclude'                       => array(
 						'type'    => 'array',
 						'default' => array( '' ),
 					),
-					'postsExclude'       => array(
+					'postsExclude'                       => array(
 						'type'    => 'array',
 						'default' => array( '' ),
 					),
-					'order'              => array(
+					'order'                              => array(
 						'type'    => 'string',
 						'default' => 'DESC',
 					),
-					'orderBy'            => array(
+					'orderBy'                            => array(
 						'type'    => 'string',
 						'default' => 'date',
 					),
-					'align'              => array(
+					'align'                              => array(
 						'type'    => 'string',
-						'default' => 'full',
+						'default' => 'wide',
 					),
-					'avatarSize'         => array(
+					'avatarSize'                         => array(
 						'type'    => 'integer',
 						'default' => 500,
 					),
-					'imageType'          => array(
+					'imageType'                          => array(
 						'type'    => 'string',
 						'default' => 'regular',
 					),
-					'imageTypeSize'      => array(
+					'imageTypeSize'                      => array(
 						'type'    => 'string',
 						'default' => 'thumbnail',
 					),
-					'postsToShow'        => array(
-						'type'    => 'number',
-						'default' => 1,
-					),
-					'imageCrop'          => array(
+					'imageCrop'                          => array(
 						'type'    => 'string',
 						'default' => 'landscape',
 					),
-					'fallbackImg'        => array(
+					'fallbackImg'                        => array(
 						'type'    => 'object',
 						'default' => '',
 					),
-					'postsToShow' => array(
-						'type' => 'integer',
+					'postsToShow'                        => array(
+						'type'    => 'integer',
 						'default' => 2,
 					),
-					'termDisplayPaddingLeft' => array(
-						'type' => 'integer',
+					'termDisplayPaddingLeft'             => array(
+						'type'    => 'integer',
 						'default' => 20,
 					),
-					'termDisplayPaddingRight' => array(
-						'type' => 'integer',
+					'termDisplayPaddingRight'            => array(
+						'type'    => 'integer',
 						'default' => 20,
 					),
-					'termDisplayPaddingTop' => array(
-						'type' => 'integer',
+					'termDisplayPaddingTop'              => array(
+						'type'    => 'integer',
 						'default' => 10,
 					),
-					'termDisplayPaddingBottom' => array(
-						'type' => 'integer',
+					'termDisplayPaddingBottom'           => array(
+						'type'    => 'integer',
 						'default' => 10,
 					),
-					'termBackgroundColor' => array(
-						'type' => 'string',
+					'termBackgroundColor'                => array(
+						'type'    => 'string',
 						'default' => '#128c20',
 					),
-					'termTextColor' => array(
-						'type' => 'string',
+					'termTextColor'                      => array(
+						'type'    => 'string',
 						'default' => '#FFFFFF',
 					),
-					'termFont' => array(
-						'type' => 'string',
+					'termFont'                           => array(
+						'type'    => 'string',
 						'default' => 'inherit',
 					),
-					'termFontSize' => array(
-						'type' => 'integer',
+					'termFontSize'                       => array(
+						'type'    => 'integer',
 						'default' => 20,
 					),
-					'termTitle' => array(
-						'type' => 'string',
+					'termTitle'                          => array(
+						'type'    => 'string',
 						'default' => '',
 					),
-					'titleFont' => array(
-						'type' => 'string',
+					'titleFont'                          => array(
+						'type'    => 'string',
 						'default' => 'inherit',
 					),
-					'titleFontSize' => array(
-						'type' => 'integer',
+					'titleFontSize'                      => array(
+						'type'    => 'integer',
 						'default' => 24,
 					),
-					'titleColor' => array(
-						'type' => 'string',
+					'titleColor'                         => array(
+						'type'    => 'string',
 						'default' => '#000000',
 					),
-					'titleColorHover' => array(
-						'type' => 'string',
+					'titleColorHover'                    => array(
+						'type'    => 'string',
 						'default' => '#128c20',
 					),
-					'containerId' => array(
-						'type' => 'string',
+					'containerId'                        => array(
+						'type'    => 'string',
 						'default' => 'ptam-featured-post-list',
 					),
-					'disableStyles' => array(
-						'type' => 'boolean',
+					'disableStyles'                      => array(
+						'type'    => 'boolean',
 						'default' => false,
 					),
-					'showMeta' => array(
-						'type' => 'boolean',
+					'showMeta'                           => array(
+						'type'    => 'boolean',
 						'default' => true,
 					),
-					'showMetaAuthor' => array(
-						'type' => 'boolean',
+					'showMetaAuthor'                     => array(
+						'type'    => 'boolean',
 						'default' => true,
 					),
-					'showMetaDate' => array(
-						'type' => 'boolean',
+					'showMetaDate'                       => array(
+						'type'    => 'boolean',
 						'default' => true,
 					),
-					'showMetaComments' => array(
-						'type' => 'boolean',
+					'showMetaComments'                   => array(
+						'type'    => 'boolean',
 						'default' => false,
 					),
-					'showFeaturedImage' => array(
-						'type' => 'boolean',
+					'showFeaturedImage'                  => array(
+						'type'    => 'boolean',
 						'default' => true,
 					),
-					'showReadMore' => array(
-						'type' => 'boolean',
+					'showReadMore'                       => array(
+						'type'    => 'boolean',
 						'default' => true,
 					),
-					'showExcerpt' => array(
-						'type' => 'boolean',
+					'showExcerpt'                        => array(
+						'type'    => 'boolean',
 						'default' => true,
 					),
-					'excerptFont' => array(
-						'type' => 'string',
+					'excerptFont'                        => array(
+						'type'    => 'string',
 						'default' => 'inherit',
 					),
-					'excerptFontSize' => array(
-						'type' => 'integer',
+					'excerptFontSize'                    => array(
+						'type'    => 'integer',
 						'default' => 18,
 					),
-					'excerptTextColor' => array(
-						'type' => 'string',
+					'excerptTextColor'                   => array(
+						'type'    => 'string',
 						'default' => '#000000',
 					),
-					'readMoreButtonText' => array(
-						'type' => 'string',
+					'readMoreButtonText'                 => array(
+						'type'    => 'string',
 						'default' => __( 'Read More', 'post-type-archive-mapping' ),
 					),
-					'readMoreButtonFont' => array(
-						'type' => 'string',
+					'readMoreButtonFont'                 => array(
+						'type'    => 'string',
 						'default' => 'inherit',
 					),
-					'readMoreButtonTextColor' => array(
-						'type' => 'string',
+					'readMoreButtonTextColor'            => array(
+						'type'    => 'string',
 						'default' => '#000000',
 					),
-					'readMoreButtonTextHoverColor' => array(
-						'type' => 'string',
+					'readMoreButtonTextHoverColor'       => array(
+						'type'    => 'string',
 						'default' => '#000000',
 					),
-					'readMoreButtonBackgroundColor' => array(
-						'type' => 'string',
+					'readMoreButtonBackgroundColor'      => array(
+						'type'    => 'string',
 						'default' => '#CCCCCC',
 					),
 					'readMoreButtonBackgroundHoverColor' => array(
-						'type' => 'string',
+						'type'    => 'string',
 						'default' => '#adadad',
 					),
-					'readMoreButtonBorder' => array(
-						'type' => 'integer',
+					'readMoreButtonBorder'               => array(
+						'type'    => 'integer',
 						'default' => 0,
 					),
-					'readMoreButtonBorderColor' => array(
-						'type' => 'string',
+					'readMoreButtonBorderColor'          => array(
+						'type'    => 'string',
 						'default' => 'inherit',
 					),
-					'readMoreButtonBorderRadius' => array(
-						'type' => 'integer',
+					'readMoreButtonBorderRadius'         => array(
+						'type'    => 'integer',
 						'default' => 10,
 					),
 				),
-				'render_callback' => array( $this, 'term_grid' ),
+				'render_callback' => array( $this, 'output' ),
 				'editor_script'   => 'ptam-custom-posts-gutenberg',
 				'editor_style'    => 'ptam-style-editor-css',
 			)

@@ -181,6 +181,16 @@ class Custom_Post_Types {
 		$taxonomy_placement_options = $attributes['taxonomyLocation'];
 		$image_size                 = $attributes['imageTypeSize'];
 
+		/**
+		 * Filter the post query.
+		 *
+		 * @since 4.5.0
+		 *
+		 * @param array  $post_args  The post arguments.
+		 * @param array  $attributes The passed attributes.
+		 */
+		$post_args = apply_filters( 'ptam_custom_post_types_query', $post_args, $attributes );
+
 		// Front page pagination fix.
 		global $wp_query;
 		$temp = $wp_query;
