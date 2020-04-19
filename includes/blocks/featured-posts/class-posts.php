@@ -128,127 +128,28 @@ class Posts {
 		 */
 		$post_args = apply_filters( 'ptam_featured_post_by_term_query', $post_args, $attributes, $post_type, $term, $taxonomy );
 		$posts     = get_posts( $post_args );
-		/*
 		if ( ! $attributes['disableStyles'] ) :
-			
 			?>
 		<style>
-			<?php
-			if ( 'image' === $attributes['backgroundType'] ) {
-				$overlay_color       = Functions::hex2rgba( $attributes['overlayColor'], $attributes['overlayOpacity'] );
-				$overlay_color_hover = Functions::hex2rgba( $attributes['overlayColorHover'], $attributes['overlayOpacityHover'] );
-				?>
-				#<?php echo esc_html( $attributes['containerId'] ); ?> .ptam-term-grid-item:before {
-					content: '';
-					position: absolute;
-					width: 100%;
-					height: 100%;
-					background-color: <?php echo esc_html( $overlay_color ); ?>;
-					z-index: 1;
-				}
-				#<?php echo esc_html( $attributes['containerId'] ); ?> .ptam-term-grid-item:hover:before {
-					background-color: <?php echo esc_html( $overlay_color_hover ); ?>;
-				}
-				<?php
+			#<?php echo esc_html( $attributes['containerId'] ); ?> .ptam-fp-term {
+				border-bottom: 2px solid <?php echo esc_html( $attributes['termBackgroundColor'] ); ?>;
+				marginBottom: 20px;
 			}
-			if ( 'none' === $attributes['backgroundType'] ) {
-				?>
-				#<?php echo esc_html( $attributes['containerId'] ); ?> .ptam-term-grid-item {
-					background: transparent;
-				}
-				<?php
-			}
-			if ( 'color' === $attributes['backgroundType'] ) {
-				?>
-				#<?php echo esc_html( $attributes['containerId'] ); ?> .ptam-term-grid-item {
-					background-color: <?php echo esc_html( $attributes['backgroundColor'] ); ?>;
-				}
-				<?php
-				if ( $attributes['linkContainer'] ) :
-					?>
-					#<?php echo esc_html( $attributes['containerId'] ); ?> .ptam-term-grid-item:hover {
-						background-color: <?php echo esc_html( $attributes['backgroundColorHover'] ); ?>;
-					}
-					<?php
-				endif;
-				?>
-				<?php
-			}
-			if ( 'gradient' === $attributes['backgroundType'] ) {
-				?>
-				#<?php echo esc_html( $attributes['containerId'] ); ?> .ptam-term-grid-item {
-					background-image: <?php echo esc_html( $attributes['backgroundGradient'] ); ?>;
-				}
-				<?php
-				if ( $attributes['linkContainer'] ) :
-					?>
-					#<?php echo esc_html( $attributes['containerId'] ); ?> .ptam-term-grid-item:hover {
-						background-image: <?php echo esc_html( $attributes['backgroundGradientHover'] ); ?>;
-					}
-					<?php
-				endif;
-				?>
-				<?php
-			}
-			?>
-			#<?php echo esc_html( $attributes['containerId'] ); ?> .ptam-term-grid-item {
-				border-color: <?php echo esc_html( $attributes['itemBorderColor'] ); ?>;
-				border-width: <?php echo absint( $attributes['itemBorder'] ); ?>px;
-				border-radius: <?php echo absint( $attributes['itemBorderRadius'] ); ?>%;
-				border-style: solid;
-			}
-			#<?php echo esc_html( $attributes['containerId'] ); ?> .ptam-term-grid-item h2,
-			#<?php echo esc_html( $attributes['containerId'] ); ?> .ptam-term-grid-item h2 a,
-			#<?php echo esc_html( $attributes['containerId'] ); ?> .ptam-term-grid-item h2 a:hover {
-				color: <?php echo esc_html( $attributes['termTitleColor'] ); ?>;
-				text-decoration: none;
-				font-family: '<?php echo esc_html( $attributes['termTitleFont'] ); ?>';
-			}
-			<?php
-			if ( $attributes['linkContainer'] ) :
-				?>
-				#<?php echo esc_html( $attributes['containerId'] ); ?> .ptam-term-grid-item:hover h2,
-				#<?php echo esc_html( $attributes['containerId'] ); ?> .ptam-term-grid-item:hover h2 a,
-				#<?php echo esc_html( $attributes['containerId'] ); ?> .ptam-term-grid-item:hover h2 a:hover {
-					color: <?php echo esc_html( $attributes['termTitleColorHover'] ); ?>;
-				}
-				<?php
-			endif;
-			?>
-			#<?php echo esc_html( $attributes['containerId'] ); ?> .ptam-term-grid-item .ptam-term-grid-item-description {
-				color: <?php echo esc_html( $attributes['termDescriptionColor'] ); ?>;
-				font-family: '<?php echo esc_html( $attributes['termDescriptionFont'] ); ?>';
-			}
-			<?php
-			if ( $attributes['linkContainer'] ) :
-				?>
-				#<?php echo esc_html( $attributes['containerId'] ); ?> .ptam-term-grid-item:hover .ptam-term-grid-item-description {
-					color: <?php echo esc_html( $attributes['termDescriptionColorHover'] ); ?>;
-				}
-				<?php
-			endif;
-			?>
-			#<?php echo esc_html( $attributes['containerId'] ); ?> .ptam-term-grid-item .ptam-term-grid-button {
-				color: <?php echo esc_html( $attributes['termButtonTextColor'] ); ?>;
-				background-color: <?php echo esc_html( $attributes['termButtonBackgroundColor'] ); ?>;
-				border-width: <?php echo absint( $attributes['termButtonBorder'] ); ?>px;
-				border-color: <?php echo esc_html( $attributes['termButtonBorderColor'] ); ?>;
-				border-radius: <?php echo absint( $attributes['termButtonBorderRadius'] ); ?>px;
-				font-family: '<?php echo esc_html( $attributes['termButtonFont'] ); ?>';
-				border-style: solid;
-			}
-			#<?php echo esc_html( $attributes['containerId'] ); ?> .ptam-term-grid-item .ptam-term-grid-button:hover {
-				background-color: <?php echo esc_html( $attributes['termButtonBackgroundHoverColor'] ); ?>;
-				color: <?php echo esc_html( $attributes['termButtonTextHoverColor'] ); ?>;
-				text-decoration: none;
+			#<?php echo esc_html( $attributes['containerId'] ); ?> .ptam-fp-term span {
+				padding-bottom: <?php echo absint( $attributes['termDisplayPaddingBottom'] ); ?>px;
+				padding-top: <?php echo absint( $attributes['termDisplayPaddingTop'] ); ?>px;
+				padding-left: <?php echo absint( $attributes['termDisplayPaddingLeft'] ); ?>px;
+				padding-right: <?php echo absint( $attributes['termDisplayPaddingRight'] ); ?>px;
+				background-color: <?php echo esc_html( $attributes['termBackgroundColor'] ); ?>;
+				color: <?php echo esc_html( $attributes['termTextColor'] ); ?>;
+				font-family: '<?php echo esc_html( $attributes['termFont'] ); ?>';
+				font-size: <?php echo absint( $attributes['termFontSize'] ); ?>px;
 			}
 		</style>
 			<?php
-			endif;
-		?>
-		*/
+		endif;
 
-		$term_name = _x( 'All', 'All Terms', 'post-type-archive-mapping' );
+		$term_name   = _x( 'All', 'All Terms', 'post-type-archive-mapping' );
 		$term_object = get_term_by( 'id', $term, $taxonomy );
 		if ( ! is_wp_error( $term_object ) ) {
 			$term_name = sanitize_text_field( $term_object->name );
