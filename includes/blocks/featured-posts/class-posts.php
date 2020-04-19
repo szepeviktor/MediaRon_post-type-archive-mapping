@@ -145,6 +145,47 @@ class Posts {
 				font-family: '<?php echo esc_html( $attributes['termFont'] ); ?>';
 				font-size: <?php echo absint( $attributes['termFontSize'] ); ?>px;
 			}
+			#<?php echo esc_html( $attributes['containerId'] ); ?> .ptam-fp-term span {
+				padding-bottom: <?php echo absint( $attributes['termDisplayPaddingBottom'] ); ?>px;
+				padding-top: <?php echo absint( $attributes['termDisplayPaddingTop'] ); ?>px;
+				padding-left: <?php echo absint( $attributes['termDisplayPaddingLeft'] ); ?>px;
+				padding-right: <?php echo absint( $attributes['termDisplayPaddingRight'] ); ?>px;
+				background-color: <?php echo esc_html( $attributes['termBackgroundColor'] ); ?>;
+				color: <?php echo esc_html( $attributes['termTextColor'] ); ?>;
+				font-family: '<?php echo esc_html( $attributes['termFont'] ); ?>';
+				font-size: <?php echo absint( $attributes['termFontSize'] ); ?>px;
+			}
+			#<?php echo esc_html( $attributes['containerId'] ); ?> .entry-title a {
+				font-family: '<?php echo esc_html( $attributes['titleFont'] ); ?>';
+				font-size: <?php echo absint( $attributes['titleFontSize'] ); ?>px;
+				color: <?php echo esc_html( $attributes['titleColor'] ); ?>;
+			}
+			#<?php echo esc_html( $attributes['containerId'] ); ?> .entry-title a:hover {
+				color: <?php echo esc_html( $attributes['titleColorHover'] ); ?>;
+			}
+			#<?php echo esc_html( $attributes['containerId'] ); ?> .ptam-featured-post-content {
+				font-family: '<?php echo esc_html( $attributes['excerptFont'] ); ?>';
+				color: <?php echo esc_html( $attributes['excerptTextColor'] ); ?>;
+				font-size: <?php echo absint( $attributes['excerptFontSize'] ); ?>px;
+			}
+			#<?php echo esc_html( $attributes['containerId'] ); ?> .ptam-featured-post-content {
+				font-family: '<?php echo esc_html( $attributes['excerptFont'] ); ?>';
+				color: <?php echo esc_html( $attributes['excerptTextColor'] ); ?>;
+				font-size: <?php echo absint( $attributes['excerptFontSize'] ); ?>px;
+			}
+			#<?php echo esc_html( $attributes['containerId'] ); ?> .ptam-featured-post-button a {
+				color: <?php echo esc_html( $attributes['readMoreButtonTextColor'] ); ?>;
+				background-color: <?php echo esc_html( $attributes['readMoreButtonBackgroundColor'] ); ?>;
+				border-width: <?php echo absint( $attributes['readMoreButtonBorder'] ); ?>px;
+				border-radius: <?php echo absint( $attributes['readMoreButtonBorderRadius'] ); ?>px;
+				border-color: <?php echo esc_attr( $attributes['readMoreButtonBorderColor'] ); ?>;
+				font-family: '<?php echo esc_html( $attributes['readMoreButtonFont'] ); ?>';
+				border-style: solid;
+			}
+			#<?php echo esc_html( $attributes['containerId'] ); ?> .ptam-featured-post-button a:hover {
+				color: <?php echo esc_html( $attributes['readMoreButtonTextHoverColor'] ); ?>;
+				background-color: <?php echo esc_html( $attributes['readMoreButtonBackgroundHoverColor'] ); ?>;
+			}
 		</style>
 			<?php
 		endif;
