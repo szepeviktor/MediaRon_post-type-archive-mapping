@@ -90,12 +90,15 @@ class Enqueue {
 			'ptam-custom-posts-gutenberg',
 			'ptam_globals',
 			array(
-				'img_url'     => esc_url( \PostTypeArchiveMapping::get_plugin_url( 'img/loading.png' ) ),
-				'rest_url'    => esc_url( rest_url() ),
-				'taxonomies'  => $tax_array,
-				'fonts'       => Functions::get_fonts(),
-				'image_sizes' => Functions::get_all_image_sizes(),
-				'post_types'  => $post_type_array,
+				'img_url'                      => esc_url( \PostTypeArchiveMapping::get_plugin_url( 'img/loading.png' ) ),
+				'rest_url'                     => esc_url( rest_url() ),
+				'taxonomies'                   => $tax_array,
+				'fonts'                        => Functions::get_fonts(),
+				'image_sizes'                  => Functions::get_all_image_sizes(),
+				'post_types'                   => $post_type_array,
+				'custom_posts_block_preview'   => esc_url( \PostTypeArchiveMapping::get_plugin_url( 'img/custom-post-types-block.jpg' ) ),
+				'term_grid_block_preview'      => esc_url( \PostTypeArchiveMapping::get_plugin_url( 'img/term-grid-block.jpg' ) ),
+				'featured_posts_block_preview' => esc_url( \PostTypeArchiveMapping::get_plugin_url( 'img/featured-posts-block.jpg' ) ),
 			)
 		);
 		wp_set_script_translations( 'ptam-custom-posts-gutenberg', 'post-type-archive-mapping' );

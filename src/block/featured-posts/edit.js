@@ -339,6 +339,13 @@ class PTAM_Featured_Posts extends Component {
 		});
 	}
 	render() {
+		if ( this.props.attributes.preview ) {
+			return(
+				<Fragment>
+					<img src={ptam_globals.featured_posts_block_preview} />
+				</Fragment>
+			);
+		}
 		let htmlToReactParser = new HtmlToReactParser();
 		const { attributes, setAttributes } = this.props;
 		const {

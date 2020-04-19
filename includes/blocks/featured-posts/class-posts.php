@@ -529,6 +529,10 @@ class Posts {
 						'type'    => 'integer',
 						'default' => 10,
 					),
+					'preview'                            => array(
+						'type'    => 'boolean',
+						'default' => false,
+					),
 				),
 				'render_callback' => array( $this, 'output' ),
 				'editor_script'   => 'ptam-custom-posts-gutenberg',

@@ -238,6 +238,14 @@ class PTAM_Term_Grid extends Component {
 	};
 
 	render() {
+		if ( this.props.attributes.preview ) {
+			return(
+				<Fragment>
+					<img src={ptam_globals.term_grid_block_preview} />
+				</Fragment>
+			);
+		}
+
 		let htmlToReactParser = new HtmlToReactParser();
 		const { attributes, setAttributes } = this.props;
 		const {

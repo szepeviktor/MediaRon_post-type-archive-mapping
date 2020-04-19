@@ -94,6 +94,10 @@ class PostTypeArchiveMapping {
 		$this->page_columns = new PTAM\Includes\Admin\Page_Columns();
 		$this->page_columns->run();
 
+		// Gutenberg Helper.
+		$this->gutenberg = new PTAM\Includes\Admin\Gutenberg();
+		$this->gutenberg->run();
+
 		// Yoast Compatibility.
 		$this->yoast = new PTAM\Includes\Yoast();
 		$this->yoast->run();

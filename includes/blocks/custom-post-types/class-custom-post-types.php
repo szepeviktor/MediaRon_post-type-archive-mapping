@@ -848,6 +848,10 @@ class Custom_Post_Types {
 						'type'    => 'object',
 						'default' => '',
 					),
+					'preview'              => array(
+						'type'    => 'boolean',
+						'default' => false,
+					),
 				),
 				'render_callback' => array( $this, 'custom_posts' ),
 				'editor_script'   => 'ptam-custom-posts-gutenberg',

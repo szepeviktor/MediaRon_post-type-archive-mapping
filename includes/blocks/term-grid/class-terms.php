@@ -595,6 +595,10 @@ class Terms {
 						'type'    => 'integer',
 						'default' => 28,
 					),
+					'preview'                        => array(
+						'type'    => 'boolean',
+						'default' => false,
+					),
 
 				),
 				'render_callback' => array( $this, 'term_grid' ),

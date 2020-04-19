@@ -41,7 +41,7 @@ export const name = 'ptam/custom-posts';
 registerBlockType( 'ptam/custom-posts', { // Block name. Block names must be string that contains a namespace prefix. Example: my-plugin/my-custom-block.
 	title: __( 'Custom Posts', 'post-type-archive-mapping' ), // Block title.
 	icon: <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M4 14h4v-4H4v4zm0 5h4v-4H4v4zM4 9h4V5H4v4zm5 5h12v-4H9v4zm0 5h12v-4H9v4zM9 5v4h12V5H9z"/><path d="M0 0h24v24H0z" fill="none"/></svg>,
-	category: 'common', // Block category — Group blocks together based on common traits E.g. common, formatting, layout widgets, embed.
+	category: 'ptam-custom-query-blocks', // Block category — Group blocks together based on common traits E.g. common, formatting, layout widgets, embed.
 
 	getEditWrapperProps( attributes ) {
 		const { align } = attributes;
@@ -49,7 +49,11 @@ registerBlockType( 'ptam/custom-posts', { // Block name. Block names must be str
 			return { 'data-align': align };
 		}
 	},
-
+	example: {
+		attributes: {
+			'preview' : true,
+		},
+	},
 	edit: edit,
 
 	// Render via PHP
