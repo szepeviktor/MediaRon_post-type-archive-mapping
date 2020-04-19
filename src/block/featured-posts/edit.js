@@ -219,22 +219,6 @@ class PTAM_Featured_Posts extends Component {
 		const posts = this.state.latestPosts;
 		const htmlToReactParser = new HtmlToReactParser();
 		const {
-			align,
-			postType,
-			avatarSize,
-			imageType,
-			imageTypeSize,
-			postsToShow,
-			imageCrop,
-			fallbackImg,
-			term,
-			taxonomy,
-			postsInclude,
-			order,
-			orderBy,
-			postsExclude,
-			postLayout,
-			displayPostContent,
 			disableStyles,
 			titleFont,
 			titleFontSize,
@@ -249,6 +233,15 @@ class PTAM_Featured_Posts extends Component {
 			excerptFont,
 			excerptFontSize,
 			excerptTextColor,
+			readMoreButtonText,
+			readMoreButtonFont,
+			readMoreButtonTextColor,
+			readMoreButtonTextHoverColor,
+			readMoreButtonBackgroundColor,
+			readMoreButtonBackgroundHoverColor,
+			readMoreButtonBorder,
+			readMoreButtonBorderColor,
+			readMoreButtonBorderRadius,
 		} = this.props.attributes;
 		if (Object.keys(posts).length === 0) {
 			return (
@@ -269,6 +262,17 @@ class PTAM_Featured_Posts extends Component {
 			titleStyles = {};
 			excerptStyles = {};
 		}
+		const readMoreButtonStyles = !disableStyles
+			? {
+					color: readMoreButtonTextColor,
+					backgroundColor: readMoreButtonBackgroundColor,
+					borderWidth: readMoreButtonBorder + "px",
+					borderColor: readMoreButtonBorderColor,
+					borderRadius: readMoreButtonBorderRadius + 'px',
+					fontFamily: `${readMoreButtonFont}`,
+					borderStyle: "solid",
+			  }
+			: {};
 		return Object.keys(posts).map((term, i) => (
 			<Fragment key={i}>
 				<div
@@ -317,7 +321,7 @@ class PTAM_Featured_Posts extends Component {
 					}
 					{showReadMore &&
 						<div className="ptam-featured-post-button">
-							<a className="btn btn-primary" href={posts[i].link}>{__('Read More', 'post-type-archive-mapping' )}</a>
+							<a className="btn btn-primary" href={posts[i].link} style={readMoreButtonStyles}>{readMoreButtonText}</a>
 						</div>
 					}
 				</div>
@@ -342,18 +346,13 @@ class PTAM_Featured_Posts extends Component {
 		const {
 			align,
 			postType,
-			avatarSize,
-			imageType,
 			imageTypeSize,
 			postsToShow,
-			imageCrop,
 			fallbackImg,
 			term,
 			taxonomy,
-			postsInclude,
 			order,
 			orderBy,
-			postsExclude,
 			postLayout,
 			displayPostContent,
 			termDisplayPaddingBottom,
@@ -381,6 +380,15 @@ class PTAM_Featured_Posts extends Component {
 			excerptFont,
 			excerptFontSize,
 			excerptTextColor,
+			readMoreButtonText,
+			readMoreButtonFont,
+			readMoreButtonTextColor,
+			readMoreButtonTextHoverColor,
+			readMoreButtonBackgroundColor,
+			readMoreButtonBackgroundHoverColor,
+			readMoreButtonBorder,
+			readMoreButtonBorderColor,
+			readMoreButtonBorderRadius,
 		} = attributes;
 
 		// Fonts
@@ -505,6 +513,10 @@ class PTAM_Featured_Posts extends Component {
 			fontFamily: termFont,
 			fontSize: termFontSize + 'px',
 		};
+		if ( disableStyles ) {
+			termContainerStyles = {};
+			termButtonStyles = {};
+		}
 
 		const inspectorControls = (
 			<InspectorControls>
@@ -592,6 +604,15 @@ class PTAM_Featured_Posts extends Component {
 						onChange={(value) =>
 							this.props.setAttributes({ containerId: value })
 						}
+					/>
+					<ToggleControl
+						label={__("Disable Styles", "post-type-archive-mapping")}
+						checked={disableStyles}
+						onChange={(value) => {
+							this.props.setAttributes({
+								disableStyles: value,
+							});
+						}}
 					/>
 					<ToggleControl
 						label={__("Show Post Meta", "post-type-archive-mapping")}
@@ -887,6 +908,96 @@ class PTAM_Featured_Posts extends Component {
 						/>
 					</PanelBody>
 				}
+				{showReadMore &&
+					<Fragment>
+						<PanelBody
+							initialOpen={false}
+							title={__("Button", "post-type-archive-mapping")}
+						>
+							<TextControl
+								label={__("Button Text", "post-type-archive-mapping")}
+								type="text"
+								value={readMoreButtonText}
+								onChange={(value) =>
+									this.props.setAttributes({ readMoreButtonText: value })
+								}
+							/>
+							<SelectControl
+								label={__("Button Typography", "post-type-archive-mapping")}
+								options={fontOptions}
+								value={readMoreButtonFont}
+								onChange={(value) => {
+									this.props.setAttributes({ readMoreButtonFont: value });
+								}}
+							/>
+							<PanelColorSettings
+								title={__("Button Colors", "post-type-archive-mapping")}
+								initialOpen={true}
+								colorSettings={[
+									{
+										value: readMoreButtonTextColor,
+										onChange: (value) => {
+											setAttributes({ readMoreButtonTextColor: value });
+										},
+										label: __("Text Color", "post-type-archive-mapping"),
+									},
+									{
+										value: readMoreButtonTextHoverColor,
+										onChange: (value) => {
+											setAttributes({ readMoreButtonTextHoverColor: value });
+										},
+										label: __(
+											"Text Color on Hover",
+											"post-type-archive-mapping"
+										),
+									},
+									{
+										value: readMoreButtonBackgroundColor,
+										onChange: (value) => {
+											setAttributes({ readMoreButtonBackgroundColor: value });
+										},
+										label: __("Background Color", "post-type-archive-mapping"),
+									},
+									{
+										value: readMoreButtonBackgroundHoverColor,
+										onChange: (value) => {
+											setAttributes({ readMoreButtonBackgroundHoverColor: value });
+										},
+										label: __(
+											"Background Color on Hover",
+											"post-type-archive-mapping"
+										),
+									},
+									{
+										value: readMoreButtonBorderColor,
+										onChange: (value) => {
+											setAttributes({ readMoreButtonBorderColor: value });
+										},
+										label: __("Border Color", "post-type-archive-mapping"),
+									},
+								]}
+							></PanelColorSettings>
+							<RangeControl
+								label={__("Border Width", "post-type-archive-mapping")}
+								value={readMoreButtonBorder}
+								onChange={(value) => setAttributes({ readMoreButtonBorder: value })}
+								min={0}
+								max={50}
+								step={1}
+							/>
+							<RangeControl
+								label={__("Border Radius", "post-type-archive-mapping")}
+								value={readMoreButtonBorderRadius}
+								onChange={(value) =>
+									setAttributes({ readMoreButtonBorderRadius: value })
+								}
+								min={0}
+								max={100}
+								step={1}
+							/>
+						</PanelBody>
+					</Fragment>
+				}
 				
 			</InspectorControls>
 		);
@@ -960,6 +1071,10 @@ class PTAM_Featured_Posts extends Component {
 								__html: `
 							#${containerId} .entry-title a:hover {
 								color: ${titleColorHover} !important;
+							}
+							#${containerId} .ptam-featured-post-button a:hover {
+								color: ${readMoreButtonTextHoverColor} !important;
+								background-color: ${readMoreButtonBackgroundHoverColor} !important;
 							}
 							`,
 							}}

@@ -583,6 +583,42 @@ class Posts {
 						'type' => 'string',
 						'default' => '#000000',
 					),
+					'readMoreButtonText' => array(
+						'type' => 'string',
+						'default' => __( 'Read More', 'post-type-archive-mapping' ),
+					),
+					'readMoreButtonFont' => array(
+						'type' => 'string',
+						'default' => 'inherit',
+					),
+					'readMoreButtonTextColor' => array(
+						'type' => 'string',
+						'default' => '#000000',
+					),
+					'readMoreButtonTextHoverColor' => array(
+						'type' => 'string',
+						'default' => '#000000',
+					),
+					'readMoreButtonBackgroundColor' => array(
+						'type' => 'string',
+						'default' => '#CCCCCC',
+					),
+					'readMoreButtonBackgroundHoverColor' => array(
+						'type' => 'string',
+						'default' => '#adadad',
+					),
+					'readMoreButtonBorder' => array(
+						'type' => 'integer',
+						'default' => 0,
+					),
+					'readMoreButtonBorderColor' => array(
+						'type' => 'string',
+						'default' => 'inherit',
+					),
+					'readMoreButtonBorderRadius' => array(
+						'type' => 'integer',
+						'default' => 10,
+					),
 				),
 				'render_callback' => array( $this, 'term_grid' ),
 				'editor_script'   => 'ptam-custom-posts-gutenberg',

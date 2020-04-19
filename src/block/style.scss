@@ -530,5 +530,16 @@ button.ptam-media-alt-reset.components-button {
 	}
 	.ptam-featured-post-content {
 		line-height: 1.2em;
+		margin: 1em 0;
+	}
+	.ptam-featured-post-button {
+		a {
+			display: inline-block;
+			padding: 10px 20px;
+			text-decoration: none;
+			:hover {
+				text-decoration: none;
+			}
+		}
 	}
 }
