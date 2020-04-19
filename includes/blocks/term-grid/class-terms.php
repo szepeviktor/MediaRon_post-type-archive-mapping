@@ -217,7 +217,7 @@ class Terms {
 		<style>
 			<?php
 			if ( 'image' === $attributes['backgroundType'] ) {
-				$overlay_color = Functions::hex2rgba( $attributes['overlayColor'], $attributes['overlayOpacity'] );
+				$overlay_color       = Functions::hex2rgba( $attributes['overlayColor'], $attributes['overlayOpacity'] );
 				$overlay_color_hover = Functions::hex2rgba( $attributes['overlayColorHover'], $attributes['overlayOpacityHover'] );
 				?>
 				#<?php echo esc_html( $attributes['containerId'] ); ?> .ptam-term-grid-item:before {

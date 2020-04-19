@@ -72,6 +72,19 @@ class Enqueue {
 			$tax_array[ $index ] = $taxonomy->label;
 		}
 
+		$post_type_array = array();
+		$post_types = get_post_types(
+			array(
+				'public' => true,
+			),
+			'objects'
+		);
+		foreach ( $post_types as $post_type => $type ) {
+			if ( get_object_taxonomies( $post_type, 'names' ) ) {
+				$post_type_array[ $post_type ] = $type->label;
+			}
+		}
+
 		// Pass in i18n variables.
 		wp_localize_script(
 			'ptam-custom-posts-gutenberg',
@@ -82,6 +95,7 @@ class Enqueue {
 				'taxonomies'  => $tax_array,
 				'fonts'       => Functions::get_fonts(),
 				'image_sizes' => Functions::get_all_image_sizes(),
+				'post_types'  => $post_type_array,
 			)
 		);
 		wp_set_script_translations( 'ptam-custom-posts-gutenberg', 'post-type-archive-mapping' );

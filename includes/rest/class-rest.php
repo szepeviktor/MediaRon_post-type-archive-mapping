@@ -72,6 +72,14 @@ class Rest {
 				'callback' => array( $this, 'get_tax_term_data' ),
 			)
 		);
+		register_rest_route(
+			'ptam/v2',
+			'/get_featured_posts',
+			array(
+				'methods'  => 'POST',
+				'callback' => array( $this, 'get_featured_posts' ),
+			)
+		);
 	}
 
 	/**
@@ -361,6 +369,98 @@ class Rest {
 			'image_sizes' => Functions::get_all_image_sizes(),
 			'taxonomies'  => $taxonomies,
 			'fonts'       => Functions::get_fonts(),
+		);
+		die( wp_json_encode( $return ) );
+	}
+
+	/**
+	 * Return Featured Posts
+	 *
+	 * @since 4.5.0
+	 * @param WP_REST_Request $post_data Post data.
+	 */
+	public function get_featured_posts( $post_data ) {
+		$taxonomy       = $post_data['taxonomy'];
+		$order          = $post_data['order'];
+		$orderby        = $post_data['orderby'];
+		$term           = $post_data['term'];
+		$post_type      = $post_data['post_type'];
+		$posts_per_page = $post_data['posts_per_page'];
+		$image_type     = $post_data['image_type'];
+		$image_size     = $post_data['image_size'];
+		$avatar_size    = $post_data['avatar_size'];
+		$default_image  = isset( $post_data['default_image']['id'] ) ? absint( $post_data['default_image']['id'] ) : 0;
+
+		$post_args = array(
+			'post_type'      => $post_type,
+			'post_status'    => 'publish',
+			'order'          => $order,
+			'orderby'        => $orderby,
+			'posts_per_page' => $posts_per_page,
+		);
+		if ( 'all' !== $term && 0 !== absint( $term ) && 'none' !== $taxonomy ) {
+			$post_args['tax_query'] = array( // phpcs:ignore
+				array(
+					'taxonomy' => $taxonomy,
+					'terms'    => $term,
+				),
+			);
+		}
+		$posts = get_posts( $post_args );
+
+		foreach ( $posts as &$post ) {
+
+			if ( 'gravatar' === $image_type ) {
+				$thumbnail = get_avatar( $post->post_author, $avatar_size );
+			} else {
+				$thumbnail = get_the_post_thumbnail( $post->ID, $image_size );
+				if ( empty( $thumbnail ) ) {
+					$thumbnail = wp_get_attachment_image( $default_image, $image_size );
+				}
+			}
+			$post->featured_image_src = $thumbnail;
+
+			// Get author information.
+			$display_name = get_the_author_meta( 'display_name', $post->post_author );
+			$author_url   = get_author_posts_url( $post->post_author );
+
+			$post->author_info               = new \stdClass();
+			$post->author_info->display_name = $display_name;
+			$post->author_info->author_link  = $author_url;
+
+			$post->link = get_permalink( $post->ID );
+
+			// Get taxonomy information.
+			$taxonomies = get_object_taxonomies( $post->post_type, 'objects' );
+			$terms      = array();
+			foreach ( $taxonomies as $key => $taxonomy ) {
+				if ( 'author' === $key ) {
+					unset( $taxonomies[ $key ] );
+					continue;
+				}
+				$term_list = get_the_terms( $post->ID, $key );
+				if ( ! is_wp_error( $term_list ) && ! $term_list && is_array( $term_list ) ) {
+					foreach ( $term_list as $index => $term_raw ) {
+						$terms[ $term_raw->term_id ] = $term_raw->name;
+					}
+				}
+			}
+
+			if ( empty( $post->post_excerpt ) ) {
+				$post->post_excerpt = apply_filters( 'the_excerpt', wp_strip_all_tags( strip_shortcodes( $post->post_content ) ) );
+			}
+
+			if ( ! $post->post_excerpt ) {
+				$post->post_excerpt = null;
+			}
+
+			$post->post_excerpt = wp_kses_post( $post->post_excerpt );
+			$post->post_content = apply_filters( 'ptam_the_content', $post->post_content );
+		}
+		$return = array(
+			'posts'      => $posts,
+			'taxonomies' => $taxonomies,
+			'terms'      => $terms,
 		);
 		die( wp_json_encode( $return ) );
 	}

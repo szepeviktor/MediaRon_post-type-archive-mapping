@@ -36,6 +36,7 @@ class Custom_Post_Types {
 		}
 		add_image_size( 'ptam-block-post-grid-landscape', 600, 400, true );
 		add_image_size( 'ptam-block-post-grid-square', 600, 600, true );
+		add_image_size( 'ptam-block-post-grid-featured-landscape', 1000, 600, true );
 	}
 
 	/**
@@ -179,6 +180,16 @@ class Custom_Post_Types {
 		$image_placememt_options    = $attributes['imageLocation'];
 		$taxonomy_placement_options = $attributes['taxonomyLocation'];
 		$image_size                 = $attributes['imageTypeSize'];
+
+		/**
+		 * Filter the post query.
+		 *
+		 * @since 4.5.0
+		 *
+		 * @param array  $post_args  The post arguments.
+		 * @param array  $attributes The passed attributes.
+		 */
+		$post_args = apply_filters( 'ptam_custom_post_types_query', $post_args, $attributes );
 
 		// Front page pagination fix.
 		global $wp_query;
