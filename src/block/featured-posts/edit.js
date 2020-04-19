@@ -269,7 +269,6 @@ class PTAM_Featured_Posts extends Component {
 			titleStyles = {};
 			excerptStyles = {};
 		}
-		console.log( posts );
 		return Object.keys(posts).map((term, i) => (
 			<Fragment key={i}>
 				<div

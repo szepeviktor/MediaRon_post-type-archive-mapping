@@ -604,7 +604,8 @@ button.ptam-media-alt-reset.components-button {
 
 .ptam-fp-wrapper .ptam-featured-post-meta .entry-title {
   font-weight: 700;
-  line-height: 1.4em; }
+  line-height: 1.4em;
+  margin: 1em 0; }
   .ptam-fp-wrapper .ptam-featured-post-meta .entry-title a {
     color: #000000;
     text-decoration: none; }
@@ -612,11 +613,41 @@ button.ptam-media-alt-reset.components-button {
       color: #000000;
       text-decoration: none; }
 
-.ptam-fp-wrapper .ptam-featured-post-meta .entry-meta .author-name a:before {
-  font-family: 'PTAM';
-  content: '\e71e';
-  display: inline-block;
-  margin-right: 5px; }
+.ptam-fp-wrapper .ptam-featured-post-meta .entry-meta {
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+  -ms-flex-pack: justify;
+      justify-content: space-between;
+  margin-bottom: 1em;
+  font-size: 12px; }
+  .ptam-fp-wrapper .ptam-featured-post-meta .entry-meta .author-name a {
+    font-weight: 700;
+    color: #000;
+    text-decoration: none; }
+    .ptam-fp-wrapper .ptam-featured-post-meta .entry-meta .author-name a:hover {
+      color: #333;
+      text-decoration: none; }
+    .ptam-fp-wrapper .ptam-featured-post-meta .entry-meta .author-name a:before {
+      font-family: 'PTAM';
+      content: '\e71e';
+      display: inline-block;
+      margin-right: 2px; }
+  .ptam-fp-wrapper .ptam-featured-post-meta .entry-meta .post-date {
+    color: #aaa; }
+    .ptam-fp-wrapper .ptam-featured-post-meta .entry-meta .post-date:before {
+      font-family: 'PTAM';
+      content: '\e789';
+      display: inline-block;
+      margin-right: 2px; }
+  .ptam-fp-wrapper .ptam-featured-post-meta .entry-meta .post-comments {
+    color: #000; }
+    .ptam-fp-wrapper .ptam-featured-post-meta .entry-meta .post-comments:before {
+      font-family: 'PTAM';
+      content: '\e7d6';
+      display: inline-block;
+      margin-right: 2px; }
 
 .ptam-fp-wrapper .ptam-featured-post-content {
   line-height: 1.2em; }
