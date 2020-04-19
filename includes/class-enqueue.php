@@ -73,7 +73,7 @@ class Enqueue {
 		}
 
 		$post_type_array = array();
-		$post_types = get_post_types(
+		$post_types      = get_post_types(
 			array(
 				'public' => true,
 			),

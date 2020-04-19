@@ -52,8 +52,8 @@ class Yoast {
 			}
 		}
 		if ( 'term' === $archive_type ) {
-			$term_id = absint( $archive_id );
-			$term    = get_term_by( 'id', $term_id, get_query_var( 'term_tax' ) );
+			$term_id          = absint( $archive_id );
+			$term             = get_term_by( 'id', $term_id, get_query_var( 'term_tax' ) );
 			$term_description = get_term_field( 'description', $term_id );
 			if ( is_wp_error( $term_description ) ) {
 				return $description;
