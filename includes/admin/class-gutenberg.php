@@ -36,7 +36,6 @@ class Gutenberg {
 				array(
 					'slug'  => 'ptam-custom-query-blocks',
 					'title' => __( 'Custom Query Blocks', 'post-type-archive-mapping' ),
-					'icon'  => 'layout',
 				),
 			)
 		);
