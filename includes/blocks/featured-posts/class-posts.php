@@ -251,7 +251,7 @@ class Posts {
 										datetime="<?php echo esc_attr( get_the_date( 'c', $post->ID ) ); ?>"
 										class="ptam-block-post-grid-date"
 									>
-									<?php echo esc_html( get_the_date( '', $post_id ) ); ?>
+									<?php echo esc_html( get_the_date( '', $post->ID ) ); ?>
 									</time>
 								</span>
 								<?php
