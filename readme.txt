@@ -19,9 +19,9 @@ A WordPress plugin for displaying posts and terms (e.g., categories) using a Gut
 
 The plugin currently has three blocks:
 
-* <a href="https://mediaron.com/custom-post-types-block/">Custom Post Types Block</a>
-* <a href="https://mediaron.com/term-grid-block/">Term (Category) Grid Block</a>
-* <a href="https://mediaron.com/featured-posts-block/">Featured Posts by Category Block</a>
+* <a href="https://mediaron.com/custom-query-blocks/custom-post-types-block/">Custom Post Types Block</a>
+* <a href="https://mediaron.com/custom-query-blocks/term-grid-block/">Term (Category) Grid Block</a>
+* <a href="https://mediaron.com/custom-query-blocks/featured-posts-by-category-block/">Featured Posts by Category Block</a>
 
 === Post Type Archive Mapping ===
 
