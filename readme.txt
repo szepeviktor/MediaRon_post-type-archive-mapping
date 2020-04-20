@@ -15,17 +15,13 @@ A WordPress plugin for displaying posts or terms using a Gutenberg block. Works 
 
 A WordPress plugin for displaying posts and terms (e.g., categories) using a Gutenberg block. Works well with posts, pages, custom post types, taxonomies, and terms.
 
-<a href="https://mediaron.com/custom-post-types-block/">View Documentation and Overview</a>
+<a href="https://mediaron.com/custom-query-blocks/">View Documentation and Overview</a>
 
-=== Custom Post Types Gutenberg Block ===
+The plugin currently has three blocks:
 
-This 4-minute video covers how the Gutenberg block works.
-
-https://www.youtube.com/watch?v=YmlHOj68MeU&rel=0
-
-=== Term (Category) Grid Gutenberg Block ===
-
-<a href="https://mediaron.com/term-grid-block/">View documentation and overview of the Term Grid block</a>.
+* <a href="https://mediaron.com/custom-post-types-block/">Custom Post Types Block</a>
+* <a href="https://mediaron.com/term-grid-block/">Term (Category) Grid Block</a>
+* <a href="https://mediaron.com/featured-posts-block/">Featured Posts by Category Block</a>
 
 === Post Type Archive Mapping ===
 
@@ -34,12 +30,6 @@ This plugin also allows you to map your custom post type archive pages. Just cre
 Ensure your post types have <code>has_archive</code> set to true.
 
 You can also map term archives to pages by editing a term in the admin area.
-
-The plugin has a new Gutenberg block based on Atomic Blocks that will allow you to select which posts to display on your archive page. It even supports pagination.
-
-See below for an overview of how Archive Mapping works:
-
-https://www.youtube.com/watch?v=QT0QIdTBrdk?rel=0
 
 <ul>
 <li>Select a Public page to use as your post type archive page.</li>
@@ -79,10 +69,6 @@ Term Archive Mapping
 4. Use Gutenberg on your public page to customize the archive.
 
 == Frequently Asked Questions ==
-
-= Can I Add Custom Fields? =
-
-Yes! The plugin supports regular post meta and also Advanced Custom Fields.
 
 = I don't see the post types. What's wrong? =
 
