@@ -1,10 +1,10 @@
-=== Custom Post Types Block ===
+=== Custom Query Blocks ===
 Contributors: ronalfy, chrislogan, paaljoachim
 Tags: custom post types, archive, mapping, gutenberg, block, taxonomy, terms
 Requires at least: 5.3
 Requires PHP: 5.6
 Tested up to: 5.4
-Stable tag: 4.0.5
+Stable tag: 4.5.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Donate link: https://mediaron.com/give/
@@ -109,6 +109,12 @@ Yes, just post in the support forums here and I'll do my best to address your is
 5. Term archive option.
 
 == Changelog ==
+
+= 4.5.0 =
+* Released 2020-04-20
+* Added featured posts by category block.
+* Added block previews.
+* New plugin name: Custom Query Blocks
 
 = 4.0.5 -
 * Released 2020-04-16
@@ -263,6 +269,9 @@ Yes, just post in the support forums here and I'll do my best to address your is
 * Initial release.
 
 == Upgrade Notice ==
+
+= 4.5.0 =
+Added featured posts by category block. Added block previews. New plugin name: Custom Query Blocks
 
 = 4.0.5 =
 Added compatibility for Yoast SEO.

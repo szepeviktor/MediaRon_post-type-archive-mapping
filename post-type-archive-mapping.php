@@ -1,10 +1,10 @@
 <?php // phpcs:ignore
 /*
-Plugin Name: Custom Post Types Block
-Plugin URI: https://mediaron.com/custom-post-types-block/
-Description: Map your post type archives to a page and use our Gutenberg blocks to show posts or terms.
+Plugin Name: Custom Query Blocks
+Plugin URI: https://mediaron.com/custom-query-blocks/
+Description: Map your post type and term archives to a page and use our Gutenberg blocks to show posts or terms.
 Author: MediaRon LLC
-Version: 4.0.5
+Version: 4.5.0
 Requires at least: 5.3
 Author URI: https://mediaron.com
 Contributors: MediaRon LLC
@@ -13,7 +13,7 @@ Domain Path: /languages
 Credit: Forked from https://github.com/bigwing/post-type-archive-mapping
 Credit: Gutenberg block based on Atomic Blocks
 */
-define( 'PTAM_VERSION', '4.0.5' );
+define( 'PTAM_VERSION', '4.5.0' );
 require_once 'autoloader.php';
 
 /**
