@@ -394,6 +394,7 @@ class PTAM_Featured_Posts extends Component {
 			readMoreButtonBorder,
 			readMoreButtonBorderColor,
 			readMoreButtonBorderRadius,
+			showPagination,
 		} = attributes;
 
 		// Fonts
@@ -684,6 +685,16 @@ class PTAM_Featured_Posts extends Component {
 						onChange={(value) => {
 							this.props.setAttributes({
 								showReadMore: value,
+							});
+						}}
+					/>
+					<ToggleControl
+						label={__("Show Pagination", "post-type-archive-mapping")}
+						help={__('Not recommended if you have more than one of these blocks on the same page.', 'post-type-archive-mapping')}
+						checked={showPagination}
+						onChange={(value) => {
+							this.props.setAttributes({
+								showPagination: value,
 							});
 						}}
 					/>

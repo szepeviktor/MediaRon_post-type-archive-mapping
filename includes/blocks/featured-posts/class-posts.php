@@ -114,6 +114,7 @@ class Posts {
 		$attributes['readMoreButtonBorder']               = Functions::sanitize_attribute( $attributes, 'readMoreButtonBorder', 'int' );
 		$attributes['readMoreButtonBorderColor']          = Functions::sanitize_attribute( $attributes, 'readMoreButtonBorderColor', 'text' );
 		$attributes['readMoreButtonBorderRadius']         = Functions::sanitize_attribute( $attributes, 'readMoreButtonBorderRadius', 'int' );
+		$attributes['showPagination']                     = Functions::sanitize_attribute( $attributes, 'showPagination', 'bool' );
 
 		/**
 		 * Filter the post query.
@@ -127,7 +128,15 @@ class Posts {
 		 * @parma string $taxonomy   The taxonomy.
 		 */
 		$post_args = apply_filters( 'ptam_featured_post_by_term_query', $post_args, $attributes, $post_type, $term, $taxonomy );
-		$posts     = get_posts( $post_args );
+		// Front page pagination fix.
+		global $wp_query;
+		$temp = $wp_query;
+		if ( is_front_page() ) {
+			$wp_query     = new \WP_Query( $post_args ); // phpcs:ignore
+			$recent_posts = $wp_query;
+		} else {
+			$recent_posts = new \WP_Query( $post_args );
+		}
 		if ( ! $attributes['disableStyles'] ) :
 			?>
 		<style>
@@ -202,105 +211,129 @@ class Posts {
 		<div class="ptam-fp-wrapper" id="<?php echo esc_attr( $attributes['containerId'] ); ?>">
 			<h4 class="ptam-fp-term"><span><?php echo esc_html( $term_name ); ?></span></h4>
 		<?php
-		foreach ( $posts as &$post ) {
-			$thumbnail = get_the_post_thumbnail( $post->ID, $attributes['imageTypeSize'] );
-			if ( empty( $thumbnail ) ) {
-				$thumbnail = wp_get_attachment_image( $attributes['fallbackImg'], $attributes['imageTypeSize'] );
-			}
-			$post->featured_image_src = $thumbnail;
+		if ( $recent_posts->have_posts() ) :
+			while ( $recent_posts->have_posts() ) {
+				global $post;
+				$recent_posts->the_post();
+				$thumbnail = get_the_post_thumbnail( $post->ID, $attributes['imageTypeSize'] );
+				if ( empty( $thumbnail ) ) {
+					$thumbnail = wp_get_attachment_image( $attributes['fallbackImg'], $attributes['imageTypeSize'] );
+				}
+				$post->featured_image_src = $thumbnail;
 
-			// Get author information.
-			$display_name = get_the_author_meta( 'display_name', $post->post_author );
-			$author_url   = get_author_posts_url( $post->post_author );
+				// Get author information.
+				$display_name = get_the_author_meta( 'display_name', $post->post_author );
+				$author_url   = get_author_posts_url( $post->post_author );
 
-			$post->author_info               = new \stdClass();
-			$post->author_info->display_name = $display_name;
-			$post->author_info->author_link  = $author_url;
+				$post->author_info               = new \stdClass();
+				$post->author_info->display_name = $display_name;
+				$post->author_info->author_link  = $author_url;
 
-			$post->link = get_permalink( $post->ID );
+				$post->link = get_permalink( $post->ID );
 
-			if ( empty( $post->post_excerpt ) ) {
-				$post->post_excerpt = apply_filters( 'the_excerpt', wp_strip_all_tags( strip_shortcodes( $post->post_content ) ) );
-			}
+				if ( empty( $post->post_excerpt ) ) {
+					$post->post_excerpt = apply_filters( 'the_excerpt', wp_strip_all_tags( strip_shortcodes( $post->post_content ) ) );
+				}
 
-			if ( ! $post->post_excerpt ) {
-				$post->post_excerpt = null;
-			}
+				if ( ! $post->post_excerpt ) {
+					$post->post_excerpt = null;
+				}
 
-			$post->post_excerpt = wp_kses_post( $post->post_excerpt );
-			$post->post_content = apply_filters( 'ptam_the_content', $post->post_content );
+				$post->post_excerpt = wp_kses_post( $post->post_excerpt );
+				$post->post_content = apply_filters( 'ptam_the_content', $post->post_content );
 
-			?>
-			<div class="ptam-featured-post-item">
-				<div class="ptam-featured-post-meta">
-					<h3 class="entry-title"><a href="<?php echo esc_url( $post->link ); ?>"><?php echo wp_kses_post( get_the_title( $post ) ); ?></a></h3>
-					<?php
-					if ( $attributes['showMeta'] ) :
-						?>
-						<div class="entry-meta">
-							<?php
-							if ( $attributes['showMetaAuthor'] ) :
-								?>
-								<span class="author-name"><a href="<?php echo esc_url( $post->author_info->author_link ); ?>"><?php echo esc_html( $post->author_info->display_name ); ?></a></span>
-								<?php
-							endif;
-							if ( $attributes['showMetaDate'] ) :
-								?>
-								<span class="post-date">
-									<time
-										datetime="<?php echo esc_attr( get_the_date( 'c', $post->ID ) ); ?>"
-										class="ptam-block-post-grid-date"
-									>
-									<?php echo esc_html( get_the_date( '', $post->ID ) ); ?>
-									</time>
-								</span>
-								<?php
-							endif;
-							if ( $attributes['showMetaComments'] ) :
-								?>
-								<span class="post-comments">
-									<?php echo absint( $post->comment_count ); ?> <?php echo esc_html( _n( 'Comment', 'Comments', $post->comment_count, 'post-type-archive-mapping' ) ); ?>
-								</span>
-								<?php
-							endif;
-							?>
-						</div><!-- .entry-meta -->
+				?>
+				<div class="ptam-featured-post-item">
+					<div class="ptam-featured-post-meta">
+						<h3 class="entry-title"><a href="<?php echo esc_url( $post->link ); ?>"><?php echo wp_kses_post( get_the_title( $post ) ); ?></a></h3>
 						<?php
-						endif;
-					?>
-				</div><!-- .ptam-featured-post-meta -->
-				<?php
-				if ( $attributes['showFeaturedImage'] && ! empty( $post->featured_image_src ) ) :
-					?>
-					<div class="ptam-featured-post-image">
-						<a href="<?php echo esc_url( $post->link ); ?>">
-							<?php echo wp_kses_post( $post->featured_image_src ); ?>
-						</a>
-					</div>
+						if ( $attributes['showMeta'] ) :
+							?>
+							<div class="entry-meta">
+								<?php
+								if ( $attributes['showMetaAuthor'] ) :
+									?>
+									<span class="author-name"><a href="<?php echo esc_url( $post->author_info->author_link ); ?>"><?php echo esc_html( $post->author_info->display_name ); ?></a></span>
+									<?php
+								endif;
+								if ( $attributes['showMetaDate'] ) :
+									?>
+									<span class="post-date">
+										<time
+											datetime="<?php echo esc_attr( get_the_date( 'c', $post->ID ) ); ?>"
+											class="ptam-block-post-grid-date"
+										>
+										<?php echo esc_html( get_the_date( '', $post->ID ) ); ?>
+										</time>
+									</span>
+									<?php
+								endif;
+								if ( $attributes['showMetaComments'] ) :
+									?>
+									<span class="post-comments">
+										<?php echo absint( $post->comment_count ); ?> <?php echo esc_html( _n( 'Comment', 'Comments', $post->comment_count, 'post-type-archive-mapping' ) ); ?>
+									</span>
+									<?php
+								endif;
+								?>
+							</div><!-- .entry-meta -->
+							<?php
+							endif;
+						?>
+					</div><!-- .ptam-featured-post-meta -->
 					<?php
-				endif;
-				?>
-				<?php
-				if ( $attributes['showExcerpt'] ) {
+					if ( $attributes['showFeaturedImage'] && ! empty( $post->featured_image_src ) ) :
+						?>
+						<div class="ptam-featured-post-image">
+							<a href="<?php echo esc_url( $post->link ); ?>">
+								<?php echo wp_kses_post( $post->featured_image_src ); ?>
+							</a>
+						</div>
+						<?php
+					endif;
 					?>
-					<div class="ptam-featured-post-content">
-						<?php echo wp_kses_post( $post->post_excerpt ); ?>
-					</div>
 					<?php
-				}
-				?>
-				<?php
-				if ( $attributes['showReadMore'] ) {
+					if ( $attributes['showExcerpt'] ) {
+						?>
+						<div class="ptam-featured-post-content">
+							<?php echo wp_kses_post( $post->post_excerpt ); ?>
+						</div>
+						<?php
+					}
 					?>
-					<div class="ptam-featured-post-button">
-						<a class="button button-primary btn btn-primary" href="<?php echo esc_url( $post->link ); ?>"><?php echo wp_kses_post( $attributes['readMoreButtonText'] ); ?></a>
-					</div>
 					<?php
-				}
-				?>
-			</div><!-- .ptam-featured-post-item -->
-			<?php
+					if ( $attributes['showReadMore'] ) {
+						?>
+						<div class="ptam-featured-post-button">
+							<a class="button button-primary btn btn-primary" href="<?php echo esc_url( $post->link ); ?>"><?php echo wp_kses_post( $attributes['readMoreButtonText'] ); ?></a>
+						</div>
+						<?php
+					}
+					?>
+				</div><!-- .ptam-featured-post-item -->
+				<?php
+			}
+		endif;
+		if ( ! is_wp_error( $attributes['showPagination'] ) && $attributes['showPagination'] ) {
+			$pagination = paginate_links(
+				array(
+					'total'        => $recent_posts->max_num_pages,
+					'current'      => max( 1, get_query_var( 'paged' ) ),
+					'format'       => 'page/%#%',
+					'show_all'     => false,
+					'type'         => 'list',
+					'end_size'     => 1,
+					'mid_size'     => 2,
+					'prev_next'    => false,
+					'prev_text'    => sprintf( '<i></i> %1$s', __( 'Newer Items', 'post-type-archive-mapping' ) ),
+					'next_text'    => sprintf( '%1$s <i></i>', __( 'Older Items', 'post-type-archive-mapping' ) ),
+					'add_args'     => false,
+					'add_fragment' => '',
+				)
+			);
+			echo wp_kses_post( '<div class="ptam-pagination">' . $pagination . '</div>' );
 		}
+		$wp_query = $temp; // phpcs:ignore
 		?>
 		</div><!-- .ptam-fp-wrapper -->
 		<?php
@@ -530,6 +563,10 @@ class Posts {
 						'default' => 10,
 					),
 					'preview'                            => array(
+						'type'    => 'boolean',
+						'default' => false,
+					),
+					'showPagination'                     => array(
 						'type'    => 'boolean',
 						'default' => false,
 					),
