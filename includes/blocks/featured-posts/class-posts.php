@@ -46,12 +46,17 @@ class Posts {
 		$posts_per_page = isset( $attributes['postsToShow'] ) ? absint( $attributes['postsToShow'] ) : 2;
 
 		// Build Query.
+		$paged = 0;
+		if ( absint( get_query_var( 'page' ) > 1 ) ) {
+			$paged = absint( get_query_var( 'page' ) );
+		}
 		$post_args = array(
 			'post_type'      => $post_type,
 			'post_status'    => 'publish',
 			'order'          => $order,
 			'orderby'        => $orderby,
 			'posts_per_page' => $posts_per_page,
+			'paged'          => $paged,
 		);
 		if ( 'all' !== $term && 0 !== absint( $term ) && 'none' !== $taxonomy ) {
 			$post_args['tax_query'] = array( // phpcs:ignore
