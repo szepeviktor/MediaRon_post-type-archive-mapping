@@ -4,7 +4,7 @@ Tags: custom post types, archive, mapping, gutenberg, block, taxonomy, terms
 Requires at least: 5.3
 Requires PHP: 5.6
 Tested up to: 5.4
-Stable tag: 4.5.1
+Stable tag: 4.5.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Donate link: https://mediaron.com/give/
@@ -95,6 +95,10 @@ Yes, just post in the support forums here and I'll do my best to address your is
 5. Term archive option.
 
 == Changelog ==
+
+= 4.5.2 =
+* Released 2020-05-01
+* Removing the term redirect as some pages would get "stuck."
 
 = 4.5.1 =
 * Released 2020-04-29
@@ -259,6 +263,9 @@ Yes, just post in the support forums here and I'll do my best to address your is
 * Initial release.
 
 == Upgrade Notice ==
+
+= 4.5.2 =
+Removing term redirect as some pages would get stuck. 
 
 = 4.5.1 =
 Added pagination to the Featured Posts by Category Block.
