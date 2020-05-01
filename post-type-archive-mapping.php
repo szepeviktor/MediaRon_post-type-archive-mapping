@@ -418,14 +418,8 @@ class PostTypeArchiveMapping {
 		if ( current_user_can( 'edit_term', $term_id ) ) {
 			$maybe_post_id = filter_input( INPUT_POST, 'term_post_type' );
 			if ( $maybe_post_id ) {
-				// Check if post is already mapped.
-				$maybe_mapped = get_post_meta( $maybe_post_id, '_post_type_mapped', true );
-				if ( $maybe_mapped ) {
-					update_option( 'ptam_error_message', __( 'The page you selected to map to a term is already mapped.', 'post-type-archive-mapping' ) );
-				} else {
-					update_post_meta( $maybe_post_id, '_term_mapped', $term_id );
-					update_term_meta( $term_id, '_term_archive_mapping', $maybe_post_id );
-				}
+				update_post_meta( $maybe_post_id, '_term_mapped', $term_id );
+				update_term_meta( $term_id, '_term_archive_mapping', $maybe_post_id );
 			}
 		}
 	}
