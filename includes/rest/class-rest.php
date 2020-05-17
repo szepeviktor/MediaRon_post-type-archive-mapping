@@ -291,6 +291,7 @@ class Rest {
 		$avatar_size    = $post_data['avatar_size'];
 		$link_color     = $post_data['link_color'];
 		$default_image  = isset( $post_data['default_image']['id'] ) ? absint( $post_data['default_image']['id'] ) : 0;
+		$language       = $post_data['language'];
 
 		$post_args = array(
 			'post_type'      => $post_type,
@@ -307,62 +308,74 @@ class Rest {
 				),
 			);
 		}
-		$posts = get_posts( $post_args );
-
-		foreach ( $posts as &$post ) {
-
-			if ( 'gravatar' === $image_type ) {
-				$thumbnail = get_avatar( $post->post_author, $avatar_size );
-			} else {
-				$thumbnail = get_the_post_thumbnail( $post->ID, $image_size );
-				if ( empty( $thumbnail ) ) {
-					$thumbnail = wp_get_attachment_image( $default_image, $image_size );
-				}
-			}
-			$post->featured_image_src = $thumbnail;
-
-			// Get author information.
-			$display_name = get_the_author_meta( 'display_name', $post->post_author );
-			$author_url   = get_author_posts_url( $post->post_author );
-
-			$post->author_info               = new \stdClass();
-			$post->author_info->display_name = $display_name;
-			$post->author_info->author_link  = $author_url;
-
-			$post->link = get_permalink( $post->ID );
-
-			// Get taxonomy information.
-			$taxonomies = get_object_taxonomies( $post->post_type, 'objects' );
-			$terms      = array();
-			foreach ( $taxonomies as $key => $taxonomy ) {
-				if ( 'author' === $key ) {
-					unset( $taxonomies[ $key ] );
-					continue;
-				}
-				$term_list  = get_the_terms( $post->ID, $key );
-				$term_array = array();
-				if ( $term_list && ! empty( $term_list ) ) {
-					foreach ( $term_list as $term ) {
-						$term_permalink = get_term_link( $term, $key );
-						$term_array[]   = sprintf( '<a href="%s" style="color: %s; text-decoration: none; box-shadow: unset;">%s</a>', esc_url( $term_permalink ), esc_attr( 6 === strlen( $link_color ) ? '#' . $link_color : $link_color ), esc_html( $term->name ) );
-					}
-					$terms[ $key ] = implode( ', ', $term_array );
+		// WPML Compatability.
+		global $sitepress;
+		if ( ! empty( $sitepress ) ) {
+			$sitepress->switch_lang( $language );
+		}
+		$query = new \WP_Query( $post_args );
+		if ( ! empty( $sitepress ) ) {
+			$sitepress->switch_lang( $sitepress->get_default_language() );
+		}
+		$posts = array();
+		if ( $query->have_posts() ) {
+			while ( $query->have_posts() ) {
+				global $post;
+				$query->the_post();
+				if ( 'gravatar' === $image_type ) {
+					$thumbnail = get_avatar( $post->post_author, $avatar_size );
 				} else {
-					$terms[ $key ] = false;
+					$thumbnail = get_the_post_thumbnail( $post->ID, $image_size );
+					if ( empty( $thumbnail ) ) {
+						$thumbnail = wp_get_attachment_image( $default_image, $image_size );
+					}
 				}
-			}
-			$post->terms = $terms;
+				$post->featured_image_src = $thumbnail;
 
-			if ( empty( $post->post_excerpt ) ) {
-				$post->post_excerpt = apply_filters( 'the_excerpt', wp_strip_all_tags( strip_shortcodes( $post->post_content ) ) );
-			}
+				// Get author information.
+				$display_name = get_the_author_meta( 'display_name', $post->post_author );
+				$author_url   = get_author_posts_url( $post->post_author );
 
-			if ( ! $post->post_excerpt ) {
-				$post->post_excerpt = null;
-			}
+				$post->author_info               = new \stdClass();
+				$post->author_info->display_name = $display_name;
+				$post->author_info->author_link  = $author_url;
 
-			$post->post_excerpt = wp_kses_post( $post->post_excerpt );
-			$post->post_content = apply_filters( 'ptam_the_content', $post->post_content );
+				$post->link = get_permalink( $post->ID );
+
+				// Get taxonomy information.
+				$taxonomies = get_object_taxonomies( $post->post_type, 'objects' );
+				$terms      = array();
+				foreach ( $taxonomies as $key => $taxonomy ) {
+					if ( 'author' === $key ) {
+						unset( $taxonomies[ $key ] );
+						continue;
+					}
+					$term_list  = get_the_terms( $post->ID, $key );
+					$term_array = array();
+					if ( $term_list && ! empty( $term_list ) ) {
+						foreach ( $term_list as $term ) {
+							$term_permalink = get_term_link( $term, $key );
+							$term_array[]   = sprintf( '<a href="%s" style="color: %s; text-decoration: none; box-shadow: unset;">%s</a>', esc_url( $term_permalink ), esc_attr( 6 === strlen( $link_color ) ? '#' . $link_color : $link_color ), esc_html( $term->name ) );
+						}
+						$terms[ $key ] = implode( ', ', $term_array );
+					} else {
+						$terms[ $key ] = false;
+					}
+				}
+				$post->terms = $terms;
+
+				if ( empty( $post->post_excerpt ) ) {
+					$post->post_excerpt = apply_filters( 'the_excerpt', wp_strip_all_tags( strip_shortcodes( $post->post_content ) ) );
+				}
+
+				if ( ! $post->post_excerpt ) {
+					$post->post_excerpt = null;
+				}
+
+				$post->post_excerpt = wp_kses_post( $post->post_excerpt );
+				$post->post_content = apply_filters( 'ptam_the_content', $post->post_content );
+				$posts[]            = $post;
+			}
 		}
 		$return = array(
 			'posts'       => $posts,
@@ -482,6 +495,7 @@ class Rest {
 		$image_size     = $post_data['image_size'];
 		$link_color     = $post_data['link_color'];
 		$default_image  = isset( $post_data['default_image']['id'] ) ? absint( $post_data['default_image']['id'] ) : 0;
+		$language       = $post_data['language'];
 
 		$post_args = array(
 			'post_type'      => $post_type,
@@ -498,62 +512,75 @@ class Rest {
 				),
 			);
 		}
-		$posts = get_posts( $post_args );
-		foreach ( $posts as &$post ) {
-			$thumbnail = '';
-			if ( 'gravatar' === $image_type ) {
-				$thumbnail = get_avatar( $post->post_author, $avatar_size );
-			} else {
-				$thumbnail = get_the_post_thumbnail( $post->ID, $image_size );
-				if ( empty( $thumbnail ) ) {
-					$thumbnail = wp_get_attachment_image( $default_image, $image_size );
-				}
-			}
-			$post->featured_image_src = $thumbnail;
-
-			// Get author information.
-			$display_name = get_the_author_meta( 'display_name', $post->post_author );
-			$author_url   = get_author_posts_url( $post->post_author );
-
-			$post->author_info               = new \stdClass();
-			$post->author_info->display_name = $display_name;
-			$post->author_info->author_link  = $author_url;
-
-			$post->link = get_permalink( $post->ID );
-
-			// Get taxonomy information.
-			$taxonomies = get_object_taxonomies( $post->post_type, 'objects' );
-			$terms      = array();
-			foreach ( $taxonomies as $key => $taxonomy ) {
-				if ( 'author' === $key ) {
-					unset( $taxonomies[ $key ] );
-					continue;
-				}
-				$term_list  = get_the_terms( $post->ID, $key );
-				$term_array = array();
-				if ( $term_list && ! empty( $term_list ) ) {
-					foreach ( $term_list as $term ) {
-						$term_permalink = get_term_link( $term, $key );
-						$term_array[]   = sprintf( '<a href="%s" style="color: %s; text-decoration: none; box-shadow: unset;">%s</a>', esc_url( $term_permalink ), esc_attr( 6 === strlen( $link_color ) ? '#' . $link_color : $link_color ), esc_html( $term->name ) );
-					}
-					$terms[ $key ] = implode( ', ', $term_array );
+		// WPML Compatability.
+		global $sitepress;
+		if ( ! empty( $sitepress ) ) {
+			$sitepress->switch_lang( $language );
+		}
+		$query = new \WP_Query( $post_args );
+		if ( ! empty( $sitepress ) ) {
+			$sitepress->switch_lang( $sitepress->get_default_language() );
+		}
+		$posts = array();
+		if ( $query->have_posts() ) {
+			while ( $query->have_posts() ) {
+				global $post;
+				$query->the_post();
+				$thumbnail = '';
+				if ( 'gravatar' === $image_type ) {
+					$thumbnail = get_avatar( $post->post_author, $avatar_size );
 				} else {
-					$terms[ $key ] = false;
+					$thumbnail = get_the_post_thumbnail( $post->ID, $image_size );
+					if ( empty( $thumbnail ) ) {
+						$thumbnail = wp_get_attachment_image( $default_image, $image_size );
+					}
 				}
+				$post->featured_image_src = $thumbnail;
+
+				// Get author information.
+				$display_name = get_the_author_meta( 'display_name', $post->post_author );
+				$author_url   = get_author_posts_url( $post->post_author );
+
+				$post->author_info               = new \stdClass();
+				$post->author_info->display_name = $display_name;
+				$post->author_info->author_link  = $author_url;
+
+				$post->link = get_permalink( $post->ID );
+
+				// Get taxonomy information.
+				$taxonomies = get_object_taxonomies( $post->post_type, 'objects' );
+				$terms      = array();
+				foreach ( $taxonomies as $key => $taxonomy ) {
+					if ( 'author' === $key ) {
+						unset( $taxonomies[ $key ] );
+						continue;
+					}
+					$term_list  = get_the_terms( $post->ID, $key );
+					$term_array = array();
+					if ( $term_list && ! empty( $term_list ) ) {
+						foreach ( $term_list as $term ) {
+							$term_permalink = get_term_link( $term, $key );
+							$term_array[]   = sprintf( '<a href="%s" style="color: %s; text-decoration: none; box-shadow: unset;">%s</a>', esc_url( $term_permalink ), esc_attr( 6 === strlen( $link_color ) ? '#' . $link_color : $link_color ), esc_html( $term->name ) );
+						}
+						$terms[ $key ] = implode( ', ', $term_array );
+					} else {
+						$terms[ $key ] = false;
+					}
+				}
+				$post->terms = $terms;
+
+				// Get excerpt.
+				if ( empty( $post->post_excerpt ) ) {
+					$post->post_excerpt = apply_filters( 'the_excerpt', wp_strip_all_tags( strip_shortcodes( $post->post_content ) ) );
+				}
+
+				if ( ! $post->post_excerpt ) {
+					$post->post_excerpt = null;
+				}
+
+				$post->post_excerpt = wp_kses_post( $post->post_excerpt );
+				$posts[]            = $post;
 			}
-			$post->terms = $terms;
-
-			// Get excerpt.
-			if ( empty( $post->post_excerpt ) ) {
-				$post->post_excerpt = apply_filters( 'the_excerpt', wp_strip_all_tags( strip_shortcodes( $post->post_content ) ) );
-			}
-
-			if ( ! $post->post_excerpt ) {
-				$post->post_excerpt = null;
-			}
-
-			$post->post_excerpt = wp_kses_post( $post->post_excerpt );
-
 		}
 		$return = array(
 			'posts'       => $posts,
