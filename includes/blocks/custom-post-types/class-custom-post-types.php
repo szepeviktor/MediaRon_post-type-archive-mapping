@@ -852,6 +852,10 @@ class Custom_Post_Types {
 						'type'    => 'boolean',
 						'default' => false,
 					),
+					'wpmlLanguage'         => array(
+						'type'    => 'string',
+						'default' => 'en',
+					),
 				),
 				'render_callback' => array( $this, 'custom_posts' ),
 				'editor_script'   => 'ptam-custom-posts-gutenberg',
