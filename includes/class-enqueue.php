@@ -85,6 +85,17 @@ class Enqueue {
 			}
 		}
 
+		$wpml_languages = array();
+		if ( function_exists( 'icl_get_languages' ) ) {
+			$languages = icl_get_languages();
+			foreach ( $languages as $language ) {
+				$wpml_languages[] = array(
+					'value' => $language['code'],
+					'label' => $language['native_name'],
+				);
+			}
+		}
+
 		// Pass in i18n variables.
 		wp_localize_script(
 			'ptam-custom-posts-gutenberg',
@@ -99,6 +110,8 @@ class Enqueue {
 				'custom_posts_block_preview'   => esc_url( \PostTypeArchiveMapping::get_plugin_url( 'img/custom-post-types-block.jpg' ) ),
 				'term_grid_block_preview'      => esc_url( \PostTypeArchiveMapping::get_plugin_url( 'img/term-grid-block.jpg' ) ),
 				'featured_posts_block_preview' => esc_url( \PostTypeArchiveMapping::get_plugin_url( 'img/featured-posts-block.jpg' ) ),
+				'wpml_installed'               => defined( 'ICL_SITEPRESS_VERSION' ) ? true : false,
+				'wpml_languages'               => $wpml_languages,
 			)
 		);
 		wp_set_script_translations( 'ptam-custom-posts-gutenberg', 'post-type-archive-mapping' );

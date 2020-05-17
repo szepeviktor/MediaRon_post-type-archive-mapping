@@ -88,7 +88,8 @@ class PTAM_Custom_Posts extends Component {
 			postsToShow,
 			imageCrop,
 			linkColor,
-			fallbackImg
+			fallbackImg,
+			wpmlLanguage,
 		} = props;
 		linkColor = linkColor.replace("#", "");
 		axios
@@ -104,7 +105,8 @@ class PTAM_Custom_Posts extends Component {
 				image_type: imageType,
 				image_size: imageTypeSize,
 				link_color: linkColor,
-				default_image: fallbackImg
+				default_image: fallbackImg,
+				language: wpmlLanguage,
 			})
 			.then(response => {
 				// Now Set State
@@ -168,7 +170,8 @@ class PTAM_Custom_Posts extends Component {
 			postsToShow,
 			imageCrop,
 			linkColor,
-			fallbackImg
+			fallbackImg,
+			wpmlLanguage,
 		} = props;
 
 		linkColor = linkColor.replace("#", "");
@@ -187,7 +190,8 @@ class PTAM_Custom_Posts extends Component {
 				image_type: imageType,
 				image_size: imageTypeSize,
 				link_color: linkColor,
-				default_image: fallbackImg
+				default_image: fallbackImg,
+				language: wpmlLanguage,
 			})
 			.then(response => {
 				latestPosts = response.data.posts;
@@ -385,7 +389,8 @@ class PTAM_Custom_Posts extends Component {
 			postsToShow,
 			imageCrop,
 			linkColor,
-			fallbackImg
+			fallbackImg,
+			wpmlLanguage,
 		} = this.props.attributes;
 
 		linkColor = linkColor.replace("#", "");
@@ -404,7 +409,8 @@ class PTAM_Custom_Posts extends Component {
 				image_type: imageType,
 				image_size: imageTypeSize,
 				link_color: linkColor,
-				default_image: fallbackImg
+				default_image: fallbackImg,
+				language: wpmlLanguage,
 			})
 			.then(response => {
 				latestPosts = response.data.posts;
@@ -435,7 +441,8 @@ class PTAM_Custom_Posts extends Component {
 			postsToShow,
 			imageCrop,
 			linkColor,
-			fallbackImg
+			fallbackImg,
+			wpmlLanguage,
 		} = this.props.attributes;
 
 		linkColor = linkColor.replace("#", "");
@@ -454,7 +461,8 @@ class PTAM_Custom_Posts extends Component {
 				image_type: "regular",
 				image_size: value,
 				link_color: linkColor,
-				default_image: fallbackImg
+				default_image: fallbackImg,
+				language: wpmlLanguage,
 			})
 			.then(response => {
 				latestPosts = response.data.posts;
@@ -498,7 +506,8 @@ class PTAM_Custom_Posts extends Component {
 				imageTypeSize,
 				imageType,
 				linkColor,
-				fallbackImg
+				fallbackImg,
+				wpmlLanguage,
 			} = classRef.props.attributes;
 
 			linkColor = linkColor.replace("#", "");
@@ -517,7 +526,8 @@ class PTAM_Custom_Posts extends Component {
 					image_type: imageType,
 					image_size: imageTypeSize,
 					link_color: linkColor,
-					default_image: fallbackImg
+					default_image: fallbackImg,
+					language: wpmlLanguage,
 				})
 				.then(response => {
 					latestPosts = response.data.posts;
@@ -554,7 +564,8 @@ class PTAM_Custom_Posts extends Component {
 				imageTypeSize,
 				imageType,
 				linkColor,
-				fallbackImg
+				fallbackImg,
+				wpmlLanguage,
 			} = classRef.props.attributes;
 
 			linkColor = linkColor.replace("#", "");
@@ -573,7 +584,8 @@ class PTAM_Custom_Posts extends Component {
 					image_type: imageType,
 					image_size: imageTypeSize,
 					link_color: linkColor,
-					default_image: fallbackImg
+					default_image: fallbackImg,
+					language: wpmlLanguage,
 				})
 				.then(response => {
 					latestPosts = response.data.posts;
@@ -674,7 +686,8 @@ class PTAM_Custom_Posts extends Component {
 			customFields,
 			removeStyles,
 			titleHeadingTag,
-			fallbackImg
+			fallbackImg,
+			wpmlLanguage,
 		} = attributes;
 
 		let userTaxonomies = this.state.userTaxonomies;
@@ -721,6 +734,9 @@ class PTAM_Custom_Posts extends Component {
 			{ value: "h5", label: __("H5", "post-type-archive-mapping") },
 			{ value: "H6", label: __("H6", "post-type-archive-mapping") }
 		];
+
+		const wpmlInstalled = ptam_globals.wpml_installed;
+		const wpmlLanguages = ptam_globals.wpml_languages;
 
 		// Fonts
 		let fontOptions = [];
@@ -832,6 +848,17 @@ class PTAM_Custom_Posts extends Component {
 							this.get_latest_posts({ term: value });
 						}}
 					/>
+					{wpmlInstalled &&
+						<SelectControl
+							label={__("Language", "post-type-archive-mapping")}
+							options={wpmlLanguages}
+							value={wpmlLanguage}
+							onChange={value => {
+								this.props.setAttributes({ wpmlLanguage: value });
+								this.get_latest_posts({ wpmlLanguage: value });
+							}}
+						/>
+					}
 					<SelectControl
 						label={__("Order", "post-type-archive-mapping")}
 						options={orderOptions}
