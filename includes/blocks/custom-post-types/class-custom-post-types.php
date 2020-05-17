@@ -176,6 +176,7 @@ class Custom_Post_Types {
 		$attributes['contentFont']         = isset( $attributes['contentFont'] ) ? esc_attr( $attributes['contentFont'] ) : 'inherit';
 		$attributes['continueReadingFont'] = isset( $attributes['continueReadingFont'] ) ? esc_attr( $attributes['continueReadingFont'] ) : 'inherit';
 		$attributes['titleHeadingTag']     = isset( $attributes['titleHeadingTag'] ) ? esc_html( $attributes['titleHeadingTag'] ) : 'h2';
+		$attributes['wpmlLanguage']        = isset( $attributes['wpmlLanguage'] ) ? esc_html( $attributes['wpmlLanguage'] ) : 'en';
 
 		$image_placememt_options    = $attributes['imageLocation'];
 		$taxonomy_placement_options = $attributes['taxonomyLocation'];
@@ -191,6 +192,12 @@ class Custom_Post_Types {
 		 */
 		$post_args = apply_filters( 'ptam_custom_post_types_query', $post_args, $attributes );
 
+		// WPML Compatability.
+		global $sitepress;
+		if ( ! empty( $sitepress ) ) {
+			$sitepress->switch_lang( $attributes['wpmlLanguage'] );
+		}
+
 		// Front page pagination fix.
 		global $wp_query;
 		$temp = $wp_query;
@@ -199,6 +206,9 @@ class Custom_Post_Types {
 			$recent_posts = $wp_query;
 		} else {
 			$recent_posts = new \WP_Query( $post_args );
+		}
+		if ( ! empty( $sitepress ) ) {
+			$sitepress->switch_lang( defined( 'ICL_LANGUAGE_CODE' ) ? ICL_LANGUAGE_CODE : $sitepress->get_default_language() );
 		}
 
 		$list_items_markup = '';
