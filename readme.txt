@@ -96,6 +96,10 @@ Yes, just post in the support forums here and I'll do my best to address your is
 
 == Changelog ==
 
+= 4.5.3 =
+* Released 2020-05-17
+* Added Polylang support when mapping posts. Added WPML support for the main Custom Post Types block.
+
 = 4.5.2 =
 * Released 2020-05-01
 * Removing the term redirect as some pages would get "stuck."
@@ -263,6 +267,9 @@ Yes, just post in the support forums here and I'll do my best to address your is
 * Initial release.
 
 == Upgrade Notice ==
+
+= 4.5.3 =
+Added Polylang support when mapping posts. Added WPML support for the main Custom Post Types block.
 
 = 4.5.2 =
 Removing term redirect as some pages would get stuck. 
