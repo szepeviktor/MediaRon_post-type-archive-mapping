@@ -55,6 +55,16 @@ class PTAM_Featured_Posts extends Component {
 		//this.get_latest_data();
 	}
 
+	excerptParse = excerpt => {
+		let htmlToReactParser = new HtmlToReactParser();
+		const { excerptLength } = this.props.attributes;
+
+		excerpt = excerpt.split(" ").slice(0, excerptLength);
+		excerpt = excerpt.join(" ");
+
+		return htmlToReactParser.parse(excerpt);
+	};
+
 	get_term_list = (object = {}) => {
 		let termsList = [];
 		const props = jQuery.extend({}, this.props.attributes, object);
@@ -230,6 +240,7 @@ class PTAM_Featured_Posts extends Component {
 			showFeaturedImage,
 			showReadMore,
 			showExcerpt,
+			excerptLength,
 			excerptFont,
 			excerptFontSize,
 			excerptTextColor,
@@ -314,7 +325,7 @@ class PTAM_Featured_Posts extends Component {
 					}
 					{showExcerpt &&
 						<div className="ptam-featured-post-content" style={excerptStyles}>
-							{htmlToReactParser.parse(posts[i].post_excerpt)}
+							{this.excerptParse(posts[i].post_excerpt)}
 						</div>
 					}
 					{showReadMore &&
@@ -337,6 +348,10 @@ class PTAM_Featured_Posts extends Component {
 				this.get_latest_data( { postsToShow: postsToShow });
 			}, 1000 ),
 		});
+	}
+	trimWords = value => {
+		const { setAttributes } = this.props;
+		setAttributes({ excerptLength: value });
 	}
 	render() {
 		if ( this.props.attributes.preview ) {
@@ -382,6 +397,7 @@ class PTAM_Featured_Posts extends Component {
 			showFeaturedImage,
 			showReadMore,
 			showExcerpt,
+			excerptLength,
 			excerptFont,
 			excerptFontSize,
 			excerptTextColor,
@@ -879,6 +895,15 @@ class PTAM_Featured_Posts extends Component {
 						initialOpen={false}
 						title={__("Post Excerpt", "post-type-archive-mapping")}
 					>
+						<TextControl
+							label={__(
+								"Maximum Word Length of Excerpt",
+								"post-type-archive-mapping"
+							)}
+							type="number"
+							value={excerptLength}
+							onChange={value => this.trimWords(value)}
+						/>
 						<PanelColorSettings
 							title={__("Excerpt Colors", "post-type-archive-mapping")}
 							initialOpen={true}

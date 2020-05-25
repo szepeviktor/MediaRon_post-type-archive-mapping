@@ -108,6 +108,7 @@ class Posts {
 		$attributes['showReadMore']                       = Functions::sanitize_attribute( $attributes, 'showReadMore', 'bool' );
 		$attributes['showExcerpt']                        = Functions::sanitize_attribute( $attributes, 'showExcerpt', 'bool' );
 		$attributes['excerptFont']                        = Functions::sanitize_attribute( $attributes, 'excerptFont', 'text' );
+		$attributes['excerptLength']                      = Functions::sanitize_attribute( $attributes, 'excerptLength', 'int' );
 		$attributes['excerptFontSize']                    = Functions::sanitize_attribute( $attributes, 'excerptFontSize', 'int' );
 		$attributes['excerptTextColor']                   = Functions::sanitize_attribute( $attributes, 'excerptTextColor', 'text' );
 		$attributes['readMoreButtonText']                 = Functions::sanitize_attribute( $attributes, 'readMoreButtonText', 'text' );
@@ -250,7 +251,7 @@ class Posts {
 					$post->post_excerpt = null;
 				}
 
-				$post->post_excerpt = wp_kses_post( $post->post_excerpt );
+				$post->post_excerpt = wp_kses_post( wp_trim_words( $post->post_excerpt, absint( $attributes['excerptLength'] ) ) );
 				$post->post_content = apply_filters( 'ptam_the_content', $post->post_content );
 
 				?>
@@ -524,6 +525,10 @@ class Posts {
 					'showExcerpt'                        => array(
 						'type'    => 'boolean',
 						'default' => true,
+					),
+					'excerptLength'                      => array(
+						'type'    => 'integer',
+						'default' => 55,
 					),
 					'excerptFont'                        => array(
 						'type'    => 'string',

@@ -460,7 +460,7 @@ class Rest {
 			}
 
 			if ( empty( $post->post_excerpt ) ) {
-				$post->post_excerpt = apply_filters( 'the_excerpt', wp_strip_all_tags( strip_shortcodes( $post->post_content ) ) );
+				$post->post_excerpt = wp_trim_words( apply_filters( 'the_excerpt', wp_strip_all_tags( strip_shortcodes( $post->post_content ) ) ), 55 );
 			}
 
 			if ( ! $post->post_excerpt ) {
