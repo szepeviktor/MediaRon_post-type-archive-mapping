@@ -207,7 +207,9 @@ class Posts {
 		$term_name   = _x( 'All', 'All Terms', 'post-type-archive-mapping' );
 		$term_object = get_term_by( 'id', $term, $taxonomy );
 		if ( ! is_wp_error( $term_object ) && 'all' !== $term && $term ) {
-			$term_name = sanitize_text_field( $term_object->name );
+			if ( isset( $term_object->name ) ) {
+				$term_name = sanitize_text_field( $term_object->name );
+			}
 			if ( ! empty( $attributes['termTitle'] ) ) {
 				$term_name = $attributes['termTitle'];
 			}
