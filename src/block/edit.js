@@ -809,7 +809,8 @@ class PTAM_Custom_Posts extends Component {
 		const inspectorControls = (
 			<InspectorControls>
 				<PanelBody
-					title={__("Custom Posts Settings", "post-type-archive-mapping")}
+					title={__("Query", "post-type-archive-mapping")}
+					initialOpen={false}
 				>
 					<SelectControl
 						label={__("Post Type", "post-type-archive-mapping")}
