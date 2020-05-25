@@ -477,21 +477,6 @@ class PTAM_Featured_Posts extends Component {
 			{ value: "H6", label: __("H6", "post-type-archive-mapping") },
 		];
 
-		const layoutControls = [
-			{
-				icon: "excerpt-view",
-				title: __("Show Excerpt", "post-type-archive-mapping"),
-				onClick: () => setAttributes({ postLayout: "excerpt", displayPostContent: false }),
-				isActive: postLayout === "excerpt"
-			},
-			{
-				icon: "admin-page",
-				title: __("Full Content View", "post-type-archive-mapping"),
-				onClick: () => setAttributes({ postLayout: "full_content", displayPostContent: true }),
-				isActive: postLayout === "full_content"
-			}
-		];
-
 		// Get the term label.
 		let selectedTerm = 0;
 		for ( let key in this.state.termsList ) {
@@ -1047,19 +1032,6 @@ class PTAM_Featured_Posts extends Component {
 			return (
 				<Fragment>
 					{inspectorControls}
-					<BlockControls>
-						<BlockAlignmentToolbar
-							value={align}
-							onChange={value => {
-								if (undefined == value) {
-									value = "wide";
-								}
-								setAttributes({ align: value });
-							}}
-							controls={["center", "wide"]}
-						/>
-						<Toolbar controls={layoutControls} />
-					</BlockControls>
 					<h2 style={{textAlign: 'center'}}>{__('Please select a term to begin.', 'post-type-archive-mapping')}</h2>
 				</Fragment>
 			)
@@ -1068,19 +1040,6 @@ class PTAM_Featured_Posts extends Component {
 			return (
 				<Fragment>
 					{inspectorControls}
-					<BlockControls>
-						<BlockAlignmentToolbar
-							value={align}
-							onChange={value => {
-								if (undefined == value) {
-									value = "wide";
-								}
-								setAttributes({ align: value });
-							}}
-							controls={["center", "wide"]}
-						/>
-						<Toolbar controls={layoutControls} />
-					</BlockControls>
 					{!disableStyles && (
 						<style
 							dangerouslySetInnerHTML={{
