@@ -565,3 +565,11 @@ body.has-blocks .fl-post-content .ptam-pagination {
 	margin-top: 15px;
 	margin-bottom: 20px;
 }
+.ptam-term-select .woocommerce-search-list__selected,
+.ptam-term-exclude .woocommerce-search-list__selected {
+	display: none;
+}
+.ptam-term-select .components-base-control__field,
+.ptam-term-exclude .components-base-control__field {
+	display: none;
+}

@@ -329,7 +329,6 @@ class PTAM_Term_Grid extends Component {
 		];
 
 		const backgroundImage = [
-			{ value: "none", label: __("None", "post-type-archive-mapping") },
 			{
 				value: "acf",
 				label: __("Advanced Custom Fields", "post-type-archive-mapping"),
