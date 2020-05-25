@@ -996,7 +996,7 @@ class PTAM_Custom_Posts extends Component {
 										render={({ open }) => (
 											<Fragment>
 												<button
-													className="ptam-media-alt-upload components-button is-button secondary"
+													className="ptam-media-alt-upload components-button is-button is-secondary"
 													onClick={open}
 												>
 													{__(
@@ -1019,7 +1019,7 @@ class PTAM_Custom_Posts extends Component {
 														</div>
 														<div>
 															<button
-																className="ptam-media-alt-reset components-button is-button secondary"
+																className="ptam-media-alt-reset components-button is-button is-secondary"
 																onClick={event => {
 																	this.props.setAttributes({ fallbackImg: "" });
 																	this.props.attributes.fallbackImg = "";
