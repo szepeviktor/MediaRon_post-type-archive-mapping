@@ -131,6 +131,7 @@ class PTAM_Term_Grid extends Component {
 
 	getTermHtml = () => {
 		const terms = this.state.termsToDisplay;
+		console.log( terms );
 		const htmlToReactParser = new HtmlToReactParser();
 		const {
 			linkContainer,
@@ -185,7 +186,7 @@ class PTAM_Term_Grid extends Component {
 					borderStyle: "solid",
 			  }
 			: {};
-		return Object.keys(terms).map((term, i) => (
+		return Object.keys(terms).map((i) => (
 			<Fragment key={i}>
 				<div
 					className="ptam-term-grid-item"
@@ -459,11 +460,11 @@ class PTAM_Term_Grid extends Component {
 						messages={termMessages}
 					/>
 					<Button
-						isTertiary={true}
-						isLink={true}
+						isSecondary={true}
 						onClick={(event) => {
 							this.displayTerms();
 						}}
+						className="ptam-apply"
 					>
 						{__("Apply", "post-type-archive-mapping")}
 					</Button>
@@ -481,11 +482,11 @@ class PTAM_Term_Grid extends Component {
 								messages={termMessagesExclude}
 							/>
 							<Button
-								isTertiary={true}
-								isLink={true}
+								isSecondary={true}
 								onClick={(event) => {
 									this.displayTerms();
 								}}
+								className="ptam-apply"
 							>
 								{__("Apply", "post-type-archive-mapping")}
 							</Button>
@@ -682,7 +683,7 @@ class PTAM_Term_Grid extends Component {
 										render={({ open }) => (
 											<Fragment>
 												<button
-													className="ptam-media-alt-upload components-button is-button secondary"
+													className="ptam-media-alt-upload components-button is-button is-secondary"
 													onClick={open}
 												>
 													{__(
@@ -705,7 +706,7 @@ class PTAM_Term_Grid extends Component {
 														</div>
 														<div>
 															<button
-																className="ptam-media-alt-reset components-button is-button secondary"
+																className="ptam-media-alt-reset components-button is-button is-secondary"
 																onClick={(event) => {
 																	this.props.setAttributes({
 																		backgroundImageFallback: "",
@@ -724,11 +725,11 @@ class PTAM_Term_Grid extends Component {
 									/>
 									<div>
 										<Button
-											isTertiary={true}
-											isLink={true}
+											isSecondary={true}
 											onClick={(event) => {
 												this.displayTerms();
 											}}
+											className="ptam-apply"
 										>
 											{__("Apply", "post-type-archive-mapping")}
 										</Button>
