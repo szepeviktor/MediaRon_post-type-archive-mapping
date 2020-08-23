@@ -47,8 +47,17 @@ class Posts {
 
 		// Build Query.
 		$paged = 0;
-		if ( absint( get_query_var( 'page' ) > 1 ) ) {
-			$paged = absint( get_query_var( 'page' ) );
+		if ( absint( get_query_var( 'paged' ) > 1 ) ) {
+			$paged = absint( get_query_var( 'paged' ) );
+		}
+		// WP 5.5 quirk for items on the front page.
+		if ( is_front_page() ) {
+			if ( absint( get_query_var( 'page' ) > 1 ) ) {
+				$paged = absint( get_query_var( 'page' ) );
+			}
+		}
+		if ( empty( $paged ) ) {
+			$paged = 0;
 		}
 		$post_args = array(
 			'post_type'      => $post_type,
