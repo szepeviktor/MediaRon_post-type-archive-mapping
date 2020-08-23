@@ -30,6 +30,7 @@ class Rest {
 			array(
 				'methods'  => 'POST',
 				'callback' => array( $this, 'get_all_terms' ),
+				'permission_callback' => '__return_true',
 			)
 		);
 		register_rest_route(
@@ -38,6 +39,7 @@ class Rest {
 			array(
 				'methods'  => 'POST',
 				'callback' => array( $this, 'get_posts' ),
+				'permission_callback' => '__return_true',
 			)
 		);
 		register_rest_route(
@@ -46,6 +48,7 @@ class Rest {
 			array(
 				'methods'  => 'POST',
 				'callback' => array( $this, 'get_taxonomies' ),
+				'permission_callback' => '__return_true',
 			)
 		);
 		register_rest_route(
@@ -54,6 +57,7 @@ class Rest {
 			array(
 				'methods'  => 'POST',
 				'callback' => array( $this, 'get_image' ),
+				'permission_callback' => '__return_true',
 			)
 		);
 		register_rest_route(
@@ -62,6 +66,7 @@ class Rest {
 			array(
 				'methods'  => 'POST',
 				'callback' => array( $this, 'get_tax_terms' ),
+				'permission_callback' => '__return_true',
 			)
 		);
 		register_rest_route(
@@ -70,6 +75,7 @@ class Rest {
 			array(
 				'methods'  => 'POST',
 				'callback' => array( $this, 'get_tax_term_data' ),
+				'permission_callback' => '__return_true',
 			)
 		);
 		register_rest_route(
@@ -78,6 +84,7 @@ class Rest {
 			array(
 				'methods'  => 'POST',
 				'callback' => array( $this, 'get_featured_posts' ),
+				'permission_callback' => '__return_true',
 			)
 		);
 	}
