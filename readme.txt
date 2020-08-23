@@ -1,10 +1,10 @@
 === Custom Query Blocks ===
 Contributors: ronalfy, chrislogan, paaljoachim
 Tags: custom post types, archive, mapping, gutenberg, block, taxonomy, terms
-Requires at least: 5.3
+Requires at least: 5.5
 Requires PHP: 5.6
-Tested up to: 5.4
-Stable tag: 4.5.3
+Tested up to: 5.5
+Stable tag: 4.5.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Donate link: https://mediaron.com/give/
@@ -95,6 +95,13 @@ Yes, just post in the support forums here and I'll do my best to address your is
 5. Term archive option.
 
 == Changelog ==
+
+= 4.5.5 =
+* Released 2020-08-23
+* Minimium supported version is now WordPress 5.5
+* Fixed pagination for WP 5.5.
+* Fixed REST API errors for WP 5.5.
+* Miscellaneous block fixes and updates.
 
 = 4.5.3 =
 * Released 2020-05-17
@@ -267,6 +274,9 @@ Yes, just post in the support forums here and I'll do my best to address your is
 * Initial release.
 
 == Upgrade Notice ==
+
+= 4.5.5 =
+Minimium supported version is now WordPress 5.5. Fixed pagination for WP 5.5. Fixed REST API errors for WP 5.5.Miscellaneous block fixes and updates.
 
 = 4.5.3 =
 Added Polylang support when mapping posts. Added WPML support for the main Custom Post Types block.
