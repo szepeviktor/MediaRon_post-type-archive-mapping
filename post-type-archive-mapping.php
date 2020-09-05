@@ -318,6 +318,13 @@ class PostTypeArchiveMapping {
 				'sanitize_callback' => array( $this, 'post_type_save' ),
 			)
 		);
+		register_setting(
+			'reading',
+			'post-type-archive-mapping-404',
+			array(
+				'sanitize_callback' => 'absint',
+			)
+		);
 
 		add_settings_section( 'post-type-archive-mapping', _x( 'Page/Item Mapping', 'plugin settings heading', 'post-type-archive-mapping' ), array( $this, 'settings_section' ), 'reading' );
 
@@ -325,6 +332,14 @@ class PostTypeArchiveMapping {
 			'post-type-archive-mapping',
 			__( 'Post Type Archive Mapping', 'post-type-archive-mapping' ),
 			array( $this, 'add_settings_post_types' ),
+			'reading',
+			'post-type-archive-mapping'
+		);
+
+		add_settings_field(
+			'post-type-archive-mapping-404',
+			__( '404 Page', 'post-type-archive-mapping' ),
+			array( $this, 'add_settings_404_page' ),
 			'reading',
 			'post-type-archive-mapping'
 		);
@@ -385,6 +400,38 @@ class PostTypeArchiveMapping {
 			<?php
 		}
 		?>
+		<?php
+	}
+
+	/**
+	 * Add 404 page options to Settings->Reading screen.
+	 *
+	 * @param array $args No idea what these are.
+	 */
+	public function add_settings_404_page( $args ) {
+		$page_id_404 = absint( get_option( 'post-type-archive-mapping-404', 0 ) );
+		$posts       = get_posts(
+			array(
+				'post_status'    => array( 'publish' ),
+				'posts_per_page' => 200, // phpcs:ignore
+				'post_type'      => 'page',
+				'orderby'        => 'name',
+				'order'          => 'ASC',
+				'lang'           => '',
+			)
+		);
+		?>
+		<div class="ptam-admin-reading-cpt">
+			<p class="description"><?php esc_html_e( 'Please select a page to map to your 404 page.', 'post-type-archive-mapping' ); ?> <?php echo esc_html( $post_type_label ); ?></p>
+			<select name="post-type-archive-mapping-404">
+				<option value="0"><?php esc_html_e( 'Default', 'post-type-archive-mapping' ); ?></option>
+				<?php
+				foreach ( $posts as $post ) {
+					printf( '<option value="%d" %s>%s</option>', absint( $post->ID ), selected( $page_id_404, $post->ID, false ), esc_html( $post->post_title ) );
+				}
+				?>
+			</select>
+		</div>
 		<?php
 	}
 
