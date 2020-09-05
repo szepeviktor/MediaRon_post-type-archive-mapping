@@ -354,6 +354,12 @@ class PostTypeArchiveMapping {
 				'has_archive' => true,
 			)
 		);
+		if ( empty( $post_types ) ) {
+			?>
+			<p><?php esc_html_e( 'There are no post types to map.', 'post-type-archive-mapping' ); ?></p>
+			<?php
+			return;
+		}
 		foreach ( $post_types as $index => $post_type ) {
 			$selection = 'default';
 			if ( isset( $output[ $post_type ] ) ) {

@@ -20,6 +20,24 @@ class Enqueue {
 	public function run() {
 		add_action( 'enqueue_block_assets', array( $this, 'enqueue_block_assets' ) );
 		add_action( 'enqueue_block_editor_assets', array( $this, 'enqueue_block_editor_assets' ) );
+		add_action( 'admin_enqueue_scripts', array( $this, 'admin_scripts' ), 10, 1 );
+	}
+
+	/**
+	 * Enqueue admin scripts.
+	 *
+	 * @param string $hook The page hook name.
+	 */
+	public function admin_scripts( $hook ) {
+		if ( 'options-reading.php' !== $hook ) {
+			return;
+		}
+		wp_enqueue_style(
+			'ptam-reading-admin',
+			\PostTypeArchiveMapping::get_plugin_url( 'dist/admin.css' ),
+			PTAM_VERSION,
+			'all'
+		);
 	}
 
 	/**

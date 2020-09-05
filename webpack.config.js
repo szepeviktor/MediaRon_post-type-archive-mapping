@@ -8,6 +8,7 @@ module.exports = {
 	entry: {
 		blocks: ["./src/blocks.js"],
 		blockstyles: ["./src/block/style.scss"],
+		admin: ["./src/scss/admin.scss"],
 	},
 	output: {
 		filename: "[name].js",
