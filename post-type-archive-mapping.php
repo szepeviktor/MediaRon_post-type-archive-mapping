@@ -319,7 +319,7 @@ class PostTypeArchiveMapping {
 			)
 		);
 
-		add_settings_section( 'post-type-archive-mapping', _x( 'Post Type Archive Mapping', 'plugin settings heading', 'post-type-archive-mapping' ), array( $this, 'settings_section' ), 'reading' );
+		add_settings_section( 'post-type-archive-mapping', _x( 'Page/Item Mapping', 'plugin settings heading', 'post-type-archive-mapping' ), array( $this, 'settings_section' ), 'reading' );
 
 		add_settings_field(
 			'post-type-archive-mapping',
@@ -365,15 +365,17 @@ class PostTypeArchiveMapping {
 				$post_type_label = $post_type_data->label;
 			}
 			?>
-			<p><strong><?php echo esc_html( $post_type_label ); ?></strong></p>
-			<select name="post-type-archive-mapping[<?php echo esc_html( $post_type ); ?>]">
-				<option value="default"><?php esc_html_e( 'Default', 'post-type-archive-mapping' ); ?></option>
-				<?php
-				foreach ( $posts as $post ) {
-					printf( '<option value="%d" %s>%s</option>', absint( $post->ID ), selected( $selection, $post->ID, false ), esc_html( $post->post_title ) );
-				}
-				?>
-			</select>
+			<div class="ptam-admin-reading-cpt">
+				<h3><?php esc_html_e( 'Post Type:', 'post-type-archive-mapping' ); ?> <?php echo esc_html( $post_type_label ); ?></h3>
+				<select name="post-type-archive-mapping[<?php echo esc_html( $post_type ); ?>]">
+					<option value="default"><?php esc_html_e( 'Default', 'post-type-archive-mapping' ); ?></option>
+					<?php
+					foreach ( $posts as $post ) {
+						printf( '<option value="%d" %s>%s</option>', absint( $post->ID ), selected( $selection, $post->ID, false ), esc_html( $post->post_title ) );
+					}
+					?>
+				</select>
+			</div>
 			<?php
 		}
 		?>
