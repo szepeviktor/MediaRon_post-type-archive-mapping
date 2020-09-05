@@ -9,6 +9,6 @@
  * Webpack is compiling as the input file.
  */
 
-import './block/block.js'; // Import main block.
+import './block/custom-post-one/block.js'; // Import main block.
 import './block/term-grid/block.js'; // Import term grid block.
 import './block/featured-posts/block.js'; // Import Featured Posts Block.

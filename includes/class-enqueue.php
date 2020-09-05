@@ -26,16 +26,9 @@ class Enqueue {
 	 * Enqueue block assets.
 	 */
 	public function enqueue_block_assets() {
-		// Load the compiled styles.
-		wp_enqueue_style(
-			'ptam-style-css',
-			\PostTypeArchiveMapping::get_plugin_url( 'dist/blocks.style.build.css' ),
-			PTAM_VERSION,
-			'all'
-		);
 		wp_enqueue_style(
 			'ptam-style-css-editor',
-			\PostTypeArchiveMapping::get_plugin_url( 'dist/blocks.editor.build.css' ),
+			\PostTypeArchiveMapping::get_plugin_url( 'dist/blockstyles.css' ),
 			PTAM_VERSION,
 			'all'
 		);
@@ -47,13 +40,13 @@ class Enqueue {
 	public function enqueue_block_editor_assets() {
 		wp_register_style(
 			'ptam-style-editor-css',
-			\PostTypeArchiveMapping::get_plugin_url( 'dist/blocks.editor.build.css' ),
+			\PostTypeArchiveMapping::get_plugin_url( 'dist/blockstyles.css' ),
 			PTAM_VERSION,
 			'all'
 		);
 		wp_register_script(
 			'ptam-custom-posts-gutenberg',
-			\PostTypeArchiveMapping::get_plugin_url( 'dist/blocks.build.js' ),
+			\PostTypeArchiveMapping::get_plugin_url( 'dist/blocks.js' ),
 			array( 'wp-blocks', 'wp-element' ),
 			PTAM_VERSION,
 			true

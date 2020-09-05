@@ -68,4 +68,7 @@ module.exports = {
 			filename: "[name].css",
 		}),
 	],
+	externals: {
+		lodash: 'lodash'
+	  }
 };
