@@ -144,14 +144,10 @@ class Posts {
 		 */
 		$post_args = apply_filters( 'ptam_featured_post_by_term_query', $post_args, $attributes, $post_type, $term, $taxonomy );
 		// Front page pagination fix.
-		global $wp_query;
-		$temp = $wp_query;
-		if ( is_front_page() ) {
-			$wp_query     = new \WP_Query( $post_args ); // phpcs:ignore
-			$recent_posts = $wp_query;
-		} else {
-			$recent_posts = new \WP_Query( $post_args );
-		}
+		$recent_posts     = new \WP_Query( $post_args ); // phpcs:ignore
+		?>
+		<div class="ptam-fp-wrapper" id="<?php echo esc_attr( $attributes['containerId'] ); ?>">
+		<?php
 		if ( ! $attributes['disableStyles'] ) :
 			?>
 		<style>
@@ -229,8 +225,7 @@ class Posts {
 			}
 		}
 		?>
-		<div class="ptam-fp-wrapper" id="<?php echo esc_attr( $attributes['containerId'] ); ?>">
-			<h4 class="ptam-fp-term"><span><?php echo esc_html( $term_name ); ?></span></h4>
+		<h4 class="ptam-fp-term"><span><?php echo esc_html( $term_name ); ?></span></h4>
 		<?php
 		if ( $recent_posts->have_posts() ) :
 			while ( $recent_posts->have_posts() ) {
@@ -252,21 +247,14 @@ class Posts {
 
 				$post->link = get_permalink( $post->ID );
 
-				if ( empty( $post->post_excerpt ) ) {
-					$post->post_excerpt = apply_filters( 'the_excerpt', wp_strip_all_tags( strip_shortcodes( $post->post_content ) ) );
-				}
-
-				if ( ! $post->post_excerpt ) {
-					$post->post_excerpt = null;
-				}
+				$post_excerpt = get_the_excerpt();
 
 				$post->post_excerpt = wp_kses_post( wp_trim_words( $post->post_excerpt, absint( $attributes['excerptLength'] ) ) );
-				$post->post_content = apply_filters( 'ptam_the_content', $post->post_content );
 
 				?>
 				<div class="ptam-featured-post-item">
 					<div class="ptam-featured-post-meta">
-						<h3 class="entry-title"><a href="<?php echo esc_url( $post->link ); ?>"><?php echo wp_kses_post( get_the_title( $post ) ); ?></a></h3>
+						<h3 class="entry-title"><a href="<?php echo esc_attr( esc_url( $post->link ) ); ?>"><?php echo wp_kses_post( get_the_title( $post ) ); ?></a></h3>
 						<?php
 						if ( $attributes['showMeta'] ) :
 							?>
@@ -274,7 +262,7 @@ class Posts {
 								<?php
 								if ( $attributes['showMetaAuthor'] ) :
 									?>
-									<span class="author-name"><a href="<?php echo esc_url( $post->author_info->author_link ); ?>"><?php echo esc_html( $post->author_info->display_name ); ?></a></span>
+									<span class="author-name"><a href="<?php echo esc_attr( esc_url( $post->author_info->author_link ) ); ?>"><?php echo esc_html( $post->author_info->display_name ); ?></a></span>
 									<?php
 								endif;
 								if ( $attributes['showMetaDate'] ) :
@@ -306,7 +294,7 @@ class Posts {
 					if ( $attributes['showFeaturedImage'] && ! empty( $post->featured_image_src ) ) :
 						?>
 						<div class="ptam-featured-post-image">
-							<a href="<?php echo esc_url( $post->link ); ?>">
+							<a href="<?php echo esc_attr( esc_url( get_permalink( $post->ID ) ) ); ?>">
 								<?php echo wp_kses_post( $post->featured_image_src ); ?>
 							</a>
 						</div>
@@ -315,18 +303,20 @@ class Posts {
 					?>
 					<?php
 					if ( $attributes['showExcerpt'] ) {
+						$post->post_excerpt = html_entity_decode( $post->post_excerpt, ENT_QUOTES, get_option( 'blog_charset' ) );
 						?>
 						<div class="ptam-featured-post-content">
-							<?php echo wp_kses_post( $post->post_excerpt ); ?>
+							<?php echo esc_html( $post_excerpt ); ?>
 						</div>
 						<?php
 					}
 					?>
 					<?php
 					if ( $attributes['showReadMore'] ) {
+						$permalink = get_permalink();
 						?>
 						<div class="ptam-featured-post-button">
-							<a class="button button-primary btn btn-primary" href="<?php echo esc_url( $post->link ); ?>"><?php echo wp_kses_post( $attributes['readMoreButtonText'] ); ?></a>
+							<a class="btn button" href="<?php echo esc_url( $permalink ); ?>"><?php echo esc_html( $attributes['readMoreButtonText'] ); ?></a>
 						</div>
 						<?php
 					}
@@ -339,7 +329,7 @@ class Posts {
 			$pagination = paginate_links(
 				array(
 					'total'        => $recent_posts->max_num_pages,
-					'current'      => max( 1, get_query_var( 'paged' ) ),
+					'current'      => $paged,
 					'format'       => 'page/%#%',
 					'show_all'     => false,
 					'type'         => 'list',

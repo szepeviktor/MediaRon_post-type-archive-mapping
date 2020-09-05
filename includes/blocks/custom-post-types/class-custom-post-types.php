@@ -560,6 +560,8 @@ class Custom_Post_Types {
 						$list_items_markup .= '</div>';
 					}
 				}
+				// Wrap the text content.
+				$list_items_markup .= '</div>'; // ptam-block-post-grid-text.
 
 				// Close the markup for the post.
 				$list_items_markup .= "</article>\n";
