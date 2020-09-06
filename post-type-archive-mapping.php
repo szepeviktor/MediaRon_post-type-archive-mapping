@@ -119,8 +119,105 @@ class PostTypeArchiveMapping {
 		add_action( 'pre_get_posts', array( $this, 'maybe_override_archive' ) );
 
 		add_action( 'admin_notices', array( $this, 'admin_notices' ) );
+
+		// 404 page detection.
+		add_action( 'parse_query', array( $this, 'parse_query' ), 100 );
+		add_filter( 'posts_request_ids', array( $this, 'maybe_return_404_post_ids' ), 10, 2 );
+		add_filter( 'split_the_query', array( $this, 'maybe_split_query' ), 10, 2 );
 	} //end init
 
+	/**
+	 * Determine if a request is a 404 page or not based on passed query object.
+	 * Ideally should only evaluate on the first query, and not subsequent queries.
+	 *
+	 * @param WP_Query $query The query object to check.
+	 *
+	 * @return bool true if is 404 and false if not.
+	 */
+	public function is_404( $query ) {
+		$queried_object = get_queried_object();
+
+		$queried_item = get_queried_object_id();
+		$post_val     = get_query_var( 'p' );
+		$page_id_val  = get_query_var( 'page_id' );
+		$is_single    = isset( $query->is_single ) ? $query->is_single : 0;
+		$is_singular  = isset( $query->is_singular ) ? $query->is_singular : 0;
+		$is_archive   = isset( $query->is_archive ) ? $query->is_archive : 0;
+		$ptam_404     = get_query_var( 'ptam_404' );
+
+		if ( ( true === $ptam_404 ) || ( is_null( $queried_object ) && 0 === $queried_item && 0 === $post_val && 0 === $page_id_val && true === $is_single && true === $is_singular ) || ( is_null( $queried_object ) && 0 === $queried_item && 0 === $post_val && 0 === $page_id_val && ! $is_single && ! $is_singular && $is_archive ) ) {
+			return true;
+		}
+		return false;
+	}
+	/**
+	 * Whether to split the query if there is a 404 page.
+	 *
+	 * @param bool     $split Whether to split the query or not.
+	 * @param WP_Query $query The WP_Query instance.
+	 *
+	 * @return bool $split true to split the query, false to not.
+	 */
+	public function maybe_split_query( $split, $query ) {
+		if ( $this->is_404( $query ) ) {
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * If 404 page, rewrite the query.
+	 *
+	 * @param string   $request SQL Query for the page.
+	 * @param WP_Query $query The WP_Query instance.
+	 *
+	 * @return string Updated SQL Query.
+	 */
+	public function maybe_return_404_post_ids( $request, $query ) {
+		global $wpdb;
+
+		if ( $this->is_404( $query ) ) {
+			$page_id_404 = absint( get_option( 'post-type-archive-mapping-404', 0 ) );
+			if ( $page_id_404 > 0 ) {
+				$post_query = $wpdb->prepare( "select {$wpdb->posts}.* from {$wpdb->posts} WHERE 1=1 AND {$wpdb->posts}.ID = %d AND {$wpdb->posts}.post_status = 'publish'", $page_id_404 );
+				return $post_query;
+			}
+		}
+		return $request;
+	}
+
+	/**
+	 * If 404 page, overwrite some query vars.
+	 *
+	 * @param WP_Query $query The WP_Query instance. Passed by reference.
+	 *
+	 * @return WP_Query The WP_Query instance.
+	 */
+	public function parse_query( &$query ) {
+		if ( $this->is_404( $query ) ) {
+			$page_id_404 = absint( get_option( 'post-type-archive-mapping-404', 0 ) );
+			if ( $page_id_404 > 0 ) {
+				$post_id = absint( $page_id_404 );
+				$query->set( 'post_type', 'page' );
+				$query->set( 'page_id', $post_id );
+				$query->set( 'redirected', true );
+				$query->set( 'paged', 1 );
+				$query->set( 'original_archive_type', '404' );
+				$query->is_page              = true;
+				$query->is_archive           = false;
+				$query->is_category          = false;
+				$query->is_tag               = false;
+				$query->is_tax               = false;
+				$query->is_single            = true;
+				$query->is_singular          = true;
+				$query->is_post_type_archive = false;
+				$query->queried_object_id    = $post_id;
+				$query->queried_object       = get_post( $post_id, OBJECT );
+				return $query;
+			}
+		}
+		return $query;
+	}
 	/**
 	 * Add admin notices when things go wrong.
 	 *
@@ -146,7 +243,6 @@ class PostTypeArchiveMapping {
 		if ( is_admin() ) {
 			return $query;
 		}
-
 		// Maybe Redirect.
 		if ( is_page() ) {
 			$object_id = get_queried_object_id();
