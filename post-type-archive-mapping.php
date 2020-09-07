@@ -121,11 +121,19 @@ class PostTypeArchiveMapping {
 		add_action( 'admin_notices', array( $this, 'admin_notices' ) );
 
 		// 404 page detection.
-		add_action( 'parse_query', array( $this, 'parse_query' ), 100 );
+		add_action( 'parse_query', array( $this, 'parse_query' ), 10 );
 		add_filter( 'posts_request_ids', array( $this, 'maybe_return_404_post_ids' ), 10, 2 );
 		add_filter( 'split_the_query', array( $this, 'maybe_split_query' ), 10, 2 );
 	} //end init
 
+	/**
+	 * Determine if a request is a 404 page or not based on passed query object.
+	 * Ideally should only evaluate on the first query, and not subsequent queries.
+	 *
+	 * @param WP_Query $query The query object to check.
+	 *
+	 * @return bool true if is 404 and false if not.
+	 */
 	/**
 	 * Determine if a request is a 404 page or not based on passed query object.
 	 * Ideally should only evaluate on the first query, and not subsequent queries.
@@ -143,9 +151,20 @@ class PostTypeArchiveMapping {
 		$is_single    = isset( $query->is_single ) ? $query->is_single : 0;
 		$is_singular  = isset( $query->is_singular ) ? $query->is_singular : 0;
 		$is_archive   = isset( $query->is_archive ) ? $query->is_archive : 0;
-		$ptam_404     = get_query_var( 'ptam_404' );
+		$maybe_slug   = isset( $query->query['name'] ) ? $query->query['name'] : false;
 
-		if ( ( true === $ptam_404 ) || ( is_null( $queried_object ) && 0 === $queried_item && 0 === $post_val && 0 === $page_id_val && true === $is_single && true === $is_singular ) || ( is_null( $queried_object ) && 0 === $queried_item && 0 === $post_val && 0 === $page_id_val && ! $is_single && ! $is_singular && $is_archive ) ) {
+		if ( ( is_null( $queried_object ) && 0 === $queried_item && 0 === $post_val && 0 === $page_id_val && true === $is_single && true === $is_singular ) || ( is_null( $queried_object ) && 0 === $queried_item && 0 === $post_val && 0 === $page_id_val && ! $is_single && ! $is_singular && $is_archive ) ) {
+			if ( is_date() ) {
+				return false;
+			}
+			if ( $maybe_slug ) {
+				global $wpdb;
+				$query         = $wpdb->prepare( "select * from {$wpdb->posts} WHERE {$wpdb->posts}.post_name = %s AND {$wpdb->posts}.post_status = 'publish' limit 1", $maybe_slug );
+				$maybe_results = $wpdb->get_row( $query ); // phpcs:ignore
+				if ( ! is_wp_error( $maybe_results ) && $maybe_results ) {
+					return false;
+				}
+			}
 			return true;
 		}
 		return false;
@@ -175,7 +194,6 @@ class PostTypeArchiveMapping {
 	 */
 	public function maybe_return_404_post_ids( $request, $query ) {
 		global $wpdb;
-
 		if ( $this->is_404( $query ) ) {
 			$page_id_404 = absint( get_option( 'post-type-archive-mapping-404', 0 ) );
 			if ( $page_id_404 > 0 ) {
@@ -198,6 +216,7 @@ class PostTypeArchiveMapping {
 			$page_id_404 = absint( get_option( 'post-type-archive-mapping-404', 0 ) );
 			if ( $page_id_404 > 0 ) {
 				$post_id = absint( $page_id_404 );
+				$query->set( 'ptam_is_404', true );
 				$query->set( 'post_type', 'page' );
 				$query->set( 'page_id', $post_id );
 				$query->set( 'redirected', true );
