@@ -4,7 +4,7 @@ Tags: custom post types, archive, mapping, gutenberg, block, taxonomy, terms
 Requires at least: 5.5
 Requires PHP: 5.6
 Tested up to: 5.5
-Stable tag: 4.5.5
+Stable tag: 5.0.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Donate link: https://mediaron.com/give/
@@ -48,6 +48,10 @@ This plugin also allows you to map your term archives to a page. Just create a p
 <li>View the term and you will see your selected page.</li>
 <li>Use Gutenberg on your public page to customize the archive.</li>
 </ul>
+
+=== 404 Page Mapping ===
+
+This plugin allows you to map a page to your 404 page, so you can customize as needed.
 
 == Installation ==
 
@@ -95,6 +99,11 @@ Yes, just post in the support forums here and I'll do my best to address your is
 5. Term archive option.
 
 == Changelog ==
+
+= 5.0.0 =
+* Released 2020-09-07
+* Added ability to map 404 to a page.
+* Fixed Gutenberg bugs in the Custom Post Types block and Featured Posts block.
 
 = 4.5.5 =
 * Released 2020-08-23
@@ -275,29 +284,5 @@ Yes, just post in the support forums here and I'll do my best to address your is
 
 == Upgrade Notice ==
 
-= 4.5.5 =
-Minimium supported version is now WordPress 5.5. Fixed pagination for WP 5.5. Fixed REST API errors for WP 5.5.Miscellaneous block fixes and updates.
-
-= 4.5.3 =
-Added Polylang support when mapping posts. Added WPML support for the main Custom Post Types block.
-
-= 4.5.2 =
-Removing term redirect as some pages would get stuck. 
-
-= 4.5.1 =
-Added pagination to the Featured Posts by Category Block.
-
-= 4.5.0 =
-Added featured posts by category block. Added block previews. New plugin name: Custom Query Blocks
-
-= 4.0.5 =
-Added compatibility for Yoast SEO.
-
-= 4.0.1 =
-Added Term (Category) Grid Block. Hotfix. Term grid was erroring out.
-
-= 4.0.0 =
-Added Term (Category) Grid Block.
-
-= 3.3.5 =
-Show mapped pages and its own column. Mapped term pages now redirect to the correct term. Added new contributor: Paal Joachim.
+= 5.0.0 =
+Added ability to map 404 to a page. Fixed Gutenberg bugs in the Custom Post Types block and Featured Posts block.
