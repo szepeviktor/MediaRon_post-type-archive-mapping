@@ -25,7 +25,7 @@ The plugin currently has three blocks:
 
 === Post Type Archive Mapping ===
 
-This plugin also allows you to map your custom post type archive pages. Just create a page and go to Settings->Reading to set the page for your archive.
+This plugin allows you to map your custom post type archive pages. Just create a page and go to Settings->Reading to set the page for your archive.
 
 Ensure your post types have <code>has_archive</code> set to true.
 
