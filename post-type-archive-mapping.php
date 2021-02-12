@@ -452,7 +452,7 @@ class PostTypeArchiveMapping {
 		);
 		?>
 		<div class="ptam-admin-reading-cpt">
-			<p class="description"><?php esc_html_e( 'Please select a page to map to your 404 page.', 'post-type-archive-mapping' ); ?> <?php echo esc_html( $post_type_label ); ?></p>
+			<p class="description"><?php esc_html_e( 'Please select a page to map to your 404 page.', 'post-type-archive-mapping' ); ?></p>
 			<select name="post-type-archive-mapping-404">
 				<option value="0"><?php esc_html_e( 'Default', 'post-type-archive-mapping' ); ?></option>
 				<?php

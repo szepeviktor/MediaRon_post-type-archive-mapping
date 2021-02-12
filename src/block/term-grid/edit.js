@@ -131,7 +131,6 @@ class PTAM_Term_Grid extends Component {
 
 	getTermHtml = () => {
 		const terms = this.state.termsToDisplay;
-		console.log(terms);
 		const htmlToReactParser = new HtmlToReactParser();
 		const {
 			linkContainer,
