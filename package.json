@@ -44,6 +44,8 @@
     "dayjs": "^1.8.15",
     "del": "^5.1.0",
     "file-loader": "^6.0.0",
+    "grunt": "^1.3.0",
+    "grunt-contrib-compress": "^2.0.0",
     "gulp": "^4.0.2",
     "gulp-clean-css": "^4.3.0",
     "gulp-postcss": "^8.0.0",
