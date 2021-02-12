@@ -10,6 +10,7 @@ module.exports = function (grunt) {
 				{src: ['autoloader.php'], dest: '/', filter: 'isFile'}, // includes files in path
 				{src: ['readme.txt'], dest: '/', filter: 'isFile'}, // includes files in path
 				{src: ['uninstall.php'], dest: '/', filter: 'isFile'}, // includes files in path
+				{src: ['fonts/**'], dest: '/'}, // includes files in path and its subdirs
 				{src: ['dist/**'], dest: '/'}, // includes files in path and its subdirs
 				{src: ['img/**'], dest: '/'}, // includes files in path and its subdirs
 				{src: ['includes/**'], dest: '/'}, // includes files in path and its subdirs
