@@ -21,7 +21,7 @@ const {
 	TextControl,
 	TextareaControl,
 	ToggleControl,
-	Toolbar
+	ToolbarGroup,
 } = wp.components;
 
 const {
@@ -1485,7 +1485,7 @@ class PTAM_Custom_Posts extends Component {
 						}}
 						controls={["center", "wide"]}
 					/>
-					<Toolbar controls={layoutControls} />
+					<ToolbarGroup controls={layoutControls} />
 				</BlockControls>
 				<div
 					className={classnames(this.props.className, "ptam-block-post-grid")}

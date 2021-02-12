@@ -3,8 +3,8 @@ Contributors: ronalfy, chrislogan, paaljoachim
 Tags: custom post types, archive, mapping, gutenberg, block, taxonomy, terms
 Requires at least: 5.5
 Requires PHP: 5.6
-Tested up to: 5.5
-Stable tag: 5.0.0
+Tested up to: 5.7
+Stable tag: 5.0.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Donate link: https://mediaron.com/give/
@@ -99,6 +99,11 @@ Yes, just post in the support forums here and I'll do my best to address your is
 5. Term archive option.
 
 == Changelog ==
+
+= 5.0.1 =
+* Released 2021-02-12
+* Fixed the Term block with the block erroring out when modifying the query parameters.
+* Testing with WordPress 5.7.
 
 = 5.0.0 =
 * Released 2020-09-07
@@ -284,5 +289,6 @@ Yes, just post in the support forums here and I'll do my best to address your is
 
 == Upgrade Notice ==
 
-= 5.0.0 =
-Added ability to map 404 to a page. Fixed Gutenberg bugs in the Custom Post Types block and Featured Posts block.
+= 5.0.1 =
+
+Fixed the Term block with the block erroring out when modifying the query parameters. Testing with WordPress 5.7.
