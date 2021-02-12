@@ -64,12 +64,15 @@ module.exports = {
 			},
 		],
 	},
+	externals: {
+		// Use external version of React
+		"react": "React",
+		"react-dom": "ReactDOM",
+		lodash: 'lodash',
+	},
 	plugins: [
 		new MiniCssExtractPlugin({
 			filename: "[name].css",
 		}),
 	],
-	externals: {
-		lodash: 'lodash'
-	  }
 };

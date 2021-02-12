@@ -131,7 +131,7 @@ class PTAM_Term_Grid extends Component {
 
 	getTermHtml = () => {
 		const terms = this.state.termsToDisplay;
-		console.log( terms );
+		console.log(terms);
 		const htmlToReactParser = new HtmlToReactParser();
 		const {
 			linkContainer,
@@ -210,13 +210,21 @@ class PTAM_Term_Grid extends Component {
 					}
 				>
 					<div className="ptam-term-grid-item-content">
-						{showTermTitle && <h2 style={termTitleStyles}>{i in terms ? terms[i].name : __( 'Unknown Title', 'post-type-archive-mapping' )}</h2>}
+						{showTermTitle && (
+							<h2 style={termTitleStyles}>
+								{i in terms
+									? terms[i].name
+									: __("Unknown Title", "post-type-archive-mapping")}
+							</h2>
+						)}
 						{showTermDescription && (
 							<div
 								className="ptam-term-grid-item-description"
 								style={termDescriptionStyles}
 							>
-								{i in terms ? htmlToReactParser.parse(terms[i].description) : ''}
+								{i in terms
+									? htmlToReactParser.parse(terms[i].description)
+									: ""}
 							</div>
 						)}
 						{!linkContainer && showButton && (
@@ -239,8 +247,8 @@ class PTAM_Term_Grid extends Component {
 	};
 
 	render() {
-		if ( this.props.attributes.preview ) {
-			return(
+		if (this.props.attributes.preview) {
+			return (
 				<Fragment>
 					<img src={ptam_globals.term_grid_block_preview} />
 				</Fragment>
@@ -370,6 +378,7 @@ class PTAM_Term_Grid extends Component {
 					n
 				),
 			updated: __("Term search results updated.", "post-type-archive-mapping"),
+			noResults: __("There were no terms found.", "post-type-archive-mapping"),
 		};
 		// Term select messages.
 		const termMessagesExclude = {
@@ -388,11 +397,12 @@ class PTAM_Term_Grid extends Component {
 					n
 				),
 			updated: __("Term search results updated.", "post-type-archive-mapping"),
+			noResults: __("There were no terms found.", "post-type-archive-mapping"),
 		};
 
 		// Whether to show term exclusion or not.
 		let showTermExclude = false;
-		if ( Array.isArray( terms ) ) {
+		if (Array.isArray(terms)) {
 			terms.forEach(function (termObject) {
 				if (0 === termObject.id) {
 					showTermExclude = true;
