@@ -4,7 +4,7 @@ Plugin Name: Custom Query Blocks
 Plugin URI: https://mediaron.com/custom-query-blocks/
 Description: Map your post type and term archives to a page and use our Gutenberg blocks to show posts or terms.
 Author: MediaRon LLC
-Version: 5.0.1
+Version: 5.0.5
 Requires at least: 5.5
 Author URI: https://mediaron.com
 Contributors: MediaRon LLC
@@ -13,7 +13,7 @@ Domain Path: /languages
 Credit: Forked from https://github.com/bigwing/post-type-archive-mapping
 Credit: Gutenberg block based on Atomic Blocks
 */
-define( 'PTAM_VERSION', '5.0.1' );
+define( 'PTAM_VERSION', '5.0.5' );
 require_once 'autoloader.php';
 
 /**
@@ -470,7 +470,7 @@ class PostTypeArchiveMapping {
 		<?php
 		wp_dropdown_pages(
 			array(
-				'selected'          => $post_id,
+				'selected'          => intval( $post_id ),
 				'name'              => 'term_post_type',
 				'value_field'       => 'ID',
 				'option_none_value' => esc_html__( 'Default', 'post-type-archive-mapping' ),
