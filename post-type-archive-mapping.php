@@ -383,16 +383,6 @@ class PostTypeArchiveMapping {
 	 */
 	public function add_settings_post_types( $args ) {
 		$output     = get_option( 'post-type-archive-mapping', array() );
-		$posts      = get_posts(
-			array(
-				'post_status'    => array( 'publish' ),
-				'posts_per_page' => 200, // phpcs:ignore
-				'post_type'      => 'page',
-				'orderby'        => 'name',
-				'order'          => 'ASC',
-				'lang'           => '',
-			)
-		);
 		$post_types = get_post_types(
 			array(
 				'public'      => true,
@@ -418,14 +408,17 @@ class PostTypeArchiveMapping {
 			?>
 			<div class="ptam-admin-reading-cpt">
 				<h3><?php esc_html_e( 'Post Type:', 'post-type-archive-mapping' ); ?> <?php echo esc_html( $post_type_label ); ?></h3>
-				<select name="post-type-archive-mapping[<?php echo esc_html( $post_type ); ?>]">
-					<option value="default"><?php esc_html_e( 'Default', 'post-type-archive-mapping' ); ?></option>
-					<?php
-					foreach ( $posts as $post ) {
-						printf( '<option value="%d" %s>%s</option>', absint( $post->ID ), selected( $selection, $post->ID, false ), esc_html( $post->post_title ) );
-					}
-					?>
-				</select>
+				<?php
+				wp_dropdown_pages(
+					array(
+						'selected'          => esc_attr( $selection ),
+						'name'              => esc_html( "post-type-archive-mapping[{$post_type}]" ),
+						'value_field'       => 'ID',
+						'option_none_value' => esc_html__( 'Default', 'post-type-archive-mapping' ),
+						'show_option_none'  => esc_html__( 'Default', 'post-type-archive-mapping' ),
+					)
+				);
+				?>
 			</div>
 			<?php
 		}
@@ -439,28 +432,24 @@ class PostTypeArchiveMapping {
 	 * @param array $args No idea what these are.
 	 */
 	public function add_settings_404_page( $args ) {
-		$page_id_404 = absint( get_option( 'post-type-archive-mapping-404', 0 ) );
-		$posts       = get_posts(
-			array(
-				'post_status'    => array( 'publish' ),
-				'posts_per_page' => 200, // phpcs:ignore
-				'post_type'      => 'page',
-				'orderby'        => 'name',
-				'order'          => 'ASC',
-				'lang'           => '',
-			)
-		);
+		$page_id_404 = get_option( 'post-type-archive-mapping-404', 0 );
+		if ( ! $page_id_404 ) {
+			$page_id_404 = -1;
+		}
 		?>
 		<div class="ptam-admin-reading-cpt">
 			<p class="description"><?php esc_html_e( 'Please select a page to map to your 404 page.', 'post-type-archive-mapping' ); ?></p>
-			<select name="post-type-archive-mapping-404">
-				<option value="0"><?php esc_html_e( 'Default', 'post-type-archive-mapping' ); ?></option>
-				<?php
-				foreach ( $posts as $post ) {
-					printf( '<option value="%d" %s>%s</option>', absint( $post->ID ), selected( $page_id_404, $post->ID, false ), esc_html( $post->post_title ) );
-				}
-				?>
-			</select>
+			<?php
+			wp_dropdown_pages(
+				array(
+					'selected'          => intval( $page_id_404 ),
+					'name'              => 'post-type-archive-mapping-404',
+					'value_field'       => 'ID',
+					'option_none_value' => esc_html__( 'Default', 'post-type-archive-mapping' ),
+					'show_option_none'  => esc_html__( 'Default', 'post-type-archive-mapping' ),
+				)
+			);
+			?>
 		</div>
 		<?php
 	}
@@ -472,26 +461,23 @@ class PostTypeArchiveMapping {
 	 * @param string $taxonomy The taxonomy.
 	 */
 	public function map_term_interface( $tag, $taxonomy = '' ) {
-		$posts   = get_posts(
-			array(
-				'post_status'    => array( 'publish' ),
-				'posts_per_page' => 200, // phpcs:ignore
-				'post_type'      => 'page',
-				'orderby'        => 'name',
-				'order'          => 'ASC',
-			)
-		);
 		$post_id = get_term_meta( $tag->term_id, '_term_archive_mapping', true );
+		if ( ! $post_id ) {
+			$post_id = -1;
+		}
 		?>
 		<h2><?php esc_html_e( 'Archive Mapping', 'post-type-archive-mapping' ); ?></h2>
-		<select name="term_post_type">
-			<option value="default"><?php esc_html_e( 'Default', 'post-type-archive-mapping' ); ?></option>
-			<?php
-			foreach ( $posts as $post ) {
-				printf( '<option value="%d" %s>%s</option>', absint( $post->ID ), selected( $post_id, $post->ID, false ), esc_html( $post->post_title ) );
-			}
-			?>
-		</select>
+		<?php
+		wp_dropdown_pages(
+			array(
+				'selected'          => $post_id,
+				'name'              => 'term_post_type',
+				'value_field'       => 'ID',
+				'option_none_value' => esc_html__( 'Default', 'post-type-archive-mapping' ),
+				'show_option_none'  => esc_html__( 'Default', 'post-type-archive-mapping' ),
+			)
+		);
+		?>
 		<p class="description"><?php esc_html_e( 'Map a term archive to a page.', 'post-type-archive-mapping' ); ?></p>
 		<?php
 	}
