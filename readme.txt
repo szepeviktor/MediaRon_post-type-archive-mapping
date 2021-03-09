@@ -4,7 +4,7 @@ Tags: map pages, archives, post type block, 404 page, category grid
 Requires at least: 5.5
 Requires PHP: 5.6
 Tested up to: 5.7
-Stable tag: 5.0.5
+Stable tag: 5.0.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Donate link: https://github.com/MediaRon/post-type-archive-mapping
@@ -111,6 +111,10 @@ Yes, just post in the support forums here and I'll do my best to address your is
 5. Term archive option.
 
 == Changelog ==
+
+= 5.0.6 =
+* Released 2021-03-09
+* Fixing term saving causing archives to fail.
 
 = 5.0.5 =
 * Released 2021-02-12
@@ -306,6 +310,9 @@ Yes, just post in the support forums here and I'll do my best to address your is
 * Initial release.
 
 == Upgrade Notice ==
+
+= 5.0.6 =
+Fixing term saving causing archives to fail.
 
 = 5.0.5 =
 
