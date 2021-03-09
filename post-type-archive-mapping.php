@@ -414,7 +414,7 @@ class PostTypeArchiveMapping {
 						'selected'          => esc_attr( $selection ),
 						'name'              => esc_html( "post-type-archive-mapping[{$post_type}]" ),
 						'value_field'       => 'ID',
-						'option_none_value' => esc_html__( 'Default', 'post-type-archive-mapping' ),
+						'option_none_value' => 'default',
 						'show_option_none'  => esc_html__( 'Default', 'post-type-archive-mapping' ),
 					)
 				);
