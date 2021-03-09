@@ -445,7 +445,7 @@ class PostTypeArchiveMapping {
 					'selected'          => intval( $page_id_404 ),
 					'name'              => 'post-type-archive-mapping-404',
 					'value_field'       => 'ID',
-					'option_none_value' => esc_html__( 'Default', 'post-type-archive-mapping' ),
+					'option_none_value' => 'default',
 					'show_option_none'  => esc_html__( 'Default', 'post-type-archive-mapping' ),
 				)
 			);
@@ -473,7 +473,7 @@ class PostTypeArchiveMapping {
 				'selected'          => intval( $post_id ),
 				'name'              => 'term_post_type',
 				'value_field'       => 'ID',
-				'option_none_value' => esc_html__( 'Default', 'post-type-archive-mapping' ),
+				'option_none_value' => 'default',
 				'show_option_none'  => esc_html__( 'Default', 'post-type-archive-mapping' ),
 			)
 		);
@@ -490,7 +490,10 @@ class PostTypeArchiveMapping {
 	public function save_mapped_term( $term_id ) {
 		if ( current_user_can( 'edit_term', $term_id ) ) {
 			$maybe_post_id = filter_input( INPUT_POST, 'term_post_type' );
-			if ( $maybe_post_id ) {
+			if ( 'default' === $maybe_post_id ) {
+				delete_post_meta( $maybe_post_id, '_term_mapped' );
+				delete_term_meta( $term_id, '_term_archive_mapping' );
+			} elseif ( $maybe_post_id ) {
 				update_post_meta( $maybe_post_id, '_term_mapped', $term_id );
 				update_term_meta( $term_id, '_term_archive_mapping', $maybe_post_id );
 			}
