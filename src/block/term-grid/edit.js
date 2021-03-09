@@ -185,7 +185,7 @@ class PTAM_Term_Grid extends Component {
 					borderStyle: "solid",
 			  }
 			: {};
-		return Object.keys(terms).map((term, i) => (
+		return Object.keys(terms).map((i) => (
 			<Fragment key={i}>
 				<div
 					className="ptam-term-grid-item"
@@ -209,13 +209,21 @@ class PTAM_Term_Grid extends Component {
 					}
 				>
 					<div className="ptam-term-grid-item-content">
-						{showTermTitle && <h2 style={termTitleStyles}>{i in terms ? terms[i].name : __( 'Unknown Title', 'post-type-archive-mapping' )}</h2>}
+						{showTermTitle && (
+							<h2 style={termTitleStyles}>
+								{i in terms
+									? terms[i].name
+									: __("Unknown Title", "post-type-archive-mapping")}
+							</h2>
+						)}
 						{showTermDescription && (
 							<div
 								className="ptam-term-grid-item-description"
 								style={termDescriptionStyles}
 							>
-								{i in terms ? htmlToReactParser.parse(terms[i].description) : ''}
+								{i in terms
+									? htmlToReactParser.parse(terms[i].description)
+									: ""}
 							</div>
 						)}
 						{!linkContainer && showButton && (
@@ -238,8 +246,8 @@ class PTAM_Term_Grid extends Component {
 	};
 
 	render() {
-		if ( this.props.attributes.preview ) {
-			return(
+		if (this.props.attributes.preview) {
+			return (
 				<Fragment>
 					<img src={ptam_globals.term_grid_block_preview} />
 				</Fragment>
@@ -328,7 +336,6 @@ class PTAM_Term_Grid extends Component {
 		];
 
 		const backgroundImage = [
-			{ value: "none", label: __("None", "post-type-archive-mapping") },
 			{
 				value: "acf",
 				label: __("Advanced Custom Fields", "post-type-archive-mapping"),
@@ -370,6 +377,7 @@ class PTAM_Term_Grid extends Component {
 					n
 				),
 			updated: __("Term search results updated.", "post-type-archive-mapping"),
+			noResults: __("There were no terms found.", "post-type-archive-mapping"),
 		};
 		// Term select messages.
 		const termMessagesExclude = {
@@ -388,11 +396,12 @@ class PTAM_Term_Grid extends Component {
 					n
 				),
 			updated: __("Term search results updated.", "post-type-archive-mapping"),
+			noResults: __("There were no terms found.", "post-type-archive-mapping"),
 		};
 
 		// Whether to show term exclusion or not.
 		let showTermExclude = false;
-		if ( Array.isArray( terms ) ) {
+		if (Array.isArray(terms)) {
 			terms.forEach(function (termObject) {
 				if (0 === termObject.id) {
 					showTermExclude = true;
@@ -459,11 +468,11 @@ class PTAM_Term_Grid extends Component {
 						messages={termMessages}
 					/>
 					<Button
-						isTertiary={true}
-						isLink={true}
+						isSecondary={true}
 						onClick={(event) => {
 							this.displayTerms();
 						}}
+						className="ptam-apply"
 					>
 						{__("Apply", "post-type-archive-mapping")}
 					</Button>
@@ -481,11 +490,11 @@ class PTAM_Term_Grid extends Component {
 								messages={termMessagesExclude}
 							/>
 							<Button
-								isTertiary={true}
-								isLink={true}
+								isSecondary={true}
 								onClick={(event) => {
 									this.displayTerms();
 								}}
+								className="ptam-apply"
 							>
 								{__("Apply", "post-type-archive-mapping")}
 							</Button>
@@ -682,7 +691,7 @@ class PTAM_Term_Grid extends Component {
 										render={({ open }) => (
 											<Fragment>
 												<button
-													className="ptam-media-alt-upload components-button is-button secondary"
+													className="ptam-media-alt-upload components-button is-button is-secondary"
 													onClick={open}
 												>
 													{__(
@@ -705,7 +714,7 @@ class PTAM_Term_Grid extends Component {
 														</div>
 														<div>
 															<button
-																className="ptam-media-alt-reset components-button is-button secondary"
+																className="ptam-media-alt-reset components-button is-button is-secondary"
 																onClick={(event) => {
 																	this.props.setAttributes({
 																		backgroundImageFallback: "",
@@ -724,11 +733,11 @@ class PTAM_Term_Grid extends Component {
 									/>
 									<div>
 										<Button
-											isTertiary={true}
-											isLink={true}
+											isSecondary={true}
 											onClick={(event) => {
 												this.displayTerms();
 											}}
+											className="ptam-apply"
 										>
 											{__("Apply", "post-type-archive-mapping")}
 										</Button>
@@ -996,15 +1005,7 @@ class PTAM_Term_Grid extends Component {
 					<Placeholder>
 						<div className="ptam-term-grid-loading">
 							<h1>
-								<svg
-									xmlns="http://www.w3.org/2000/svg"
-									width="24"
-									height="24"
-									viewBox="0 0 24 24"
-								>
-									<path d="M4 14h4v-4H4v4zm0 5h4v-4H4v4zM4 9h4V5H4v4zm5 5h12v-4H9v4zm0 5h12v-4H9v4zM9 5v4h12V5H9z" />
-									<path d="M0 0h24v24H0z" fill="none" />
-								</svg>{" "}
+								<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 315.23 341.25" width="42" height="42"><polygon points="315.23 204.75 315.23 68.25 197.02 0 197.02 136.5 315.23 204.75" style={{fill: "#ffdd01",opacity:0.8}} /><polygon points="0 204.75 0 68.25 118.21 0 118.21 136.5 0 204.75" style={{fill: "#2e3192",opacity:0.8}} /><polygon points="157.62 159.25 275.83 91 157.62 22.75 39.4 91 157.62 159.25" style={{fill:"#86cedc",opacity:0.8}}/><polygon points="157.62 341.25 275.83 273 157.62 204.75 39.4 273 157.62 341.25" style={{fill:"#f07f3b", opacity:0.8}} /><polygon points="177.32 170.62 295.53 102.37 295.53 238.87 177.32 307.12 177.32 170.62" style={{fill:"#c10a26",opacity:0.8}}/><polygon points="137.91 170.62 19.7 102.37 19.7 238.87 137.91 307.12 137.91 170.62" style={{fill:"#662583",opacity:0.8}} /></svg>{" "}
 								{__("Term Grid", "post-type-archive-mapping")}
 							</h1>
 							<h2>
@@ -1022,15 +1023,7 @@ class PTAM_Term_Grid extends Component {
 					<Placeholder>
 						<div className="ptam-term-grid-loading">
 							<h1>
-								<svg
-									xmlns="http://www.w3.org/2000/svg"
-									width="24"
-									height="24"
-									viewBox="0 0 24 24"
-								>
-									<path d="M4 14h4v-4H4v4zm0 5h4v-4H4v4zM4 9h4V5H4v4zm5 5h12v-4H9v4zm0 5h12v-4H9v4zM9 5v4h12V5H9z" />
-									<path d="M0 0h24v24H0z" fill="none" />
-								</svg>{" "}
+								<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 315.23 341.25" width="42" height="42"><polygon points="315.23 204.75 315.23 68.25 197.02 0 197.02 136.5 315.23 204.75" style={{fill: "#ffdd01",opacity:0.8}} /><polygon points="0 204.75 0 68.25 118.21 0 118.21 136.5 0 204.75" style={{fill: "#2e3192",opacity:0.8}} /><polygon points="157.62 159.25 275.83 91 157.62 22.75 39.4 91 157.62 159.25" style={{fill:"#86cedc",opacity:0.8}}/><polygon points="157.62 341.25 275.83 273 157.62 204.75 39.4 273 157.62 341.25" style={{fill:"#f07f3b", opacity:0.8}} /><polygon points="177.32 170.62 295.53 102.37 295.53 238.87 177.32 307.12 177.32 170.62" style={{fill:"#c10a26",opacity:0.8}}/><polygon points="137.91 170.62 19.7 102.37 19.7 238.87 137.91 307.12 137.91 170.62" style={{fill:"#662583",opacity:0.8}} /></svg>{" "}
 								{__("Term Grid", "post-type-archive-mapping")}
 							</h1>
 							<h2>

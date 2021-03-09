@@ -469,7 +469,7 @@ class Terms {
 					),
 					'backgroundImageSource'          => array(
 						'type'    => 'string',
-						'default' => 'none',
+						'default' => 'meta',
 					),
 					'backgroundImageMeta'            => array(
 						'type'    => 'string',

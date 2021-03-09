@@ -21,7 +21,7 @@ const {
 	TextControl,
 	TextareaControl,
 	ToggleControl,
-	Toolbar
+	ToolbarGroup,
 } = wp.components;
 
 const {
@@ -809,7 +809,8 @@ class PTAM_Custom_Posts extends Component {
 		const inspectorControls = (
 			<InspectorControls>
 				<PanelBody
-					title={__("Custom Posts Settings", "post-type-archive-mapping")}
+					title={__("Query", "post-type-archive-mapping")}
+					initialOpen={false}
 				>
 					<SelectControl
 						label={__("Post Type", "post-type-archive-mapping")}
@@ -996,7 +997,7 @@ class PTAM_Custom_Posts extends Component {
 										render={({ open }) => (
 											<Fragment>
 												<button
-													className="ptam-media-alt-upload components-button is-button secondary"
+													className="ptam-media-alt-upload components-button is-button is-secondary"
 													onClick={open}
 												>
 													{__(
@@ -1019,7 +1020,7 @@ class PTAM_Custom_Posts extends Component {
 														</div>
 														<div>
 															<button
-																className="ptam-media-alt-reset components-button is-button secondary"
+																className="ptam-media-alt-reset components-button is-button is-secondary"
 																onClick={event => {
 																	this.props.setAttributes({ fallbackImg: "" });
 																	this.props.attributes.fallbackImg = "";
@@ -1371,15 +1372,7 @@ class PTAM_Custom_Posts extends Component {
 					<Placeholder>
 						<div className="ptam-loading">
 							<h1>
-								<svg
-									xmlns="http://www.w3.org/2000/svg"
-									width="24"
-									height="24"
-									viewBox="0 0 24 24"
-								>
-									<path d="M4 14h4v-4H4v4zm0 5h4v-4H4v4zM4 9h4V5H4v4zm5 5h12v-4H9v4zm0 5h12v-4H9v4zM9 5v4h12V5H9z" />
-									<path d="M0 0h24v24H0z" fill="none" />
-								</svg>{" "}
+								<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 315.23 341.25" width="42" height="42"><polygon points="315.23 204.75 315.23 68.25 197.02 0 197.02 136.5 315.23 204.75" style={{fill: "#ffdd01",opacity:0.8}} /><polygon points="0 204.75 0 68.25 118.21 0 118.21 136.5 0 204.75" style={{fill: "#2e3192",opacity:0.8}} /><polygon points="157.62 159.25 275.83 91 157.62 22.75 39.4 91 157.62 159.25" style={{fill:"#86cedc",opacity:0.8}}/><polygon points="157.62 341.25 275.83 273 157.62 204.75 39.4 273 157.62 341.25" style={{fill:"#f07f3b", opacity:0.8}} /><polygon points="177.32 170.62 295.53 102.37 295.53 238.87 177.32 307.12 177.32 170.62" style={{fill:"#c10a26",opacity:0.8}}/><polygon points="137.91 170.62 19.7 102.37 19.7 238.87 137.91 307.12 137.91 170.62" style={{fill:"#662583",opacity:0.8}} /></svg>{" "}
 								{__("Custom Posts", "post-type-archive-mapping")}
 							</h1>
 							<h2>
@@ -1484,7 +1477,7 @@ class PTAM_Custom_Posts extends Component {
 						}}
 						controls={["center", "wide"]}
 					/>
-					<Toolbar controls={layoutControls} />
+					<ToolbarGroup controls={layoutControls} />
 				</BlockControls>
 				<div
 					className={classnames(this.props.className, "ptam-block-post-grid")}

@@ -147,8 +147,17 @@ class Custom_Post_Types {
 	 */
 	public function custom_posts( $attributes ) {
 		$paged = 0;
-		if ( absint( get_query_var( 'page' ) > 1 ) ) {
-			$paged = absint( get_query_var( 'page' ) );
+		if ( absint( get_query_var( 'paged' ) > 1 ) ) {
+			$paged = absint( get_query_var( 'paged' ) );
+		}
+		// WP 5.5 quirk for items on the front page.
+		if ( is_front_page() ) {
+			if ( absint( get_query_var( 'page' ) > 1 ) ) {
+				$paged = absint( get_query_var( 'page' ) );
+			}
+		}
+		if ( empty( $paged ) ) {
+			$paged = 0;
 		}
 		$post_args = array(
 			'post_type'      => $attributes['postType'],
@@ -551,6 +560,8 @@ class Custom_Post_Types {
 						$list_items_markup .= '</div>';
 					}
 				}
+				// Wrap the text content.
+				$list_items_markup .= '</div>'; // ptam-block-post-grid-text.
 
 				// Close the markup for the post.
 				$list_items_markup .= "</article>\n";

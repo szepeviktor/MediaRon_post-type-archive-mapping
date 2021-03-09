@@ -55,6 +55,16 @@ class PTAM_Featured_Posts extends Component {
 		//this.get_latest_data();
 	}
 
+	excerptParse = excerpt => {
+		let htmlToReactParser = new HtmlToReactParser();
+		const { excerptLength } = this.props.attributes;
+
+		excerpt = excerpt.split(" ").slice(0, excerptLength);
+		excerpt = excerpt.join(" ");
+
+		return htmlToReactParser.parse(excerpt);
+	};
+
 	get_term_list = (object = {}) => {
 		let termsList = [];
 		const props = jQuery.extend({}, this.props.attributes, object);
@@ -230,6 +240,7 @@ class PTAM_Featured_Posts extends Component {
 			showFeaturedImage,
 			showReadMore,
 			showExcerpt,
+			excerptLength,
 			excerptFont,
 			excerptFontSize,
 			excerptTextColor,
@@ -314,7 +325,7 @@ class PTAM_Featured_Posts extends Component {
 					}
 					{showExcerpt &&
 						<div className="ptam-featured-post-content" style={excerptStyles}>
-							{htmlToReactParser.parse(posts[i].post_excerpt)}
+							{this.excerptParse(posts[i].post_excerpt)}
 						</div>
 					}
 					{showReadMore &&
@@ -337,6 +348,10 @@ class PTAM_Featured_Posts extends Component {
 				this.get_latest_data( { postsToShow: postsToShow });
 			}, 1000 ),
 		});
+	}
+	trimWords = value => {
+		const { setAttributes } = this.props;
+		setAttributes({ excerptLength: value });
 	}
 	render() {
 		if ( this.props.attributes.preview ) {
@@ -382,6 +397,7 @@ class PTAM_Featured_Posts extends Component {
 			showFeaturedImage,
 			showReadMore,
 			showExcerpt,
+			excerptLength,
 			excerptFont,
 			excerptFontSize,
 			excerptTextColor,
@@ -475,21 +491,6 @@ class PTAM_Featured_Posts extends Component {
 			{ value: "h4", label: __("H4", "post-type-archive-mapping") },
 			{ value: "h5", label: __("H5", "post-type-archive-mapping") },
 			{ value: "H6", label: __("H6", "post-type-archive-mapping") },
-		];
-
-		const layoutControls = [
-			{
-				icon: "excerpt-view",
-				title: __("Show Excerpt", "post-type-archive-mapping"),
-				onClick: () => setAttributes({ postLayout: "excerpt", displayPostContent: false }),
-				isActive: postLayout === "excerpt"
-			},
-			{
-				icon: "admin-page",
-				title: __("Full Content View", "post-type-archive-mapping"),
-				onClick: () => setAttributes({ postLayout: "full_content", displayPostContent: true }),
-				isActive: postLayout === "full_content"
-			}
 		];
 
 		// Get the term label.
@@ -837,7 +838,7 @@ class PTAM_Featured_Posts extends Component {
 								render={({ open }) => (
 									<Fragment>
 										<button
-											className="ptam-media-alt-upload components-button is-button secondary"
+											className="ptam-media-alt-upload components-button is-button is-secondary"
 											onClick={open}
 										>
 											{__(
@@ -860,7 +861,7 @@ class PTAM_Featured_Posts extends Component {
 												</div>
 												<div>
 													<button
-														className="ptam-media-alt-reset components-button is-button secondary"
+														className="ptam-media-alt-reset components-button is-button is-secondary"
 														onClick={event => {
 															this.props.setAttributes({ fallbackImg: "" });
 															this.get_latest_posts({ fallbackImg: 0 });
@@ -894,6 +895,15 @@ class PTAM_Featured_Posts extends Component {
 						initialOpen={false}
 						title={__("Post Excerpt", "post-type-archive-mapping")}
 					>
+						<TextControl
+							label={__(
+								"Maximum Word Length of Excerpt",
+								"post-type-archive-mapping"
+							)}
+							type="number"
+							value={excerptLength}
+							onChange={value => this.trimWords(value)}
+						/>
 						<PanelColorSettings
 							title={__("Excerpt Colors", "post-type-archive-mapping")}
 							initialOpen={true}
@@ -1014,7 +1024,7 @@ class PTAM_Featured_Posts extends Component {
 						</PanelBody>
 					</Fragment>
 				}
-				
+
 			</InspectorControls>
 		);
 		if (this.state.loading) {
@@ -1024,15 +1034,7 @@ class PTAM_Featured_Posts extends Component {
 					<Placeholder>
 						<div className="ptam-term-grid-loading">
 							<h1>
-								<svg
-									xmlns="http://www.w3.org/2000/svg"
-									height="24"
-									viewBox="0 0 24 24"
-									width="24"
-								>
-									<path d="M0 0h24v24H0V0z" fill="none" />
-									<path d="M21 3H3c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-9 8H3V9h9v2zm0-4H3V5h9v2z" />
-								</svg>{" "}
+								<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 315.23 341.25" width="42" height="42"><polygon points="315.23 204.75 315.23 68.25 197.02 0 197.02 136.5 315.23 204.75" style={{fill: "#ffdd01",opacity:0.8}} /><polygon points="0 204.75 0 68.25 118.21 0 118.21 136.5 0 204.75" style={{fill: "#2e3192",opacity:0.8}} /><polygon points="157.62 159.25 275.83 91 157.62 22.75 39.4 91 157.62 159.25" style={{fill:"#86cedc",opacity:0.8}}/><polygon points="157.62 341.25 275.83 273 157.62 204.75 39.4 273 157.62 341.25" style={{fill:"#f07f3b", opacity:0.8}} /><polygon points="177.32 170.62 295.53 102.37 295.53 238.87 177.32 307.12 177.32 170.62" style={{fill:"#c10a26",opacity:0.8}}/><polygon points="137.91 170.62 19.7 102.37 19.7 238.87 137.91 307.12 137.91 170.62" style={{fill:"#662583",opacity:0.8}} /></svg>{" "}
 								{__("Featured Posts by Category", "post-type-archive-mapping")}
 							</h1>
 							<h2>
@@ -1047,19 +1049,6 @@ class PTAM_Featured_Posts extends Component {
 			return (
 				<Fragment>
 					{inspectorControls}
-					<BlockControls>
-						<BlockAlignmentToolbar
-							value={align}
-							onChange={value => {
-								if (undefined == value) {
-									value = "wide";
-								}
-								setAttributes({ align: value });
-							}}
-							controls={["center", "wide"]}
-						/>
-						<Toolbar controls={layoutControls} />
-					</BlockControls>
 					<h2 style={{textAlign: 'center'}}>{__('Please select a term to begin.', 'post-type-archive-mapping')}</h2>
 				</Fragment>
 			)
@@ -1068,19 +1057,6 @@ class PTAM_Featured_Posts extends Component {
 			return (
 				<Fragment>
 					{inspectorControls}
-					<BlockControls>
-						<BlockAlignmentToolbar
-							value={align}
-							onChange={value => {
-								if (undefined == value) {
-									value = "wide";
-								}
-								setAttributes({ align: value });
-							}}
-							controls={["center", "wide"]}
-						/>
-						<Toolbar controls={layoutControls} />
-					</BlockControls>
 					{!disableStyles && (
 						<style
 							dangerouslySetInnerHTML={{

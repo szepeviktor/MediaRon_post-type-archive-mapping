@@ -163,8 +163,10 @@ class Functions {
 				return $image;
 			} elseif ( is_array( $acf_term_value ) && isset( $acf_term_value['url'] ) ) {
 				return esc_url( $acf_term_value['url'] );
-			} else {
+			} elseif ( is_string( $acf_term_value ) ) {
 				return esc_url( $acf_term_value );
+			} else {
+				return '';
 			}
 		}
 		if ( 'meta' === $type ) {
@@ -174,8 +176,10 @@ class Functions {
 				return $image;
 			} elseif ( is_array( $term_value ) && isset( $term_value['url'] ) ) {
 				return esc_url( $term_value['url'] );
-			} else {
+			} elseif ( is_string( $term_value ) ) {
 				return esc_url( $term_value );
+			} else {
+				return '';
 			}
 		}
 		if ( 'pods' === $type ) {
@@ -185,8 +189,10 @@ class Functions {
 				return $image;
 			} elseif ( is_array( $term_value ) && isset( $term_value['ID'] ) ) {
 				return self::get_image( $term_value['ID'], $size );
-			} else {
+			} elseif ( is_string( $term_value ) ) {
 				return esc_url( $term_value );
+			} else {
+				return '';
 			}
 		}
 		return '';

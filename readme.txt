@@ -1,19 +1,27 @@
 === Custom Query Blocks ===
 Contributors: ronalfy, chrislogan, paaljoachim
-Tags: custom post types, archive, mapping, gutenberg, block, taxonomy, terms
-Requires at least: 5.3
+Tags: map pages, archives, post type block, 404 page, category grid
+Requires at least: 5.5
 Requires PHP: 5.6
-Tested up to: 5.4
-Stable tag: 4.5.3
+Tested up to: 5.7
+Stable tag: 5.0.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
-Donate link: https://mediaron.com/give/
+Donate link: https://github.com/MediaRon/post-type-archive-mapping
 
-A WordPress plugin for displaying posts or terms using a Gutenberg block. Works well with posts, pages, custom post types, taxonomies, and terms.
+Map your post type and category archives to a page, and also map your 404 template to a page as well. Three helper blocks allow you to display a post grid, a term (category) grid, and posts by category.
 
 == Description ==
 
 A WordPress plugin for displaying posts and terms (e.g., categories) using a Gutenberg block. Works well with posts, pages, custom post types, taxonomies, and terms.
+
+Bonus: archive mapping.
+
+<ul>
+	<li>Map your post type archives to a page for customization of the post type archive page.</li>
+	<li>Map your category archives to a page for customization of the term archive page.</li>
+	<li>Map your 404 template to a page and easily customize your 404 page.</li>
+</ul>
 
 <a href="https://mediaron.com/custom-query-blocks/">View Documentation and Overview</a>
 
@@ -25,11 +33,9 @@ The plugin currently has three blocks:
 
 === Post Type Archive Mapping ===
 
-This plugin also allows you to map your custom post type archive pages. Just create a page and go to Settings->Reading to set the page for your archive.
+This plugin allows you to map your custom post type archive pages. Just create a page and go to Settings->Reading to set the page for your archive.
 
 Ensure your post types have <code>has_archive</code> set to true.
-
-You can also map term archives to pages by editing a term in the admin area.
 
 <ul>
 <li>Select a Public page to use as your post type archive page.</li>
@@ -40,7 +46,7 @@ You can also map term archives to pages by editing a term in the admin area.
 
 === Term Archive Mapping ===
 
-This plugin also allows you to map your term archives to a page. Just create a page and go to edit your term to set the archive page.
+This plugin also allows you to map your term archives to a page. Just create a page and go edit your term to set the archive page.
 
 <ul>
 <li>Create a public page to use as your term archive.</li>
@@ -48,6 +54,10 @@ This plugin also allows you to map your term archives to a page. Just create a p
 <li>View the term and you will see your selected page.</li>
 <li>Use Gutenberg on your public page to customize the archive.</li>
 </ul>
+
+=== 404 Page Mapping ===
+
+This plugin allows you to map a page to your 404 template, so you can customize a 404 page as needed.
 
 == Installation ==
 
@@ -68,6 +78,12 @@ Term Archive Mapping
 3. View the term and you will see your selected page.
 4. Use Gutenberg on your public page to customize the archive.
 
+404 Template Mapping
+
+1. Visit Settings->Reading and map your 404 template to a page.
+2. Customize the new 404 page.
+3. Navigate to a broken URL to preview the 404 page.
+
 == Frequently Asked Questions ==
 
 = I don't see the post types. What's wrong? =
@@ -76,7 +92,7 @@ Make sure your post type has <code>has_archive</code> set to true and <code>show
 
 = Can you do posts instead of pages? =
 
-This plugin should work for any post type.
+This plugin will only allow mapping to pages.
 
 = Does this plugin work with term (e.g., category) archives? =
 
@@ -84,7 +100,7 @@ Yes. Edit a term and you can map it to any page.
 
 = I need help. Can you help me? =
 
-Yes, just post in the support forums here and I'll do my best to address your issue. For priority support, you can <a href="https://mediaron.com/support/">visit my support form</a>.
+Yes, just post in the support forums here and I'll do my best to address your issue.
 
 == Screenshots ==
 
@@ -95,6 +111,29 @@ Yes, just post in the support forums here and I'll do my best to address your is
 5. Term archive option.
 
 == Changelog ==
+
+= 5.0.5 =
+* Released 2021-02-12
+* Mapping to pages now shows a hierachy to more easily select pages.
+* New branding. Hopefully less spammy.
+* Making readme more descriptive of what the plugin does.
+
+= 5.0.1 =
+* Released 2021-02-12
+* Fixed the Term block with the block erroring out when modifying the query parameters.
+* Testing with WordPress 5.7.
+
+= 5.0.0 =
+* Released 2020-09-07
+* Added ability to map 404 to a page.
+* Fixed Gutenberg bugs in the Custom Post Types block and Featured Posts block.
+
+= 4.5.5 =
+* Released 2020-08-23
+* Minimium supported version is now WordPress 5.5
+* Fixed pagination for WP 5.5.
+* Fixed REST API errors for WP 5.5.
+* Miscellaneous block fixes and updates.
 
 = 4.5.3 =
 * Released 2020-05-17
@@ -268,26 +307,6 @@ Yes, just post in the support forums here and I'll do my best to address your is
 
 == Upgrade Notice ==
 
-= 4.5.3 =
-Added Polylang support when mapping posts. Added WPML support for the main Custom Post Types block.
+= 5.0.5 =
 
-= 4.5.2 =
-Removing term redirect as some pages would get stuck. 
-
-= 4.5.1 =
-Added pagination to the Featured Posts by Category Block.
-
-= 4.5.0 =
-Added featured posts by category block. Added block previews. New plugin name: Custom Query Blocks
-
-= 4.0.5 =
-Added compatibility for Yoast SEO.
-
-= 4.0.1 =
-Added Term (Category) Grid Block. Hotfix. Term grid was erroring out.
-
-= 4.0.0 =
-Added Term (Category) Grid Block.
-
-= 3.3.5 =
-Show mapped pages and its own column. Mapped term pages now redirect to the correct term. Added new contributor: Paal Joachim.
+Mapping to pages now shows a hierachy to more easily select pages. New branding. Hopefully less spammy. Making readme more descriptive of what the plugin does.

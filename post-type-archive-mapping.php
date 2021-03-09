@@ -4,8 +4,8 @@ Plugin Name: Custom Query Blocks
 Plugin URI: https://mediaron.com/custom-query-blocks/
 Description: Map your post type and term archives to a page and use our Gutenberg blocks to show posts or terms.
 Author: MediaRon LLC
-Version: 4.5.3
-Requires at least: 5.3
+Version: 5.0.5
+Requires at least: 5.5
 Author URI: https://mediaron.com
 Contributors: MediaRon LLC
 Text Domain: post-type-archive-mapping
@@ -13,7 +13,7 @@ Domain Path: /languages
 Credit: Forked from https://github.com/bigwing/post-type-archive-mapping
 Credit: Gutenberg block based on Atomic Blocks
 */
-define( 'PTAM_VERSION', '4.5.3' );
+define( 'PTAM_VERSION', '5.0.5' );
 require_once 'autoloader.php';
 
 /**
@@ -119,7 +119,38 @@ class PostTypeArchiveMapping {
 		add_action( 'pre_get_posts', array( $this, 'maybe_override_archive' ) );
 
 		add_action( 'admin_notices', array( $this, 'admin_notices' ) );
+
+		// 404 page detection.
+		add_filter( 'template_include', array( $this, 'maybe_force_404_template' ), 1 );
 	} //end init
+
+	/**
+	 * This is a catch-all. Any 404 error not caught will be directed here.
+	 * If a 404 error is caught, will load the page template instead.
+	 *
+	 * @param string $template The regular template.
+	 *
+	 * @return string $template The updated template.
+	 */
+	public function maybe_force_404_template( $template ) {
+		if ( is_404() ) {
+			$page_id_404 = absint( get_option( 'post-type-archive-mapping-404', 0 ) );
+			if ( $page_id_404 > 0 ) {
+				$args = array(
+					'post_type'      => 'page',
+					'page_id'        => $page_id_404,
+					'post_status'    => 'publish',
+					'posts_per_page' => 1,
+				);
+				/* I wise woman once told me to never use query_posts. Like NEVER. I had no choice here. */
+				query_posts( // phpcs:ignore
+					$args
+				);
+				return get_page_template();
+			}
+		}
+		return $template;
+	}
 
 	/**
 	 * Add admin notices when things go wrong.
@@ -146,7 +177,6 @@ class PostTypeArchiveMapping {
 		if ( is_admin() ) {
 			return $query;
 		}
-
 		// Maybe Redirect.
 		if ( is_page() ) {
 			$object_id = get_queried_object_id();
@@ -318,13 +348,28 @@ class PostTypeArchiveMapping {
 				'sanitize_callback' => array( $this, 'post_type_save' ),
 			)
 		);
+		register_setting(
+			'reading',
+			'post-type-archive-mapping-404',
+			array(
+				'sanitize_callback' => 'absint',
+			)
+		);
 
-		add_settings_section( 'post-type-archive-mapping', _x( 'Post Type Archive Mapping', 'plugin settings heading', 'post-type-archive-mapping' ), array( $this, 'settings_section' ), 'reading' );
+		add_settings_section( 'post-type-archive-mapping', _x( 'Page/Item Mapping', 'plugin settings heading', 'post-type-archive-mapping' ), array( $this, 'settings_section' ), 'reading' );
 
 		add_settings_field(
 			'post-type-archive-mapping',
 			__( 'Post Type Archive Mapping', 'post-type-archive-mapping' ),
 			array( $this, 'add_settings_post_types' ),
+			'reading',
+			'post-type-archive-mapping'
+		);
+
+		add_settings_field(
+			'post-type-archive-mapping-404',
+			__( '404 Page', 'post-type-archive-mapping' ),
+			array( $this, 'add_settings_404_page' ),
 			'reading',
 			'post-type-archive-mapping'
 		);
@@ -338,22 +383,18 @@ class PostTypeArchiveMapping {
 	 */
 	public function add_settings_post_types( $args ) {
 		$output     = get_option( 'post-type-archive-mapping', array() );
-		$posts      = get_posts(
-			array(
-				'post_status'    => array( 'publish' ),
-				'posts_per_page' => 200, // phpcs:ignore
-				'post_type'      => 'page',
-				'orderby'        => 'name',
-				'order'          => 'ASC',
-				'lang'           => '',
-			)
-		);
 		$post_types = get_post_types(
 			array(
 				'public'      => true,
 				'has_archive' => true,
 			)
 		);
+		if ( empty( $post_types ) ) {
+			?>
+			<p><?php esc_html_e( 'There are no post types to map.', 'post-type-archive-mapping' ); ?></p>
+			<?php
+			return;
+		}
 		foreach ( $post_types as $index => $post_type ) {
 			$selection = 'default';
 			if ( isset( $output[ $post_type ] ) ) {
@@ -365,18 +406,51 @@ class PostTypeArchiveMapping {
 				$post_type_label = $post_type_data->label;
 			}
 			?>
-			<p><strong><?php echo esc_html( $post_type_label ); ?></strong></p>
-			<select name="post-type-archive-mapping[<?php echo esc_html( $post_type ); ?>]">
-				<option value="default"><?php esc_html_e( 'Default', 'post-type-archive-mapping' ); ?></option>
+			<div class="ptam-admin-reading-cpt">
+				<h3><?php esc_html_e( 'Post Type:', 'post-type-archive-mapping' ); ?> <?php echo esc_html( $post_type_label ); ?></h3>
 				<?php
-				foreach ( $posts as $post ) {
-					printf( '<option value="%d" %s>%s</option>', absint( $post->ID ), selected( $selection, $post->ID, false ), esc_html( $post->post_title ) );
-				}
+				wp_dropdown_pages(
+					array(
+						'selected'          => esc_attr( $selection ),
+						'name'              => esc_html( "post-type-archive-mapping[{$post_type}]" ),
+						'value_field'       => 'ID',
+						'option_none_value' => 'default',
+						'show_option_none'  => esc_html__( 'Default', 'post-type-archive-mapping' ),
+					)
+				);
 				?>
-			</select>
+			</div>
 			<?php
 		}
 		?>
+		<?php
+	}
+
+	/**
+	 * Add 404 page options to Settings->Reading screen.
+	 *
+	 * @param array $args No idea what these are.
+	 */
+	public function add_settings_404_page( $args ) {
+		$page_id_404 = get_option( 'post-type-archive-mapping-404', 0 );
+		if ( ! $page_id_404 ) {
+			$page_id_404 = -1;
+		}
+		?>
+		<div class="ptam-admin-reading-cpt">
+			<p class="description"><?php esc_html_e( 'Please select a page to map to your 404 page.', 'post-type-archive-mapping' ); ?></p>
+			<?php
+			wp_dropdown_pages(
+				array(
+					'selected'          => intval( $page_id_404 ),
+					'name'              => 'post-type-archive-mapping-404',
+					'value_field'       => 'ID',
+					'option_none_value' => esc_html__( 'Default', 'post-type-archive-mapping' ),
+					'show_option_none'  => esc_html__( 'Default', 'post-type-archive-mapping' ),
+				)
+			);
+			?>
+		</div>
 		<?php
 	}
 
@@ -387,26 +461,23 @@ class PostTypeArchiveMapping {
 	 * @param string $taxonomy The taxonomy.
 	 */
 	public function map_term_interface( $tag, $taxonomy = '' ) {
-		$posts   = get_posts(
-			array(
-				'post_status'    => array( 'publish' ),
-				'posts_per_page' => 200, // phpcs:ignore
-				'post_type'      => 'page',
-				'orderby'        => 'name',
-				'order'          => 'ASC',
-			)
-		);
 		$post_id = get_term_meta( $tag->term_id, '_term_archive_mapping', true );
+		if ( ! $post_id ) {
+			$post_id = -1;
+		}
 		?>
 		<h2><?php esc_html_e( 'Archive Mapping', 'post-type-archive-mapping' ); ?></h2>
-		<select name="term_post_type">
-			<option value="default"><?php esc_html_e( 'Default', 'post-type-archive-mapping' ); ?></option>
-			<?php
-			foreach ( $posts as $post ) {
-				printf( '<option value="%d" %s>%s</option>', absint( $post->ID ), selected( $post_id, $post->ID, false ), esc_html( $post->post_title ) );
-			}
-			?>
-		</select>
+		<?php
+		wp_dropdown_pages(
+			array(
+				'selected'          => intval( $post_id ),
+				'name'              => 'term_post_type',
+				'value_field'       => 'ID',
+				'option_none_value' => esc_html__( 'Default', 'post-type-archive-mapping' ),
+				'show_option_none'  => esc_html__( 'Default', 'post-type-archive-mapping' ),
+			)
+		);
+		?>
 		<p class="description"><?php esc_html_e( 'Map a term archive to a page.', 'post-type-archive-mapping' ); ?></p>
 		<?php
 	}
