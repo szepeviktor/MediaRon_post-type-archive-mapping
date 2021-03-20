@@ -74,7 +74,18 @@ class Support extends Tabs {
 	public function output_settings( $tab, $sub_tab = '' ) {
 		if ( $this->tab === $tab ) {
 			if ( empty( $sub_tab ) || $this->tab === $sub_tab ) {
-				echo 'hello world';
+				?>
+				<div class="ptam-admin-panel-area">
+					<h3 class="ptam-panel-heading">
+						<?php esc_html_e( 'Get Support in the WordPress Plugin Directory', 'post-type-archive-mapping' ); ?>
+					</h3>
+					<div class="ptam-panel-row">
+						<p class="description">
+							<?php esc_html_e( 'The best way to receive support is via the official WordPress Plugin Directory support forum.', 'post-type-archive-mapping' ); ?>
+						</p>
+					</div>
+				</div>
+				<?php
 			}
 		}
 	}
