@@ -8,7 +8,7 @@
 namespace PTAM\Includes\Admin;
 
 use PTAM\Includes\Functions as Functions;
-use PTAM\Includes\Options as Options;
+use PTAM\Includes\Admin\Options as Options;
 
 /**
  * Class Admin Settings.
