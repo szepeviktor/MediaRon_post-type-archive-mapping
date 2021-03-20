@@ -342,7 +342,7 @@ class Functions {
 		 *
 		 * @param string URL to the plugin logo.
 		 */
-		return apply_filters( 'ptam_plugin_logo_full', self::get_plugin_url( '/images/logo/custom-query-blocks.png' ) );
+		return apply_filters( 'ptam_plugin_logo_full', self::get_plugin_url( '/img/logo.png' ) );
 	}
 
 	/**
@@ -392,7 +392,7 @@ class Functions {
 		 *
 		 * @param string URL to the plugin icon.
 		 */
-		return apply_filters( 'ptam_plugin_icon', self::get_plugin_url( '/images/logo/custom-query-blocks.png' ) );
+		return apply_filters( 'ptam_plugin_icon', self::get_plugin_url( '/img/logo.png' ) );
 	}
 
 	/**
