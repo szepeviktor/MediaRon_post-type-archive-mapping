@@ -14,12 +14,6 @@ const { registerBlockType } = wp.blocks; // Import registerBlockType() from wp.b
 // Import JS
 import edit from './edit';
 
-// Extend component
-const { Component } = wp.element;
-
-// Register alignments
-const validAlignments = [ 'full' ];
-
 export const name = 'ptam/term-grid';
 
 /**
@@ -34,11 +28,40 @@ export const name = 'ptam/term-grid';
  * @return {?WPBlock}          The block, if it has been successfully
  *                             registered; otherwise `undefined`.
  */
-registerBlockType( 'ptam/term-grid', { // Block name. Block names must be string that contains a namespace prefix. Example: my-plugin/my-custom-block.
+registerBlockType( 'ptam/term-grid', {
+	// Block name. Block names must be string that contains a namespace prefix. Example: my-plugin/my-custom-block.
 	title: __( 'Term Grid', 'post-type-archive-mapping' ), // Block title.
-	icon: <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0z" fill="none"/><path d="M20 2H4c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM8 20H4v-4h4v4zm0-6H4v-4h4v4zm0-6H4V4h4v4zm6 12h-4v-4h4v4zm0-6h-4v-4h4v4zm0-6h-4V4h4v4zm6 12h-4v-4h4v4zm0-6h-4v-4h4v4zm0-6h-4V4h4v4z"/></svg>,
+	icon: (
+		<svg
+			aria-hidden="true"
+			focusable="false"
+			data-prefix="fad"
+			data-icon="th-large"
+			className="svg-inline--fa fa-th-large fa-w-16"
+			role="img"
+			xmlns="http://www.w3.org/2000/svg"
+			viewBox="0 0 512 512"
+		>
+			<g className="fa-group">
+				<path
+					className="fa-secondary"
+					fill="#585aa8"
+					d="M488 272H296a24 24 0 0 0-24 24v160a24 24 0 0 0 24 24h192a24 24 0 0 0 24-24V296a24 24 0 0 0-24-24zm-272 0H24a24 24 0 0 0-24 24v160a24 24 0 0 0 24 24h192a24 24 0 0 0 24-24V296a24 24 0 0 0-24-24z"
+					opacity="0.4"
+				></path>
+				<path
+					className="fa-primary"
+					fill="#585aa8"
+					d="M488 32H296a24 24 0 0 0-24 24v160a24 24 0 0 0 24 24h192a24 24 0 0 0 24-24V56a24 24 0 0 0-24-24zm-272 0H24A24 24 0 0 0 0 56v160a24 24 0 0 0 24 24h192a24 24 0 0 0 24-24V56a24 24 0 0 0-24-24z"
+				></path>
+			</g>
+		</svg>
+	),
 	category: 'ptam-custom-query-blocks', // Block category — Group blocks together based on common traits E.g. common, formatting, layout widgets, embed.
-	description: __('Show off your terms (categories) in a beautiful and customizable grid.', 'post-type-archive-mapping'),
+	description: __(
+		'Show off your terms (categories) in a beautiful and customizable grid.',
+		'post-type-archive-mapping'
+	),
 	keywords: [
 		__( 'category', 'post-type-archive-mapping' ),
 		__( 'term', 'poost-type-archive-mapping' ),
@@ -51,10 +74,10 @@ registerBlockType( 'ptam/term-grid', { // Block name. Block names must be string
 	},
 	example: {
 		attributes: {
-			'preview' : true,
+			preview: true,
 		},
 	},
-	edit: edit,
+	edit,
 
 	// Render via PHP
 	save() {
