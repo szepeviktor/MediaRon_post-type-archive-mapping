@@ -20,7 +20,7 @@ class Support extends Tabs {
 	 *
 	 * @var $tab Settings tab.
 	 */
-	private $tab = 'support';
+	protected $tab = 'support';
 
 	/**
 	 * Constructor.
@@ -28,7 +28,7 @@ class Support extends Tabs {
 	public function __construct() {
 		add_filter( 'ptam_admin_tabs', array( $this, 'add_tab' ), 1, 1 );
 		add_filter( 'ptam_admin_sub_tabs', array( $this, 'add_sub_tab' ), 1, 3 );
-		add_action( 'ptam_output_' . $this->$tab, array( $this, 'output_settings' ), 1, 3 );
+		add_action( 'ptam_output_' . $this->tab, array( $this, 'output_settings' ), 1, 3 );
 	}
 
 	/**
@@ -40,9 +40,9 @@ class Support extends Tabs {
 	 */
 	public function add_tab( $tabs ) {
 		$tabs[] = array(
-			'get'    => $this->$tab,
-			'action' => 'ptam_output_' . $this->$tab,
-			'url'    => Functions::get_settings_url( $this->$tab ),
+			'get'    => $this->tab,
+			'action' => 'ptam_output_' . $this->tab,
+			'url'    => Functions::get_settings_url( $this->tab ),
 			'label'  => _x( 'Support', 'Tab label as support', 'post-type-archive-mapping' ),
 			'icon'   => 'home-heart',
 		);
@@ -59,7 +59,7 @@ class Support extends Tabs {
 	 * @return array of tabs.
 	 */
 	public function add_sub_tab( $tabs, $current_tab, $sub_tab ) {
-		if ( ( ! empty( $current_tab ) || ! empty( $sub_tab ) ) && $this->$tab !== $current_tab ) {
+		if ( ( ! empty( $current_tab ) || ! empty( $sub_tab ) ) && $this->tab !== $current_tab ) {
 			return $tabs;
 		}
 		return $tabs;
@@ -72,8 +72,8 @@ class Support extends Tabs {
 	 * @param string $sub_tab Current sub tab.
 	 */
 	public function output_settings( $tab, $sub_tab = '' ) {
-		if ( $this->$tab === $tab ) {
-			if ( empty( $sub_tab ) || $this->$tab === $sub_tab ) {
+		if ( $this->tab === $tab ) {
+			if ( empty( $sub_tab ) || $this->tab === $sub_tab ) {
 				echo 'hello world';
 			}
 		}

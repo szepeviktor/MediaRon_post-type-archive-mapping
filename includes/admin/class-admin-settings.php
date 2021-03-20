@@ -256,8 +256,8 @@ class Admin_Settings {
 	public static function get_settings_header() {
 		?>
 		<div class="wrap ptam-admin-wrap">
-			<h1><strong>User Profile</strong> Picture</h1>
-			<p class="upp-info-text"><?php esc_html_e( 'The easiest way to add a profile picture for your users.', 'post-type-archive-mapping' ); ?></p>
+			<h1><strong><?php echo esc_html( _x( 'Custom Query', 'Custom Query Blocks', 'post-type-archive-mapping' ) ); ?></strong> <?php echo esc_html( _x( 'Blocks', 'Custom Query Blocks', 'post-type-archive-mapping' ) ); ?></h1>
+			<p class="ptam-info-text"><?php esc_html_e( 'This plugin provides several helper Query Blocks as well as archive mapping for post type archives, terms, and a 404 page.', 'post-type-archive-mapping' ); ?></p>
 		<?php
 	}
 

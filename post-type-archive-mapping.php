@@ -106,6 +106,9 @@ class PostTypeArchiveMapping {
 		// Yoast Compatibility.
 		$this->yoast = new PTAM\Includes\Yoast();
 		$this->yoast->run();
+
+		// Admin settings.
+		$this->admin_settings = new PTAM\Includes\Admin\Admin_Settings();
 	} //end constructor
 
 	/**

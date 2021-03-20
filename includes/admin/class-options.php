@@ -64,7 +64,7 @@ class Options {
 		 *
 		 * @return mixed WP_Error|array Array of options, or WP_Error on failure to save.
 		 */
-		$options = apply_filters( 'ptam_options_save_pre', $options, $context );
+		$options = apply_filters( 'ptam_options_save_pre', $options );
 		if ( self::sanitize_options( $options ) ) {
 			update_option( 'ptam_options', $options );
 

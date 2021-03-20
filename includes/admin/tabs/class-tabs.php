@@ -17,20 +17,29 @@ abstract class Tabs {
 	 *
 	 * @var $tab Current tab.
 	 */
-	protected $tab;
+	private $tab;
 
 	/**
 	 * Get tab content.
+	 *
+	 * @param array $tabs Array of tabs.
 	 */
-	abstract protected function add_tab();
+	abstract public function add_tab( $tabs );
 
 	/**
 	 * Add a sub tab for settings.
+	 *
+	 * @param array  $tabs        Array of tabs.
+	 * @param string $current_tab The current tab selected.
+	 * @param string $sub_tab     The current sub-tab selected.
 	 */
-	abstract protected function add_sub_tab();
+	abstract public function add_sub_tab( $tabs, $current_tab, $sub_tab );
 
 	/**
 	 * Output admin content.
+	 *
+	 * @param string $tab     Current tab.
+	 * @param string $sub_tab Current sub tab.
 	 */
-	abstract protected function output_settings();
+	abstract public function output_settings( $tab, $sub_tab );
 }
