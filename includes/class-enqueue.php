@@ -29,7 +29,7 @@ class Enqueue {
 	 * @param string $hook The page hook name.
 	 */
 	public function admin_scripts( $hook ) {
-		if ( 'options-reading.php' !== $hook ) {
+		if ( 'options-reading.php' !== $hook && 'settings_page_custom-query-blocks' !== $hook ) {
 			return;
 		}
 		wp_enqueue_style(
