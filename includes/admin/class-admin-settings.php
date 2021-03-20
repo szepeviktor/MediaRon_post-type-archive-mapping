@@ -21,7 +21,7 @@ class Admin_Settings {
 	public function __construct() {
 		// For the admin interface.
 		add_action( 'admin_menu', array( $this, 'register_settings_menu' ) );
-		add_action( 'plugin_action_links_' . Functions::get_plugin_slug(), array( $this, 'plugin_settings_link' ) );
+		add_action( 'plugin_action_links_' . Functions::get_plugin_path(), array( $this, 'plugin_settings_link' ) );
 
 		new \PTAM\Includes\Admin\Tabs\Settings();
 		new \PTAM\Includes\Admin\Tabs\Support();
@@ -50,7 +50,7 @@ class Admin_Settings {
 			esc_html__( 'Support', 'post-type-archive-mapping' )
 		);
 		$admin_settings_links[] = sprintf(
-			'<a href="%s" style="color: green;" target="_blank">%s</a>',
+			'<a href="%s" style="color: #f60098;" target="_blank">%s</a>',
 			esc_url( PTAM_SPONSORS_URL ),
 			esc_html__( '💖 Sponsor', 'post-type-archive-mapping' )
 		);

@@ -303,6 +303,15 @@ class Functions {
 	}
 
 	/**
+	 * Return the plugin path.
+	 *
+	 * @return string plugin path.
+	 */
+	public static function get_plugin_path() {
+		return plugin_basename( PTAM_FILE );
+	}
+
+	/**
 	 * Return the basefile for the plugin.
 	 *
 	 * @return string base file for the plugin.
