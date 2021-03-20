@@ -89,6 +89,7 @@ class Options {
 			'disable_archive_mapping' => 'off',
 			'disable_page_columns'    => 'off',
 			'disable_term_columns'    => 'off',
+			'disable_image_sizes'     => 'off',
 		);
 
 		/**
