@@ -77,12 +77,15 @@ class Support extends Tabs {
 				?>
 				<div class="ptam-admin-panel-area">
 					<h3 class="ptam-panel-heading">
-						<?php esc_html_e( 'Get Support in the WordPress Plugin Directory', 'post-type-archive-mapping' ); ?>
+						<?php esc_html_e( 'Get Support On the WordPress Plugin Directory', 'post-type-archive-mapping' ); ?>
 					</h3>
 					<div class="ptam-panel-row">
 						<p class="description">
 							<?php esc_html_e( 'The best way to receive support is via the official WordPress Plugin Directory support forum.', 'post-type-archive-mapping' ); ?>
 						</p>
+					</div>
+					<div class="ptam-panel-row">
+						<a class="ptam-button ptam-button-info" href="https://wordpress.org/support/plugin/post-type-archive-mapping/" target="_blank"><?php esc_html_e( 'Open a Support Topic', 'post-type-archive-mapping' ); ?></a>
 					</div>
 				</div>
 				<?php
