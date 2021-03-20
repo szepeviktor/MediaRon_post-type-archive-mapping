@@ -14,6 +14,7 @@ Credit: Forked from https://github.com/bigwing/post-type-archive-mapping
 Credit: Gutenberg block based on Atomic Blocks
 */
 define( 'PTAM_VERSION', '5.0.6' );
+define( 'PTAM_FILE', __FILE__ );
 require_once 'autoloader.php';
 
 /**
