@@ -24,11 +24,12 @@ class Options {
 	 *
 	 * @since 5.1.0
 	 *
-	 * @param bool $force true to retrieve options directly, false to use cached version.
+	 * @param bool   $force true to retrieve options directly, false to use cached version.
+	 * @param string $key The option key to retrieve.
 	 *
-	 * @return array $options Array of admin options.
+	 * @return string|array|bool Return a string if key is set, array of options (default), or false if key is set and option is not found.
 	 */
-	public static function get_options( $force = false ) {
+	public static function get_options( $force = false, $key = '' ) {
 
 		$options = self::$options;
 		if ( ! is_array( $options ) || empty( $options ) || true === $force ) {
@@ -41,6 +42,15 @@ class Options {
 			$options = wp_parse_args( $options, self::get_defaults() );
 		}
 		self::$options = $options;
+
+		// Return a key if set.
+		if ( ! empty( $key ) ) {
+			if ( isset( $options[ $key ] ) ) {
+				return $options[ $key ];
+			} else {
+				return false;
+			}
+		}
 
 		return self::$options;
 	}
@@ -87,7 +97,6 @@ class Options {
 			'disable_blocks'          => 'off',
 			'disable_archive_mapping' => 'off',
 			'disable_page_columns'    => 'off',
-			'disable_term_columns'    => 'off',
 			'disable_image_sizes'     => 'off',
 		);
 
@@ -123,5 +132,57 @@ class Options {
 			}
 		}
 		return true;
+	}
+
+	/**
+	 * Checks if blocks are disabled or not.
+	 *
+	 * @return bool true if disabled, false if not.
+	 */
+	private static function is_blocks_disabled() {
+		$maybe_disabled = self::get_options( false, 'disable_blocks' );
+		if ( is_string( $maybe_disabled ) && 'on' === $maybe_disabled ) {
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * Checks if page columns are disabled or not.
+	 *
+	 * @return bool true if disabled, false if not.
+	 */
+	private static function is_page_columns_disabled() {
+		$maybe_disabled = self::get_options( false, 'disable_page_columns' );
+		if ( is_string( $maybe_disabled ) && 'on' === $maybe_disabled ) {
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * Checks if archive mapping is disabled or not.
+	 *
+	 * @return bool true if disabled, false if not.
+	 */
+	private static function is_archive_mapping_disabled() {
+		$maybe_disabled = self::get_options( false, 'disable_archive_mapping' );
+		if ( is_string( $maybe_disabled ) && 'on' === $maybe_disabled ) {
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * Checks if custom image sizes are disabled or not.
+	 *
+	 * @return bool true if disabled, false if not.
+	 */
+	private static function is_custom_image_sizes_disabled() {
+		$maybe_disabled = self::get_options( false, 'disable_image_sizes' );
+		if ( is_string( $maybe_disabled ) && 'on' === $maybe_disabled ) {
+			return true;
+		}
+		return false;
 	}
 }
