@@ -258,7 +258,7 @@ class Admin_Settings {
 		<div class="wrap ptam-admin-wrap">
 			<h1>
 				<a href="<?php echo esc_url( Functions::get_settings_url() ); ?>" class="ptam-admin-logo"><img src="<?php echo esc_url( Functions::get_plugin_logo() ); ?>" alt="Custom Query Blocks" /></a>
-				<strong><?php echo esc_html( _x( 'Custom Query', 'Custom Query Blocks', 'post-type-archive-mapping' ) ); ?></strong> <?php echo esc_html( _x( 'Blocks', 'Custom Query Blocks', 'post-type-archive-mapping' ) ); ?>
+				<strong style="font-weight: 500;"><?php echo esc_html( _x( 'Custom Query Blocks', 'Custom Query Blocks', 'post-type-archive-mapping' ) ); ?></strong>
 			</h1>
 			<p class="ptam-info-text"><?php esc_html_e( 'This plugin provides several helper Query Blocks as well as archive mapping for post type archives, terms, and a 404 page.', 'post-type-archive-mapping' ); ?></p>
 		<?php

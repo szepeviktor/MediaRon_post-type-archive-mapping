@@ -102,7 +102,7 @@ class Support extends Tabs {
 						</p>
 					</div>
 					<div class="ptam-panel-row">
-						<a class="ptam-button ptam-button-info" href="https://wordpress.org/support/plugin/post-type-archive-mapping/" target="_blank"><svg class="ptam-icon"><use xlink:href="#ptam-support-icon"></use></svg>&nbsp;<?php esc_html_e( 'Open a Support Topic', 'post-type-archive-mapping' ); ?></a>
+						<a class="ptam-button ptam-button-info" href="https://wordpress.org/support/plugin/post-type-archive-mapping/" target="_blank"><svg class="ptam-icon"><use xlink:href="#ptam-support-icon"></use></svg>&nbsp;&nbsp;<?php esc_html_e( 'Open a Support Topic', 'post-type-archive-mapping' ); ?></a>
 					</div>
 				</div>
 				<div class="ptam-admin-panel-area">
@@ -115,7 +115,7 @@ class Support extends Tabs {
 						</p>
 					</div>
 					<div class="ptam-panel-row">
-						<a class="ptam-button ptam-button-info" href="https://github.com/MediaRon/post-type-archive-mapping/issues" target="_blank"><svg class="ptam-icon"><use xlink:href="#ptam-github-icon"></use></svg>&nbsp;<?php esc_html_e( 'Open a GitHub Issue', 'post-type-archive-mapping' ); ?></a>
+						<a class="ptam-button ptam-button-info" href="https://github.com/MediaRon/post-type-archive-mapping/issues" target="_blank"><svg class="ptam-icon"><use xlink:href="#ptam-github-icon"></use></svg>&nbsp;&nbsp;<?php esc_html_e( 'Open a GitHub Issue', 'post-type-archive-mapping' ); ?></a>
 					</div>
 				</div>
 				<div class="ptam-admin-panel-area">
@@ -128,7 +128,7 @@ class Support extends Tabs {
 						</p>
 					</div>
 					<div class="ptam-panel-row">
-						<a class="ptam-button ptam-button-info" href="https://github.com/sponsors/MediaRon" target="_blank"><svg class="ptam-icon"><use xlink:href="#ptam-heart-icon"></use></svg>&nbsp;<?php esc_html_e( 'Sponsor This Plugin', 'post-type-archive-mapping' ); ?></a>
+						<a class="ptam-button ptam-button-info" href="https://github.com/sponsors/MediaRon" target="_blank"><svg class="ptam-icon"><use xlink:href="#ptam-heart-icon"></use></svg>&nbsp;&nbsp;<?php esc_html_e( 'Sponsor This Plugin', 'post-type-archive-mapping' ); ?></a>
 					</div>
 				</div>
 				<div class="ptam-admin-panel-area">
@@ -141,7 +141,7 @@ class Support extends Tabs {
 						</p>
 					</div>
 					<div class="ptam-panel-row">
-						<a class="ptam-button ptam-button-info" href="https://mediaron.com/custom-query-blocks/" target="_blank"><svg class="ptam-icon"><use xlink:href="#ptam-book-icon"></use></svg>&nbsp;<?php esc_html_e( 'View the Documentation', 'post-type-archive-mapping' ); ?></a>
+						<a class="ptam-button ptam-button-info" href="https://mediaron.com/custom-query-blocks/" target="_blank"><svg class="ptam-icon"><use xlink:href="#ptam-book-icon"></use></svg>&nbsp;&nbsp;<?php esc_html_e( 'View the Documentation', 'post-type-archive-mapping' ); ?></a>
 					</div>
 				</div>
 				<div class="ptam-admin-panel-area">
@@ -154,7 +154,7 @@ class Support extends Tabs {
 						</p>
 					</div>
 					<div class="ptam-panel-row">
-						<a class="ptam-button ptam-button-info" href="https://wordpress.org/support/plugin/post-type-archive-mapping/reviews/#new-post" target="_blank"><svg class="ptam-icon"><use xlink:href="#ptam-star-icon"></use></svg>&nbsp;<?php esc_html_e( 'Help Rate This Plugin', 'post-type-archive-mapping' ); ?></a>
+						<a class="ptam-button ptam-button-info" href="https://wordpress.org/support/plugin/post-type-archive-mapping/reviews/#new-post" target="_blank"><svg class="ptam-icon"><use xlink:href="#ptam-star-icon"></use></svg>&nbsp;&nbsp;<?php esc_html_e( 'Help Rate This Plugin', 'post-type-archive-mapping' ); ?></a>
 					</div>
 				</div>
 				<?php
