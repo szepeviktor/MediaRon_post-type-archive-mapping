@@ -105,7 +105,7 @@ class PostTypeArchiveMapping {
 		}
 
 		// Run if page columns are enabled.
-		if ( false === Options::is_page_columns_disabled() ) {
+		if ( false === Options::is_page_columns_disabled() && false === Options::is_archive_mapping_disabled() ) {
 			// Page columns.
 			$this->page_columns = new PTAM\Includes\Admin\Page_Columns();
 			$this->page_columns->run();
