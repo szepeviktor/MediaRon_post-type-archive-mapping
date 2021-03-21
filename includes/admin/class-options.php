@@ -139,7 +139,7 @@ class Options {
 	 *
 	 * @return bool true if disabled, false if not.
 	 */
-	private static function is_blocks_disabled() {
+	public static function is_blocks_disabled() {
 		$maybe_disabled = self::get_options( false, 'disable_blocks' );
 		if ( is_string( $maybe_disabled ) && 'on' === $maybe_disabled ) {
 			return true;
@@ -152,7 +152,7 @@ class Options {
 	 *
 	 * @return bool true if disabled, false if not.
 	 */
-	private static function is_page_columns_disabled() {
+	public static function is_page_columns_disabled() {
 		$maybe_disabled = self::get_options( false, 'disable_page_columns' );
 		if ( is_string( $maybe_disabled ) && 'on' === $maybe_disabled ) {
 			return true;
@@ -165,7 +165,7 @@ class Options {
 	 *
 	 * @return bool true if disabled, false if not.
 	 */
-	private static function is_archive_mapping_disabled() {
+	public static function is_archive_mapping_disabled() {
 		$maybe_disabled = self::get_options( false, 'disable_archive_mapping' );
 		if ( is_string( $maybe_disabled ) && 'on' === $maybe_disabled ) {
 			return true;
@@ -178,7 +178,7 @@ class Options {
 	 *
 	 * @return bool true if disabled, false if not.
 	 */
-	private static function is_custom_image_sizes_disabled() {
+	public static function is_custom_image_sizes_disabled() {
 		$maybe_disabled = self::get_options( false, 'disable_image_sizes' );
 		if ( is_string( $maybe_disabled ) && 'on' === $maybe_disabled ) {
 			return true;
