@@ -112,14 +112,6 @@ class Settings extends Tabs {
 								</td>
 							</tr>
 							<tr>
-								<th scope="row"><?php esc_html_e( 'Disable Term Columns', 'post-type-archive-mapping' ); ?></th>
-								<td>
-									<input type="hidden" name="options[disable_term_columns]" value="off" />
-									<input id="ptam-disable-term-columns" type="checkbox" value="on" name="options[disable_term_columns]" <?php checked( 'on', $options['disable_term_columns'] ); ?> /> <label for="ptam-disable-term-columns"><?php esc_html_e( 'Disable Term  Columns', 'post-type-archive-mapping' ); ?></label>
-									<p class="description"><?php esc_html_e( 'Select this option if you would like to disable archive mapping columns for terms.', 'post-type-archive-mapping' ); ?></p>
-								</td>
-							</tr>
-							<tr>
 								<th scope="row"><?php esc_html_e( 'Disable Image Sizes', 'post-type-archive-mapping' ); ?></th>
 								<td>
 									<input type="hidden" name="options[disable_image_sizes]" value="off" />
