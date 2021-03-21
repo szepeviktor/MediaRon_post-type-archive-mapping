@@ -8,6 +8,7 @@
 namespace PTAM\Includes;
 
 use PTAM\Includes\Functions as Functions;
+use PTAM\Includes\Admin\Options as Options;
 
 /**
  * Class enqueue
@@ -18,8 +19,14 @@ class Enqueue {
 	 * Main init functioin.
 	 */
 	public function run() {
-		add_action( 'enqueue_block_assets', array( $this, 'enqueue_block_assets' ) );
-		add_action( 'enqueue_block_editor_assets', array( $this, 'enqueue_block_editor_assets' ) );
+
+		// Check if blocks are disabled.
+		if ( false === Options::is_blocks_disabled() ) {
+			add_action( 'enqueue_block_assets', array( $this, 'enqueue_block_assets' ) );
+			add_action( 'enqueue_block_editor_assets', array( $this, 'enqueue_block_editor_assets' ) );
+		}
+
+		// Enqueue general admin scripts.
 		add_action( 'admin_enqueue_scripts', array( $this, 'admin_scripts' ), 10, 1 );
 	}
 
