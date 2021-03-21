@@ -69,6 +69,10 @@ class Terms {
 		$display_all_terms = false;
 		$terms_to_include  = array();
 		foreach ( $terms as $index => $term_data ) {
+			// Skip over empty term data.
+			if ( empty( $term_data ) ) {
+				continue;
+			}
 			if ( ! isset( $term_data['id'] ) ) {
 				$display_all_terms = true;
 				$terms_to_include  = $all_term_ids;
@@ -332,7 +336,7 @@ class Terms {
 			<?php
 			foreach ( $raw_term_results as $index => $term ) {
 				?>
-				<div class="ptam-term-grid-item" 
+				<div class="ptam-term-grid-item"
 					<?php
 					if ( ! $attributes['disableStyles'] && 'image' === $attributes['backgroundType'] ) {
 						$background_image = Functions::get_term_image( $attributes['imageSize'], $attributes['backgroundImageMeta'], $attributes['backgroundImageSource'], $taxonomy, $term->term_id );
