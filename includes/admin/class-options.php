@@ -53,7 +53,6 @@ class Options {
 	 * @return array Options.
 	 */
 	public static function update_options( $options = array() ) {
-		$options = array_unique( $options );
 
 		/**
 		 * Filter for saving options.
@@ -110,7 +109,7 @@ class Options {
 	 *
 	 * @return bool true if valid, false if not.
 	 */
-	private function sanitize_options( $options = array() ) {
+	private static function sanitize_options( $options = array() ) {
 		if ( ! is_array( $options ) ) {
 			return false;
 		}

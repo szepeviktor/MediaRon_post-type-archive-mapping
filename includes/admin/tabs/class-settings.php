@@ -81,7 +81,7 @@ class Settings extends Tabs {
 					printf( '<div class="updated"><p><strong>%s</strong></p></div>', esc_html__( 'Your options have been saved.', 'post-type-archive-mapping' ) );
 				}
 				// Get options and defaults.
-				$options = Options::get_options();
+				$options = Options::get_options( true );
 				?>
 				<form action="<?php echo esc_url( Functions::get_settings_url( $this->tab ) ); ?>" method="POST">
 					<?php wp_nonce_field( 'save_ptam_' . $this->tab ); ?>
@@ -93,6 +93,22 @@ class Settings extends Tabs {
 									<input type="hidden" name="options[disable_blocks]" value="off" />
 									<input id="ptam-disable-blocks" type="checkbox" value="on" name="options[disable_blocks]" <?php checked( 'on', $options['disable_blocks'] ); ?> /> <label for="ptam-disable-blocks"><?php esc_html_e( 'Disable All Blocks', 'post-type-archive-mapping' ); ?></label>
 									<p class="description"><?php esc_html_e( 'Select this option if you would like to disable blocks and use only the archive mapping', 'post-type-archive-mapping' ); ?></p>
+								</td>
+							</tr>
+							<tr>
+								<th scope="row"><?php esc_html_e( 'Disable Archive Mapping', 'post-type-archive-mapping' ); ?></th>
+								<td>
+									<input type="hidden" name="options[disable_archive_mapping]" value="off" />
+									<input id="ptam-disable-archive-mapping" type="checkbox" value="on" name="options[disable_archive_mapping]" <?php checked( 'on', $options['disable_archive_mapping'] ); ?> /> <label for="ptam-disable-archive-mapping"><?php esc_html_e( 'Disable Archive Mapping', 'post-type-archive-mapping' ); ?></label>
+									<p class="description"><?php esc_html_e( 'Select this option if you would like to disable archive mapping for this plugin.', 'post-type-archive-mapping' ); ?></p>
+								</td>
+							</tr>
+							<tr>
+								<th scope="row"><?php esc_html_e( 'Disable Page Columns', 'post-type-archive-mapping' ); ?></th>
+								<td>
+									<input type="hidden" name="options[disable_page_columns]" value="off" />
+									<input id="ptam-disable-page-columns" type="checkbox" value="on" name="options[disable_page_columns]" <?php checked( 'on', $options['disable_page_columns'] ); ?> /> <label for="ptam-disable-page-columns"><?php esc_html_e( 'Disable Page Columns', 'post-type-archive-mapping' ); ?></label>
+									<p class="description"><?php esc_html_e( 'Select this option if you would like to disable archive mapping columns for pages.', 'post-type-archive-mapping' ); ?></p>
 								</td>
 							</tr>
 							<?php
