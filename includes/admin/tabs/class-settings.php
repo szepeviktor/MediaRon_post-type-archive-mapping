@@ -116,7 +116,7 @@ class Settings extends Tabs {
 								<td>
 									<input type="hidden" name="options[disable_image_sizes]" value="off" />
 									<input id="ptam-disable-image-sizes" type="checkbox" value="on" name="options[disable_image_sizes]" <?php checked( 'on', $options['disable_image_sizes'] ); ?> /> <label for="ptam-disable-image-sizes"><?php esc_html_e( 'Disable Image Sizes', 'post-type-archive-mapping' ); ?></label>
-									<p class="description"><?php esc_html_e( 'This plugin creates additional image sizes. Which can be seen in the "Featured Image Size" drop down when using the "Custom Posts" or the "Featured Posts by Term" blocks. Disabling image sizes prevents the plugin from creating these each time you upload an image.', 'post-type-archive-mapping' ); ?></p>
+									<p class="description"><?php esc_html_e( 'This plugin creates additional image sizes which can be seen in the "Featured Image Size" drop down when using the blocks this plugin provides. Disabling image sizes prevents the plugin from creating these each time you upload an image.', 'post-type-archive-mapping' ); ?></p>
 								</td>
 							</tr>
 							<?php
