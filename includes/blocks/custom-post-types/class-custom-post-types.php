@@ -7,6 +7,8 @@
 
 namespace PTAM\Includes\Blocks\Custom_Post_Types;
 
+use PTAM\Includes\Admin\Options as Options;
+
 /**
  * Custom Post Types Block helper methods.
  */
@@ -34,9 +36,13 @@ class Custom_Post_Types {
 		if ( ! apply_filters( 'ptam_add_image_sizes', true ) ) {
 			return;
 		}
-		add_image_size( 'ptam-block-post-grid-landscape', 600, 400, true );
-		add_image_size( 'ptam-block-post-grid-square', 600, 600, true );
-		add_image_size( 'ptam-block-post-grid-featured-landscape', 1000, 600, true );
+
+		// Checks if image sizes are disabled or not.
+		if ( false === Options::is_custom_image_sizes_disabled() ) {
+			add_image_size( 'ptam-block-post-grid-landscape', 600, 400, true );
+			add_image_size( 'ptam-block-post-grid-square', 600, 600, true );
+			add_image_size( 'ptam-block-post-grid-featured-landscape', 1000, 600, true );
+		}
 	}
 
 	/**
