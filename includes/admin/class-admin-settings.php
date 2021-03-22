@@ -52,7 +52,7 @@ class Admin_Settings {
 		$admin_settings_links[] = sprintf(
 			'<a href="%s" style="color: #f60098;" target="_blank">%s</a>',
 			esc_url( PTAM_SPONSORS_URL ),
-			esc_html__( '💖 Sponsor', 'post-type-archive-mapping' )
+			esc_html__( 'Sponsor', 'post-type-archive-mapping' )
 		);
 		if ( ! is_array( $settings ) ) {
 			return $admin_settings_links;
