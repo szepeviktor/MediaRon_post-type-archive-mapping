@@ -108,7 +108,7 @@ class Settings extends Tabs {
 								<td>
 									<input type="hidden" name="options[disable_page_columns]" value="off" />
 									<input id="ptam-disable-page-columns" type="checkbox" value="on" name="options[disable_page_columns]" <?php checked( 'on', $options['disable_page_columns'] ); ?> /> <label for="ptam-disable-page-columns"><?php esc_html_e( 'Disable Page Columns', 'post-type-archive-mapping' ); ?></label>
-									<p class="description"><?php esc_html_e( 'Select this option if you would like to disable archive mapping columns for pages.', 'post-type-archive-mapping' ); ?></p>
+									<p class="description"><?php esc_html_e( 'This plugin creates an extra column in the pages screen in the admin to show which pages are mapped. Disabling page columns removes the column.', 'post-type-archive-mapping' ); ?></p>
 								</td>
 							</tr>
 							<tr>
@@ -116,7 +116,7 @@ class Settings extends Tabs {
 								<td>
 									<input type="hidden" name="options[disable_image_sizes]" value="off" />
 									<input id="ptam-disable-image-sizes" type="checkbox" value="on" name="options[disable_image_sizes]" <?php checked( 'on', $options['disable_image_sizes'] ); ?> /> <label for="ptam-disable-image-sizes"><?php esc_html_e( 'Disable Image Sizes', 'post-type-archive-mapping' ); ?></label>
-									<p class="description"><?php esc_html_e( 'Select this option if you would like to disable the creation of custom image sizes.', 'post-type-archive-mapping' ); ?></p>
+									<p class="description"><?php esc_html_e( 'This plugin creates three image sizes. Disabling image sizes prevents the plugin from creating these each time you upload an image.', 'post-type-archive-mapping' ); ?></p>
 								</td>
 							</tr>
 							<?php
