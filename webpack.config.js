@@ -1,5 +1,4 @@
 const path = require("path");
-const webpack = require("webpack");
 const FixStyleOnlyEntriesPlugin = require("webpack-fix-style-only-entries");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const TerserPlugin = require("terser-webpack-plugin");
@@ -76,32 +75,17 @@ module.exports = [
 			],
 		},
 		devtool: "source-map",
-		optimization: {
-			minimize: true,
-			minimizer: [
-				new TerserPlugin({
-					terserOptions: {
-						ecma: undefined,
-						parse: {},
-						compress: true,
-						mangle: false,
-						module: false,
-						output: null,
-						toplevel: false,
-						nameCache: null,
-						ie8: false,
-						keep_classnames: undefined,
-						keep_fnames: false,
-						safari10: false,
-					},
-				}),
-			],
-		},
 		externals: {
 			// Use external version of React
 			react: "React",
 			"react-dom": "ReactDOM",
 			lodash: "lodash",
+			'@wordpress': 'wp',
+			'@wordpress/blocks': 'wp.blocks',
+			'@wordpress/element': 'wp.element',
+			"@wordpress/components": 'wp.components',
+			"@wordpress/block-editor": 'wp.blockEditor',
+			"@wordpress/i18n": 'wp.i18n',
 		},
 		plugins: [new MiniCssExtractPlugin()],
 	},

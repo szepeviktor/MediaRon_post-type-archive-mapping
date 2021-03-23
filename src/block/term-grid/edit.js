@@ -6,7 +6,7 @@ import axios from "axios";
 import { SearchListControl } from "@woocommerce/components/build/search-list-control";
 import Loading from "../components/Loading";
 import hexToRgba from "hex-to-rgba";
-var HtmlToReactParser = require("html-to-react").Parser;
+var HtmlToReactParser = require.ensure("html-to-react").Parser;
 
 const { Component, Fragment } = wp.element;
 
