@@ -113,13 +113,17 @@ Yes, just post in the support forums here and I'll do my best to address your is
 == Changelog ==
 
 = 5.1.0 =
-* Released 2021-03-23
-* Seeking volunteer devs (npm, node, react/gutenberg). Trying to decrease the bundle size and maybe someone who can help me with dynamic CSS and a few blocks.
-* Feature: Can disable post type mapping via the settings page
-* Feature: Can disable the blocks via the settings page
-* Feature: Can disable the columns on the pages screen
-* Feature: Can disable the created image sizes
-*
+* Released 2021-03-25
+* Seeking volunteer devs if you want to learn blocks and help lower the build size.
+* Feature: Can disable post type mapping via the settings page.
+* Feature: Can disable the blocks via the settings page.
+* Feature: Can disable the columns on the pages screen.
+* Feature: Can disable the created image sizes.
+* Feature: New admin options to enable/disable settings.
+* Bug fix: Selecting individual terms in the term block would not reflect on the front-end.
+* Misc: Removing block icon from the Add Blocks screen.
+* Misc: Updating block icons and color scheme.
+* Bug fix: Tweaking word-break in the terms block.
 
 = 5.0.6 =
 * Released 2021-03-09
@@ -322,6 +326,9 @@ Yes, just post in the support forums here and I'll do my best to address your is
 
 = 5.0.6 =
 Fixing term saving causing archives to fail.
+
+= 5.1.0 =
+Numerous changes. Please see the changelog. Seeking volunteer devs if you want to learn blocks and help lower the build size.
 
 = 5.0.5 =
 
