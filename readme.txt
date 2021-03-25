@@ -4,7 +4,7 @@ Tags: map pages, archives, post type block, 404 page, category grid
 Requires at least: 5.5
 Requires PHP: 5.6
 Tested up to: 5.7
-Stable tag: 5.0.6
+Stable tag: 5.1.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Donate link: https://github.com/MediaRon/post-type-archive-mapping
@@ -28,7 +28,7 @@ Bonus: archive mapping.
 The plugin currently has three blocks:
 
 * <a href="https://mediaron.com/custom-query-blocks/custom-post-types-block/">Custom Post Types Block</a>
-* <a href="https://mediaron.com/custom-query-blocks/term-grid-block/">Term (Category) Grid Block</a>
+* <a href="https://mediaron.com/custom-query-blocks/term-category-grid-block/">Term (Category) Grid Block</a>
 * <a href="https://mediaron.com/custom-query-blocks/featured-posts-by-category-block/">Featured Posts by Category Block</a>
 
 === Post Type Archive Mapping ===
@@ -111,6 +111,15 @@ Yes, just post in the support forums here and I'll do my best to address your is
 5. Term archive option.
 
 == Changelog ==
+
+= 5.1.0 =
+* Released 2021-03-23
+* Seeking volunteer devs (npm, node, react/gutenberg). Trying to decrease the bundle size and maybe someone who can help me with dynamic CSS and a few blocks.
+* Feature: Can disable post type mapping via the settings page
+* Feature: Can disable the blocks via the settings page
+* Feature: Can disable the columns on the pages screen
+* Feature: Can disable the created image sizes
+*
 
 = 5.0.6 =
 * Released 2021-03-09

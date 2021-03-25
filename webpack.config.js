@@ -2,6 +2,7 @@ const path = require("path");
 const FixStyleOnlyEntriesPlugin = require("webpack-fix-style-only-entries");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const TerserPlugin = require("terser-webpack-plugin");
+const webpack = require('webpack');
 
 module.exports = [
 	{
@@ -87,7 +88,30 @@ module.exports = [
 			"@wordpress/block-editor": 'wp.blockEditor',
 			"@wordpress/i18n": 'wp.i18n',
 		},
-		plugins: [new MiniCssExtractPlugin()],
+		optimization: {
+			minimize: true,
+			minimizer: [
+				new TerserPlugin({
+					terserOptions: {
+						ecma: undefined,
+						parse: {},
+						compress: true,
+						mangle: false,
+						module: false,
+						output: null,
+						toplevel: false,
+						nameCache: null,
+						ie8: false,
+						keep_classnames: false,
+						keep_fnames: ['__', '_n', '_x', '_nx' ],
+						safari10: false,
+					},
+				}),
+			],
+		},
+		plugins: [
+			new MiniCssExtractPlugin(),
+		],
 	},
 	{
 		mode: process.env.NODE_ENV,
