@@ -2,18 +2,12 @@ const path = require("path");
 const FixStyleOnlyEntriesPlugin = require("webpack-fix-style-only-entries");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const TerserPlugin = require("terser-webpack-plugin");
-const webpack = require('webpack');
+const defaultConfig = require( '@wordpress/scripts/config/webpack.config' );
 
 module.exports = [
 	{
 		mode: process.env.NODE_ENV,
-		entry: {
-			blocks: ["./src/blocks.js"],
-		},
-		output: {
-			filename: "[name].js",
-			sourceMapFilename: "[name].js.map",
-		},
+		...defaultConfig,
 		module: {
 			rules: [
 				{
@@ -27,20 +21,6 @@ module.exports = [
 							"@babel/plugin-transform-arrow-functions",
 						],
 					},
-				},
-				{
-					test: /\.(woff(2)?|ttf|eot|svg)(\?v=\d+\.\d+\.\d+)?$/,
-					exclude: /(node_modules|bower_components)/,
-					use: [
-						{
-							loader: "file-loader",
-							options: {
-								name: "[name].[ext]",
-								outputPath: "fonts/",
-								esModule: false,
-							},
-						},
-					],
 				},
 				{
 					test: /\.(png|jpg|gif)(\?v=\d+\.\d+\.\d+)?$/,
@@ -88,27 +68,6 @@ module.exports = [
 			"@wordpress/block-editor": 'wp.blockEditor',
 			"@wordpress/i18n": 'wp.i18n',
 		},
-		optimization: {
-			minimize: true,
-			minimizer: [
-				new TerserPlugin({
-					terserOptions: {
-						ecma: undefined,
-						parse: {},
-						compress: true,
-						mangle: false,
-						module: false,
-						output: null,
-						toplevel: false,
-						nameCache: null,
-						ie8: false,
-						keep_classnames: false,
-						keep_fnames: ['__', '_n', '_x', '_nx' ],
-						safari10: false,
-					},
-				}),
-			],
-		},
 		plugins: [
 			new MiniCssExtractPlugin(),
 		],
@@ -137,6 +96,20 @@ module.exports = [
 							},
 						},
 						"sass-loader",
+					],
+				},
+				{
+					test: /\.(woff(2)?|ttf|eot|svg)(\?v=\d+\.\d+\.\d+)?$/,
+					exclude: /(node_modules|bower_components)/,
+					use: [
+						{
+							loader: "file-loader",
+							options: {
+								name: "[name].[ext]",
+								outputPath: "fonts/",
+								esModule: false,
+							},
+						},
 					],
 				},
 			],
