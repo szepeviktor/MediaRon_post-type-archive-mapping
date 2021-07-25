@@ -34,11 +34,36 @@ export const name = 'ptam/featured-posts';
  * @return {?WPBlock}          The block, if it has been successfully
  *                             registered; otherwise `undefined`.
  */
-registerBlockType( 'ptam/featured-posts', { // Block name. Block names must be string that contains a namespace prefix. Example: my-plugin/my-custom-block.
+registerBlockType( 'ptam/featured-posts', {
+	// Block name. Block names must be string that contains a namespace prefix. Example: my-plugin/my-custom-block.
 	title: __( 'Featured Posts by Term', 'post-type-archive-mapping' ), // Block title.
-	icon: <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M21 3H3c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-9 8H3V9h9v2zm0-4H3V5h9v2z"/></svg>,
+	icon: (
+		<svg
+			aria-hidden="true"
+			focusable="false"
+			data-prefix="fad"
+			data-icon="tag"
+			className="svg-inline--fa fa-tag fa-w-16"
+			role="img"
+			xmlns="http://www.w3.org/2000/svg"
+			viewBox="0 0 512 512"
+		>
+			<g className="fa-group">
+				<path
+					className="fa-secondary"
+					fill="#585aa8"
+					d="M497.94 225.94L286.06 14.06A48 48 0 0 0 252.12 0H48A48 48 0 0 0 0 48v204.12a48 48 0 0 0 14.06 33.94l211.88 211.88a48 48 0 0 0 67.88 0l204.12-204.12a48 48 0 0 0 0-67.88zM112 160a48 48 0 1 1 48-48 48 48 0 0 1-48 48z"
+					opacity="0.7"
+				></path>
+				<path className="fa-primary" fill="currentColor" d=""></path>
+			</g>
+		</svg>
+	),
 	category: 'ptam-custom-query-blocks', // Block category — Group blocks together based on common traits E.g. common, formatting, layout widgets, embed.
-	description: __('Highlight a term (category) and show the items within it. Perfect for term archives.', 'post-type-archive-mapping'),
+	description: __(
+		'Highlight a term (category) and show the items within it. Perfect for term archives.',
+		'post-type-archive-mapping'
+	),
 	keywords: [
 		__( 'featured', 'post-type-archive-mapping' ),
 		__( 'post', 'poost-type-archive-mapping' ),
@@ -53,10 +78,10 @@ registerBlockType( 'ptam/featured-posts', { // Block name. Block names must be s
 	},
 	example: {
 		attributes: {
-			'preview' : true,
+			preview: true,
 		},
 	},
-	edit: edit,
+	edit,
 
 	// Render via PHP
 	save() {

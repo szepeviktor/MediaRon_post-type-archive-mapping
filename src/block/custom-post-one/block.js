@@ -14,9 +14,6 @@ const { registerBlockType } = wp.blocks; // Import registerBlockType() from wp.b
 // Import JS
 import edit from './edit';
 
-// Extend component
-const { Component } = wp.element;
-
 // Register alignments
 const validAlignments = [ 'center', 'wide' ];
 
@@ -34,11 +31,42 @@ export const name = 'ptam/custom-posts';
  * @return {?WPBlock}          The block, if it has been successfully
  *                             registered; otherwise `undefined`.
  */
-registerBlockType( 'ptam/custom-posts', { // Block name. Block names must be string that contains a namespace prefix. Example: my-plugin/my-custom-block.
+registerBlockType( 'ptam/custom-posts', {
+	// Block name. Block names must be string that contains a namespace prefix. Example: my-plugin/my-custom-block.
 	title: __( 'Custom Posts', 'post-type-archive-mapping' ), // Block title.
-	icon: <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M4 14h4v-4H4v4zm0 5h4v-4H4v4zM4 9h4V5H4v4zm5 5h12v-4H9v4zm0 5h12v-4H9v4zM9 5v4h12V5H9z"/><path d="M0 0h24v24H0z" fill="none"/></svg>,
+	icon: {
+		src: (
+			<svg
+				aria-hidden="true"
+				focusable="false"
+				data-prefix="fad"
+				data-icon="th-list"
+				className="svg-inline--fa fa-th-list fa-w-16"
+				role="img"
+				xmlns="http://www.w3.org/2000/svg"
+				viewBox="0 0 512 512"
+			>
+				<g className="fa-group">
+					<path
+						className="fa-secondary"
+						fill="#585aa8"
+						d="M488 352H205.33a24 24 0 0 0-24 24v80a24 24 0 0 0 24 24H488a24 24 0 0 0 24-24v-80a24 24 0 0 0-24-24zm0-320H205.33a24 24 0 0 0-24 24v80a24 24 0 0 0 24 24H488a24 24 0 0 0 24-24V56a24 24 0 0 0-24-24zm0 160H205.33a24 24 0 0 0-24 24v80a24 24 0 0 0 24 24H488a24 24 0 0 0 24-24v-80a24 24 0 0 0-24-24z"
+						opacity="0.4"
+					></path>
+					<path
+						className="fa-primary"
+						fill="#585aa8"
+						d="M125.33 192H24a24 24 0 0 0-24 24v80a24 24 0 0 0 24 24h101.33a24 24 0 0 0 24-24v-80a24 24 0 0 0-24-24zm0-160H24A24 24 0 0 0 0 56v80a24 24 0 0 0 24 24h101.33a24 24 0 0 0 24-24V56a24 24 0 0 0-24-24zm0 320H24a24 24 0 0 0-24 24v80a24 24 0 0 0 24 24h101.33a24 24 0 0 0 24-24v-80a24 24 0 0 0-24-24z"
+					></path>
+				</g>
+			</svg>
+		),
+	},
 	category: 'ptam-custom-query-blocks', // Block category — Group blocks together based on common traits E.g. common, formatting, layout widgets, embed.
-	description: __('Show a grid or list layout of custom post type archives that you can narrow down by post type, taxonomy, and term.', 'post-type-archive-mapping'),
+	description: __(
+		'Show a grid or list layout of custom post type archives that you can narrow down by post type, taxonomy, and term.',
+		'post-type-archive-mapping'
+	),
 	getEditWrapperProps( attributes ) {
 		const { align } = attributes;
 		if ( -1 !== validAlignments.indexOf( align ) ) {
@@ -47,10 +75,10 @@ registerBlockType( 'ptam/custom-posts', { // Block name. Block names must be str
 	},
 	example: {
 		attributes: {
-			'preview' : true,
+			preview: true,
 		},
 	},
-	edit: edit,
+	edit,
 
 	// Render via PHP
 	save() {

@@ -4,7 +4,7 @@ Tags: map pages, archives, post type block, 404 page, category grid
 Requires at least: 5.5
 Requires PHP: 5.6
 Tested up to: 5.7
-Stable tag: 5.0.5
+Stable tag: 5.1.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Donate link: https://github.com/MediaRon/post-type-archive-mapping
@@ -28,7 +28,7 @@ Bonus: archive mapping.
 The plugin currently has three blocks:
 
 * <a href="https://mediaron.com/custom-query-blocks/custom-post-types-block/">Custom Post Types Block</a>
-* <a href="https://mediaron.com/custom-query-blocks/term-grid-block/">Term (Category) Grid Block</a>
+* <a href="https://mediaron.com/custom-query-blocks/term-category-grid-block/">Term (Category) Grid Block</a>
 * <a href="https://mediaron.com/custom-query-blocks/featured-posts-by-category-block/">Featured Posts by Category Block</a>
 
 === Post Type Archive Mapping ===
@@ -111,6 +111,23 @@ Yes, just post in the support forums here and I'll do my best to address your is
 5. Term archive option.
 
 == Changelog ==
+
+= 5.1.0 =
+* Released 2021-03-25
+* Seeking volunteer devs if you want to learn blocks and help lower the build size.
+* Feature: Can disable post type mapping via the settings page.
+* Feature: Can disable the blocks via the settings page.
+* Feature: Can disable the columns on the pages screen.
+* Feature: Can disable the created image sizes.
+* Feature: New admin options to enable/disable settings.
+* Bug fix: Selecting individual terms in the term block would not reflect on the front-end.
+* Misc: Removing block icon from the Add Blocks screen.
+* Misc: Updating block icons and color scheme.
+* Bug fix: Tweaking word-break in the terms block.
+
+= 5.0.6 =
+* Released 2021-03-09
+* Fixing term saving causing archives to fail.
 
 = 5.0.5 =
 * Released 2021-02-12
@@ -306,6 +323,12 @@ Yes, just post in the support forums here and I'll do my best to address your is
 * Initial release.
 
 == Upgrade Notice ==
+
+= 5.0.6 =
+Fixing term saving causing archives to fail.
+
+= 5.1.0 =
+Numerous changes. Please see the changelog. Seeking volunteer devs if you want to learn blocks and help lower the build size.
 
 = 5.0.5 =
 
