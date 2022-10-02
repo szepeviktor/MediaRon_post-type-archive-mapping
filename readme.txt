@@ -3,8 +3,8 @@ Contributors: ronalfy, chrislogan, paaljoachim
 Tags: map pages, archives, post type block, 404 page, category grid
 Requires at least: 5.5
 Requires PHP: 5.6
-Tested up to: 5.7
-Stable tag: 5.1.0
+Tested up to: 5.8
+Stable tag: 5.1.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Donate link: https://github.com/MediaRon/post-type-archive-mapping
@@ -16,6 +16,8 @@ Map your post type and category archives to a page, and also map your 404 templa
 A WordPress plugin for displaying posts and terms (e.g., categories) using a Gutenberg block. Works well with posts, pages, custom post types, taxonomies, and terms.
 
 Bonus: archive mapping.
+
+> Note: (2021-07-28) The blocks are deprecated as there are better custom query items and the new Query block in WordPress 5.8. Thank you for trying us out.
 
 <ul>
 	<li>Map your post type archives to a page for customization of the post type archive page.</li>
@@ -111,6 +113,10 @@ Yes, just post in the support forums here and I'll do my best to address your is
 5. Term archive option.
 
 == Changelog ==
+
+= 5.1.2 =
+* Released 2021-07-28
+* Fixing block categories for WP 5.8.
 
 = 5.1.0 =
 * Released 2021-03-25
@@ -324,12 +330,5 @@ Yes, just post in the support forums here and I'll do my best to address your is
 
 == Upgrade Notice ==
 
-= 5.0.6 =
-Fixing term saving causing archives to fail.
-
-= 5.1.0 =
-Numerous changes. Please see the changelog. Seeking volunteer devs if you want to learn blocks and help lower the build size.
-
-= 5.0.5 =
-
-Mapping to pages now shows a hierachy to more easily select pages. New branding. Hopefully less spammy. Making readme more descriptive of what the plugin does.
+= 5.1.2 =
+Fixing block categories for WP 5.8.
