@@ -71,7 +71,7 @@ class Enqueue {
 		);
 		wp_register_script(
 			'ptam-custom-posts-gutenberg',
-			\PostTypeArchiveMapping::get_plugin_url( 'dist/index.js' ),
+			\PostTypeArchiveMapping::get_plugin_url( 'build/index.js' ),
 			array( 'wp-blocks', 'wp-element' ),
 			PTAM_VERSION,
 			true

@@ -1,36 +1,11 @@
-/**
- * BLOCK: Basic with ESNext
- *
- * Registering a basic block with Gutenberg.
- * Simple block, renders and saves the same content without any interactivity.
- *
- * Using inline styles - no external stylesheet needed.  Not recommended!
- * because all of these styles will appear in `post_content`.
- */
-
-const { __ } = wp.i18n; // Import __() from wp.i18n
-const { registerBlockType } = wp.blocks; // Import registerBlockType() from wp.blocks
+import { registerBlockType } from '@wordpress/blocks';
 
 // Import JS
 import edit from './edit';
 
-export const name = 'ptam/term-grid';
+import metadata from './block.json';
 
-/**
- * Register Basic Block.
- *
- * Registers a new block provided a unique name and an object defining its
- * behavior. Once registered, the block is made available as an option to any
- * editor interface where blocks are implemented.
- *
- * @param  {string}   name     Block name.
- * @param  {Object}   settings Block settings.
- * @return {?WPBlock}          The block, if it has been successfully
- *                             registered; otherwise `undefined`.
- */
-registerBlockType( 'ptam/term-grid', {
-	// Block name. Block names must be string that contains a namespace prefix. Example: my-plugin/my-custom-block.
-	title: __( 'Term Grid', 'post-type-archive-mapping' ), // Block title.
+registerBlockType( metadata, {
 	icon: (
 		<svg
 			aria-hidden="true"
@@ -57,26 +32,6 @@ registerBlockType( 'ptam/term-grid', {
 			</g>
 		</svg>
 	),
-	category: 'ptam-custom-query-blocks', // Block category — Group blocks together based on common traits E.g. common, formatting, layout widgets, embed.
-	description: __(
-		'Show off your terms (categories) in a beautiful and customizable grid.',
-		'post-type-archive-mapping'
-	),
-	keywords: [
-		__( 'category', 'post-type-archive-mapping' ),
-		__( 'term', 'poost-type-archive-mapping' ),
-		__( 'grid', 'post-type-archive-mapping' ),
-	],
-	supports: {
-		align: [ 'wide', 'full', 'center' ],
-		anchor: true,
-		html: false,
-	},
-	example: {
-		attributes: {
-			preview: true,
-		},
-	},
 	edit,
 
 	// Render via PHP
