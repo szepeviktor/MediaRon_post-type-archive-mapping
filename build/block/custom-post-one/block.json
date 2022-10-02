@@ -54,7 +54,7 @@
       "default": "regular"
     },
     "term": {
-      "type": "integer",
+      "type": "string",
       "default": 0
     },
     "terms": {
