@@ -3,8 +3,8 @@ Contributors: ronalfy, chrislogan, paaljoachim
 Tags: map pages, archives, post type block, 404 page, category grid
 Requires at least: 5.5
 Requires PHP: 5.6
-Tested up to: 6.1
-Stable tag: 5.1.5
+Tested up to: 6.2
+Stable tag: 5.1.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Donate link: https://github.com/MediaRon/post-type-archive-mapping
@@ -113,6 +113,10 @@ Yes, just post in the support forums here and I'll do my best to address your is
 5. Term archive option.
 
 == Changelog ==
+
+= 5.1.6 =
+* Released 2023-03-17
+* Fixing a bug where the term grid didn't show on the frontend.
 
 = 5.1.5 =
 * Released 2022-10-02
@@ -339,11 +343,5 @@ Yes, just post in the support forums here and I'll do my best to address your is
 
 == Upgrade Notice ==
 
-= 5.1.5 =
-Fixing a bug where a term would not save in the custom post types block.
-
-= 5.1.4 =
-Updated build scripts. Fixing schema errors when it comes to registering attributes.
-
-= 5.1.2 =
-Fixing block categories for WP 5.8.
+= 5.1.6 =
+Fixing a bug when the term grid would not show on the frontend. Testing with WP 6.2.
