@@ -7,8 +7,7 @@
 
 namespace MediaRon\PTAM\Blocks\Custom_Post_Types;
 
-use MediaRon\PTAM\Admin\Options as Options;
-
+use MediaRon\PTAM\Admin\Options;
 use MediaRon\PTAM\Helpers;
 
 /**

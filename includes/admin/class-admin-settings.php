@@ -8,7 +8,6 @@
 namespace MediaRon\PTAM\Admin;
 
 use MediaRon\PTAM\Helpers;
-use MediaRon\PTAM\Admin\Options as Options;
 
 /**
  * Class Admin Settings.

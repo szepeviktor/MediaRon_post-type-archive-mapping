@@ -8,7 +8,7 @@
 namespace MediaRon\PTAM\Admin\Tabs;
 
 use MediaRon\PTAM\Helpers;
-use MediaRon\PTAM\Admin\Options as Options;
+use MediaRon\PTAM\Admin\Options;
 
 /**
  * Output the settings tab and content.
